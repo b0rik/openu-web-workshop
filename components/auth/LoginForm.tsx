@@ -10,7 +10,6 @@ import { FormCardWrapper } from '@/components/FormCardWrapper'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -47,6 +46,7 @@ export const LoginForm = () => {
                 <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input 
+                    className='focus-visible:ring-[#363636]'
                     placeholder='Enter your username'
                     {...field}
                   />
@@ -71,7 +71,7 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
-          <Button type='submit' className='w-full'>Login</Button>
+          <Button type='submit' className='w-full bg-[#0DB14B] hover:bg-[#008000]'>Login</Button>
         </form>
       </Form>
     </FormCardWrapper>

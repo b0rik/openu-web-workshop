@@ -18,7 +18,7 @@ export const FormCardWrapper = ({
   children
 }: FormCardWrapperProps) => {
   return (
-    <Card className='w-fit'>
+    <Card className='w-fit text-[#363636]'>
       <CardHeader>
         {title && <CardTitle>{title}</CardTitle>}
         {description && <CardDescription>{description}</CardDescription>}
