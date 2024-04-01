@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form' 
 
-import { loginFormSchema } from '@/models/FormSchemas'
+import { LoginFormSchema } from '@/models/FormSchemas'
 
 import { FormCardWrapper } from '@/components/FormCardWrapper'
 import {
@@ -19,20 +19,20 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 export const LoginForm = () => {
-  const form = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<z.infer<typeof LoginFormSchema>>({
+    resolver: zodResolver(LoginFormSchema),
     defaultValues: {
       username: '',
       password: '',
     }
   });
 
-  const onSubmit = (values: z.infer<typeof loginFormSchema>) => {
+  const onSubmit = (values: z.infer<typeof LoginFormSchema>) => {
     console.log(values);
   };
 
   return (
-    <FormCardWrapper title='Login'>
+    <FormCardWrapper title='Login' description="Don't have a user? Contact your 'admin role'.">
       <Form {...form}>
         <form 
           onSubmit={form.handleSubmit(onSubmit)} 
