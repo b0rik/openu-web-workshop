@@ -42,10 +42,14 @@ export const UserCreateForm = () => {
 
     if (result.success) {
       form.reset();
+      setSuccess(result.success);
+      setError(undefined);
+      setTimeout(() => {
+        setSuccess(undefined);
+      }, 3000)
+    } else {
+      setError(result.error);
     }
-
-    setSuccess(result.success);
-    setError(result.error);
   };
 
   return (
