@@ -46,7 +46,7 @@ export const LoginForm = () => {
                 <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input 
-                    className='focus-visible:ring-[#363636]'
+                    className='focus-visible:ring-[#096F9F]'
                     placeholder='Enter your username'
                     {...field}
                   />
@@ -63,7 +63,9 @@ export const LoginForm = () => {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input 
+                    className='focus-visible:ring-[#096F9F]'
                     placeholder='********'
+                    type='password'
                     {...field}
                   />
                 </FormControl>
