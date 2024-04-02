@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form' 
+import { useState } from 'react'
 
 import { UserCreateFormSchema } from '@/models/FormSchemas'
 import { createUser } from '@/actions/auth'
@@ -18,8 +19,12 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { FormSuccess } from '@/components/FormSuccess'
+import { FormError } from '@/components/FormError'
 
 export const UserCreateForm = () => {
+  const [success, setSuccess] = useState<string | undefined>('');
+  const [error, setError] = useState<string | undefined>('');
   const form = useForm<z.infer<typeof UserCreateFormSchema>>({
     resolver: zodResolver(UserCreateFormSchema),
     defaultValues: {
@@ -34,7 +39,13 @@ export const UserCreateForm = () => {
 
   const onSubmit = async (values: z.infer<typeof UserCreateFormSchema>) => {
     const result = await createUser(values);
-    console.log(result);
+
+    if (result.success) {
+      form.reset();
+    }
+
+    setSuccess(result.success);
+    setError(result.error);
   };
 
   return (
@@ -160,6 +171,8 @@ export const UserCreateForm = () => {
               </div>
             </div>
           </div>
+          <FormSuccess message={success}/>
+          <FormError message={error}/>
           <Button type='submit' className='w-full bg-[#0DB14B] hover:bg-[#008000]'>Create</Button>
         </form>
       </Form>
