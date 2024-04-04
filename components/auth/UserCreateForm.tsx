@@ -34,7 +34,8 @@ export const UserCreateForm = () => {
       username: '',
       password: '',
       confirmPassword: '',
-    }
+    },
+    mode: 'onTouched',
   });
 
   const onSubmit = async (values: z.infer<typeof UserCreateFormSchema>) => {
@@ -51,7 +52,7 @@ export const UserCreateForm = () => {
       setError(result.error);
     }
   };
-
+  
   return (
     <FormCardWrapper title='Create user'>
       <Form {...form}>
@@ -60,9 +61,9 @@ export const UserCreateForm = () => {
           className='space-y-6'
         >
           <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-            <div className='space-y-1'>
+            <div className='w-[240px] md:w-[320px] space-y-1'>
               <h4 className='text-lg font-semibold'>User data</h4>
-              <div className='w-[240px] space-y-3'>
+              <div className='space-y-3'>
                 <FormField 
                   control={form.control}
                   name='username'
@@ -118,9 +119,9 @@ export const UserCreateForm = () => {
                 />
               </div>
             </div>
-            <div className='space-y-1'>
+            <div className='w-[240px] md:w-[320px] space-y-1'>
               <h4 className='text-lg font-semibold'>Personal data</h4>
-              <div className='w-[240px] space-y-3'>
+              <div className='space-y-3'>
                 <FormField
                   control={form.control}
                   name='firstName'

@@ -18,6 +18,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // dir='rtl'
   return (
     <html lang="en" className='h-full'>
       <body className={cn(
