@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { UserCreateFormSchema } from '@/models/FormSchemas'
 import { createUser } from '@/actions/auth'
 
-import { FormCardWrapper } from '@/components/FormCardWrapper'
+import { FormCardWrapper } from '@/components/form/FormCardWrapper'
 import {
   Form,
   FormControl,
@@ -17,10 +17,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { FormSuccess } from '@/components/FormSuccess'
-import { FormError } from '@/components/FormError'
+import { FormButton } from '@/components/form/FormButton'
+import { FormInput } from '@/components/form/FormInput'
+import { FormSuccess } from '@/components/form/FormSuccess'
+import { FormError } from '@/components/form/FormError'
 
 export const UserCreateForm = () => {
   const [success, setSuccess] = useState<string | undefined>('');
@@ -52,9 +52,16 @@ export const UserCreateForm = () => {
       setError(result.error);
     }
   };
+
+  const usernameFieldState = form.getFieldState('username');
+  const passwordFieldState = form.getFieldState('password');
+  const confirmPasswordFieldState = form.getFieldState('confirmPassword');
+  const firstNameFieldState = form.getFieldState('firstName');
+  const lastNameFieldState = form.getFieldState('lastName');
+  const degreeFieldState = form.getFieldState('degree');
   
   return (
-    <FormCardWrapper title='Create user'>
+    <FormCardWrapper title='יצירת משתמש'>
       <Form {...form}>
         <form 
           onSubmit={form.handleSubmit(onSubmit)} 
@@ -62,19 +69,20 @@ export const UserCreateForm = () => {
         >
           <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
             <div className='w-[240px] md:w-[320px] space-y-1'>
-              <h4 className='text-lg font-semibold'>User data</h4>
+              <h4 className='text-lg font-semibold'>פרטי משתמש</h4>
               <div className='space-y-3'>
                 <FormField 
                   control={form.control}
                   name='username'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel>שם משתמש</FormLabel>
                       <FormControl>
-                        <Input 
-                          className='focus-visible:ring-[#096F9F]'
-                          placeholder='Enter username'
-                          {...field}
+                        <FormInput 
+                          field={field}
+                          placeholder='הכנס שם משתמש כאן'
+                          showValidIcon={usernameFieldState.isTouched}
+                          isValid={!usernameFieldState.invalid}
                         />
                       </FormControl>
                       <FormMessage />
@@ -86,13 +94,14 @@ export const UserCreateForm = () => {
                   name='password'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>סיסמה</FormLabel>
                       <FormControl>
-                        <Input 
-                          className='focus-visible:ring-[#096F9F]'
-                          placeholder='Enter password'
+                        <FormInput 
+                          field={field}
+                          placeholder='הכנס סיסמה כאן'
                           type='password'
-                          {...field}
+                          showValidIcon={passwordFieldState.isTouched}
+                          isValid={!passwordFieldState.invalid}
                         />
                       </FormControl>
                       <FormMessage />
@@ -104,13 +113,14 @@ export const UserCreateForm = () => {
                   name='confirmPassword'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Confirm password</FormLabel>
+                      <FormLabel>ודא סיסמה</FormLabel>
                       <FormControl>
-                        <Input 
-                          className='focus-visible:ring-[#096F9F]'
-                          placeholder='Re-enter password'
+                        <FormInput 
+                          field={field}
+                          placeholder='הכנס סיסמה שנית'
                           type='password'
-                          {...field}
+                          showValidIcon={confirmPasswordFieldState.isTouched}
+                          isValid={!confirmPasswordFieldState.invalid}
                         />
                       </FormControl>
                       <FormMessage />
@@ -120,19 +130,20 @@ export const UserCreateForm = () => {
               </div>
             </div>
             <div className='w-[240px] md:w-[320px] space-y-1'>
-              <h4 className='text-lg font-semibold'>Personal data</h4>
+              <h4 className='text-lg font-semibold'>פרטים אישיים</h4>
               <div className='space-y-3'>
                 <FormField
                   control={form.control}
                   name='firstName'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First name</FormLabel>
+                      <FormLabel>שם פרטי</FormLabel>
                       <FormControl>
-                        <Input 
-                          className='focus-visible:ring-[#096F9F]'
-                          placeholder='Enter first name'
-                          {...field}
+                        <FormInput 
+                          field={field}
+                          placeholder='הכנס  שם פרטי כאן'
+                          showValidIcon={firstNameFieldState.isTouched}
+                          isValid={!firstNameFieldState.invalid}
                         />
                       </FormControl>
                       <FormMessage />
@@ -144,12 +155,13 @@ export const UserCreateForm = () => {
                   name='lastName'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last name</FormLabel>
+                      <FormLabel>שם משפחה</FormLabel>
                       <FormControl>
-                        <Input 
-                          className='focus-visible:ring-[#096F9F]'
-                          placeholder='Enter last name'
-                          {...field}
+                        <FormInput 
+                          field={field}
+                          placeholder='הכנס  שם משפחה כאן'
+                          showValidIcon={lastNameFieldState.isTouched}
+                          isValid={!lastNameFieldState.invalid}
                         />
                       </FormControl>
                       <FormMessage />
@@ -161,12 +173,13 @@ export const UserCreateForm = () => {
                   name='degree'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Degree</FormLabel>
+                      <FormLabel>תואר</FormLabel>
                       <FormControl>
-                        <Input 
-                          className='focus-visible:ring-[#096F9F]'
-                          placeholder='Enter degree'
-                          {...field}
+                        <FormInput 
+                          field={field}
+                          placeholder='הכנס תואר כאן'
+                          showValidIcon={degreeFieldState.isTouched}
+                          isValid={!degreeFieldState.invalid}
                         />
                       </FormControl>
                       <FormMessage />
@@ -178,7 +191,7 @@ export const UserCreateForm = () => {
           </div>
           <FormSuccess message={success}/>
           <FormError message={error}/>
-          <Button type='submit' className='w-full bg-[#0DB14B] hover:bg-[#008000]'>Create</Button>
+          <FormButton>צור משתמש</FormButton>
         </form>
       </Form>
     </FormCardWrapper>

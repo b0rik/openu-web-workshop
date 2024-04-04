@@ -5,43 +5,43 @@ import { z } from 'zod'
 
 export const LoginFormSchema = z.object({
   username: z.string()
-    .min(1, { message: 'Username is required.' }),
+    .min(1, { message: '.חובה להזין שם משתמש' }),
   password: z.string()
-    .min(1, { message: 'Password is required.' })
+    .min(1, { message: '.חובה להזין סיסמה' })
 })
 
 export const UserCreateFormSchema = z.object({
   firstName: z.string()
-    .min(1, { message: 'First name is required.' })
+    .min(1, { message: '.חובה להזין שם פרטי' })
     .max(255, { 
-      message: 'First name is too long. Maximum 255 characters allowed.' 
+      message: '.שם פרטי ארוך מדי. מותר 50 תוים לכל היותר' 
     }),
   lastName: z.string()
-    .min(1, { message: 'Last name is required.' })
+    .min(1, { message: 'חובה להזין שם משפחה' })
     .max(255, { 
-      message: 'Last name is too long. Maximum 255 characters allowed.' 
+      message: 'שם משפחה ארוך מדי. מותר 50 תוים לכל היותר' 
     }),
   degree: z.string()
-    .min(1, { message: 'Degree is required.' })
+    .min(1, { message: 'חובה להזין תואר.' })
     .max(255, { 
-      message: 'Degree is too long. Maximum 255 characters allowed.' 
+      message: 'תואר ארוך מדי. מותר 50 תוים לכל היותר' 
     }),
   username: z.string()
-    .min(1, { message: 'Username is required.' })
+    .min(1, { message: 'חובה להזין שם משתמש.' })
     .max(255, { 
-      message: 'Username is too long. Maximum 255 characters allowed.' 
+      message: 'שם משתמש ארוך מדי. מותר 50 תוים לכל היותר' 
     }),
   password: z.string()
     .regex(new RegExp(
       '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$'
     ), {
-      message: 'Password must have at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.'
+      message: 'הסיסמה צריכה להכיל - 8 תוים לפחות, לפחות אות גדולה אחת, לפחות אות קטנה אחת, לפחות מספר אחד ולפחות תו מיוחד אחד(אותיות באנגלית).'
     })
     .max(255, { 
-      message: 'Password is too long. Maximum 255 characters allowed.' 
+      message: 'סיסמה ארוכה מדי. מותר 50 תוים לכל היותר' 
     }),
   confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords do not match.',
+  message: 'סיסמאות לא תואמות.',
   path: ['confirmPassword'],
 })

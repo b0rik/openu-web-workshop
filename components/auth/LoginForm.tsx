@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 
 import { LoginFormSchema } from '@/models/FormSchemas'
 
-import { FormCardWrapper } from '@/components/FormCardWrapper'
+import { FormCardWrapper } from '@/components/form/FormCardWrapper'
 import {
   Form,
   FormControl,
@@ -15,8 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FormInput } from '@/components/form/FormInput'
+import { FormButton } from '@/components/form/FormButton'
 
 export const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginFormSchema>>({
@@ -24,15 +24,28 @@ export const LoginForm = () => {
     defaultValues: {
       username: '',
       password: '',
-    }
+    },
+    mode: 'onTouched',
   });
 
   const onSubmit = (values: z.infer<typeof LoginFormSchema>) => {
     console.log(values);
   };
 
+  const currentHour = new Date().getHours();
+  const title = (
+    currentHour < 6 ? 'לילה טוב!' 
+    : currentHour < 12 ? 'בוקר טוב!' 
+    : currentHour < 18 ? 'צהריים טובים!' 
+    : currentHour < 22 ? 'ערב טוב!'
+    : 'לילה טוב!'
+  );
+
+  const usernameFieldState = form.getFieldState('username');
+  const passwordFieldState = form.getFieldState('password');
+
   return (
-    <FormCardWrapper title='Login' description="Don't have a user? Contact your 'admin role'.">
+    <FormCardWrapper title={`היי, ${title}`}>
       <Form {...form}>
         <form 
           onSubmit={form.handleSubmit(onSubmit)} 
@@ -43,12 +56,13 @@ export const LoginForm = () => {
             name='username'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>שם משתמש</FormLabel>
                 <FormControl>
-                  <Input 
-                    className='focus-visible:ring-[#096F9F]'
-                    placeholder='Enter your username'
-                    {...field}
+                  <FormInput 
+                    field={field}
+                    placeholder='הכנס שם משתמש כאן'
+                    showValidIcon={usernameFieldState.isTouched}
+                    isValid={!usernameFieldState.invalid}
                   />
                 </FormControl>
                 <FormMessage />
@@ -60,20 +74,21 @@ export const LoginForm = () => {
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>סיסמא</FormLabel>
                 <FormControl>
-                  <Input 
-                    className='focus-visible:ring-[#096F9F]'
-                    placeholder='********'
+                  <FormInput 
+                    field={field}
+                    placeholder='הכנס סיסמא כאן'
                     type='password'
-                    {...field}
+                    showValidIcon={passwordFieldState.isTouched}
+                    isValid={!passwordFieldState.invalid}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type='submit' className='w-full bg-[#0DB14B] hover:bg-[#008000]'>Login</Button>
+          <FormButton>כניסה למחלקה</FormButton>
         </form>
       </Form>
     </FormCardWrapper>

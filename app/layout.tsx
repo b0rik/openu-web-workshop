@@ -20,13 +20,13 @@ export default function RootLayout({
 }>) {
   // dir='rtl'
   return (
-    <html lang="en" className='h-full'>
+    <html lang="en" className='h-full' dir='rtl'>
       <body className={cn(
           'flex flex-col min-h-full',
           inter.className
         )}
       >
-        <NavBar />
+        {/* <NavBar /> */}
         {children}
       </body>
     </html>
