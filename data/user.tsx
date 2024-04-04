@@ -1,9 +1,12 @@
-import { sql } from '@vercel/postgres'
+import { sql } from '@vercel/postgres';
 import { z } from 'zod';
 
 import { UserCreateFormSchema } from '@/models/FormSchemas';
 
-type CreateUserType = Omit<z.infer<typeof UserCreateFormSchema> & { hashedPassword: string }, 'password' | 'confirmPassword'>;
+type CreateUserType = Omit<
+  z.infer<typeof UserCreateFormSchema> & { hashedPassword: string },
+  'password' | 'confirmPassword'
+>;
 
 export const getUserByUsername = async (username: string) => {
   try {
@@ -16,13 +19,13 @@ export const getUserByUsername = async (username: string) => {
     console.error('Error getting user by username.');
     throw error;
   }
-}
+};
 
 export const insertUser = async ({
-  firstName, 
-  lastName, 
-  degree, 
-  username, 
+  firstName,
+  lastName,
+  degree,
+  username,
   hashedPassword,
 }: CreateUserType) => {
   try {
@@ -45,4 +48,4 @@ export const insertUser = async ({
     console.error('Error creating user.');
     throw error;
   }
-}
+};

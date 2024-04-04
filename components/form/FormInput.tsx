@@ -1,14 +1,14 @@
-import { ControllerRenderProps } from 'react-hook-form'
+import { ControllerRenderProps } from 'react-hook-form';
 
-import { Input } from '../ui/input'
-import { InputValidIcon } from './InputValidIcon'
+import { Input } from '../ui/input';
+import { InputValidIcon } from './InputValidIcon';
 
 interface FormInputProps {
-  field: ControllerRenderProps<any, any>,
-  placeholder?: string,
-  type?: 'text' | 'password' | 'email' | 'number',
-  showValidIcon?: boolean,
-  isValid?: boolean
+  field: ControllerRenderProps<any, any>;
+  placeholder?: string;
+  type?: 'text' | 'password' | 'email' | 'number';
+  showValidIcon?: boolean;
+  isValid?: boolean;
 }
 
 export const FormInput = ({
@@ -16,7 +16,7 @@ export const FormInput = ({
   placeholder = '',
   type = 'text',
   showValidIcon = false,
-  isValid = false
+  isValid = false,
 }: FormInputProps) => {
   return (
     <div className='flex items-center relative'>
@@ -26,10 +26,7 @@ export const FormInput = ({
         type={type}
         {...field}
       />
-      <InputValidIcon
-        show={showValidIcon}
-        isValid={isValid}
-      />
+      <InputValidIcon show={showValidIcon} isValid={isValid} />
     </div>
-  )
-}
+  );
+};

@@ -21,18 +21,14 @@ const createUserTable = async (client) => {
     console.error('Error creating user table:', error);
     throw error;
   }
-}
+};
 
 const main = async () => {
   const client = await db.connect();
   await createUserTable(client);
   await client.end();
-}
+};
 
-main()
-.catch((err) => {
-  console.error(
-    'An error occured while creating the database:',
-    err,
-  );
-})
+main().catch((err) => {
+  console.error('An error occured while creating the database:', err);
+});

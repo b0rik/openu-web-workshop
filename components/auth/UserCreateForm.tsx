@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form' 
-import { useState } from 'react'
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
-import { UserCreateFormSchema } from '@/models/FormSchemas'
-import { createUser } from '@/actions/auth'
+import { UserCreateFormSchema } from '@/models/FormSchemas';
+import { createUser } from '@/actions/auth';
 
-import { FormCardWrapper } from '@/components/form/FormCardWrapper'
+import { FormCardWrapper } from '@/components/form/FormCardWrapper';
 import {
   Form,
   FormControl,
@@ -16,11 +16,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { FormButton } from '@/components/form/FormButton'
-import { FormInput } from '@/components/form/FormInput'
-import { FormSuccess } from '@/components/form/FormSuccess'
-import { FormError } from '@/components/form/FormError'
+} from '@/components/ui/form';
+import { FormButton } from '@/components/form/FormButton';
+import { FormInput } from '@/components/form/FormInput';
+import { FormSuccess } from '@/components/form/FormSuccess';
+import { FormError } from '@/components/form/FormError';
 
 export const UserCreateForm = () => {
   const [success, setSuccess] = useState<string | undefined>('');
@@ -47,7 +47,7 @@ export const UserCreateForm = () => {
       setError(undefined);
       setTimeout(() => {
         setSuccess(undefined);
-      }, 3000)
+      }, 3000);
     } else {
       setError(result.error);
     }
@@ -59,26 +59,23 @@ export const UserCreateForm = () => {
   const firstNameFieldState = form.getFieldState('firstName');
   const lastNameFieldState = form.getFieldState('lastName');
   const degreeFieldState = form.getFieldState('degree');
-  
+
   return (
     <FormCardWrapper title='יצירת משתמש'>
       <Form {...form}>
-        <form 
-          onSubmit={form.handleSubmit(onSubmit)} 
-          className='space-y-6'
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
             <div className='w-[240px] md:w-[320px] space-y-1'>
               <h4 className='text-lg font-semibold'>פרטי משתמש</h4>
               <div className='space-y-3'>
-                <FormField 
+                <FormField
                   control={form.control}
                   name='username'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>שם משתמש</FormLabel>
                       <FormControl>
-                        <FormInput 
+                        <FormInput
                           field={field}
                           placeholder='הכנס שם משתמש כאן'
                           showValidIcon={usernameFieldState.isTouched}
@@ -89,14 +86,14 @@ export const UserCreateForm = () => {
                     </FormItem>
                   )}
                 />
-                <FormField 
+                <FormField
                   control={form.control}
                   name='password'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>סיסמה</FormLabel>
                       <FormControl>
-                        <FormInput 
+                        <FormInput
                           field={field}
                           placeholder='הכנס סיסמה כאן'
                           type='password'
@@ -108,14 +105,14 @@ export const UserCreateForm = () => {
                     </FormItem>
                   )}
                 />
-                <FormField 
+                <FormField
                   control={form.control}
                   name='confirmPassword'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ודא סיסמה</FormLabel>
                       <FormControl>
-                        <FormInput 
+                        <FormInput
                           field={field}
                           placeholder='הכנס סיסמה שנית'
                           type='password'
@@ -139,7 +136,7 @@ export const UserCreateForm = () => {
                     <FormItem>
                       <FormLabel>שם פרטי</FormLabel>
                       <FormControl>
-                        <FormInput 
+                        <FormInput
                           field={field}
                           placeholder='הכנס  שם פרטי כאן'
                           showValidIcon={firstNameFieldState.isTouched}
@@ -150,14 +147,14 @@ export const UserCreateForm = () => {
                     </FormItem>
                   )}
                 />
-                <FormField 
+                <FormField
                   control={form.control}
                   name='lastName'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>שם משפחה</FormLabel>
                       <FormControl>
-                        <FormInput 
+                        <FormInput
                           field={field}
                           placeholder='הכנס  שם משפחה כאן'
                           showValidIcon={lastNameFieldState.isTouched}
@@ -168,14 +165,14 @@ export const UserCreateForm = () => {
                     </FormItem>
                   )}
                 />
-                <FormField 
+                <FormField
                   control={form.control}
                   name='degree'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>תואר</FormLabel>
                       <FormControl>
-                        <FormInput 
+                        <FormInput
                           field={field}
                           placeholder='הכנס תואר כאן'
                           showValidIcon={degreeFieldState.isTouched}
@@ -189,11 +186,11 @@ export const UserCreateForm = () => {
               </div>
             </div>
           </div>
-          <FormSuccess message={success}/>
-          <FormError message={error}/>
+          <FormSuccess message={success} />
+          <FormError message={error} />
           <FormButton>צור משתמש</FormButton>
         </form>
       </Form>
     </FormCardWrapper>
-  )
-}
+  );
+};

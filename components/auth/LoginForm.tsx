@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form' 
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
-import { LoginFormSchema } from '@/models/FormSchemas'
+import { LoginFormSchema } from '@/models/FormSchemas';
 
-import { FormCardWrapper } from '@/components/form/FormCardWrapper'
+import { FormCardWrapper } from '@/components/form/FormCardWrapper';
 import {
   Form,
   FormControl,
@@ -14,9 +14,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { FormInput } from '@/components/form/FormInput'
-import { FormButton } from '@/components/form/FormButton'
+} from '@/components/ui/form';
+import { FormInput } from '@/components/form/FormInput';
+import { FormButton } from '@/components/form/FormButton';
 
 export const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginFormSchema>>({
@@ -33,13 +33,16 @@ export const LoginForm = () => {
   };
 
   const currentHour = new Date().getHours();
-  const title = (
-    currentHour < 6 ? 'לילה טוב!' 
-    : currentHour < 12 ? 'בוקר טוב!' 
-    : currentHour < 18 ? 'צהריים טובים!' 
-    : currentHour < 22 ? 'ערב טוב!'
-    : 'לילה טוב!'
-  );
+  const title =
+    currentHour < 6
+      ? 'לילה טוב!'
+      : currentHour < 12
+        ? 'בוקר טוב!'
+        : currentHour < 18
+          ? 'צהריים טובים!'
+          : currentHour < 22
+            ? 'ערב טוב!'
+            : 'לילה טוב!';
 
   const usernameFieldState = form.getFieldState('username');
   const passwordFieldState = form.getFieldState('password');
@@ -47,18 +50,18 @@ export const LoginForm = () => {
   return (
     <FormCardWrapper title={`היי, ${title}`}>
       <Form {...form}>
-        <form 
-          onSubmit={form.handleSubmit(onSubmit)} 
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
           className='space-y-6 w-[240px] md:w-[320px]'
         >
-          <FormField 
+          <FormField
             control={form.control}
             name='username'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>שם משתמש</FormLabel>
                 <FormControl>
-                  <FormInput 
+                  <FormInput
                     field={field}
                     placeholder='הכנס שם משתמש כאן'
                     showValidIcon={usernameFieldState.isTouched}
@@ -69,14 +72,14 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
-          <FormField 
+          <FormField
             control={form.control}
             name='password'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>סיסמא</FormLabel>
                 <FormControl>
-                  <FormInput 
+                  <FormInput
                     field={field}
                     placeholder='הכנס סיסמא כאן'
                     type='password'
@@ -92,5 +95,5 @@ export const LoginForm = () => {
         </form>
       </Form>
     </FormCardWrapper>
-  )
-}
+  );
+};
