@@ -44,11 +44,11 @@ export const LoginForm = () => {
             ? 'ערב טוב!'
             : 'לילה טוב!';
 
-  const usernameFieldState = form.getFieldState('username');
-  const passwordFieldState = form.getFieldState('password');
-
   return (
-    <FormCardWrapper title={`היי, ${title}`}>
+    <FormCardWrapper
+      title={`היי, ${title}`}
+      description='הכנס פרטי הזדהות על מנת להתחבר למערכת'
+    >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -61,12 +61,7 @@ export const LoginForm = () => {
               <FormItem>
                 <FormLabel>שם משתמש</FormLabel>
                 <FormControl>
-                  <FormInput
-                    field={field}
-                    placeholder='הכנס שם משתמש כאן'
-                    showValidIcon={usernameFieldState.isTouched}
-                    isValid={!usernameFieldState.invalid}
-                  />
+                  <FormInput field={field} placeholder='הכנס שם משתמש כאן' />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -83,8 +78,6 @@ export const LoginForm = () => {
                     field={field}
                     placeholder='הכנס סיסמא כאן'
                     type='password'
-                    showValidIcon={passwordFieldState.isTouched}
-                    isValid={!passwordFieldState.invalid}
                   />
                 </FormControl>
                 <FormMessage />

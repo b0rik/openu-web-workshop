@@ -21,6 +21,7 @@ import { FormButton } from '@/components/form/FormButton';
 import { FormInput } from '@/components/form/FormInput';
 import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
+import { ErrorMessage } from '@hookform/error-message';
 
 export const UserCreateForm = () => {
   const [success, setSuccess] = useState<string | undefined>('');
@@ -36,6 +37,7 @@ export const UserCreateForm = () => {
       confirmPassword: '',
     },
     mode: 'onTouched',
+    criteriaMode: 'all',
   });
 
   const onSubmit = async (values: z.infer<typeof UserCreateFormSchema>) => {
@@ -52,13 +54,6 @@ export const UserCreateForm = () => {
       setError(result.error);
     }
   };
-
-  const usernameFieldState = form.getFieldState('username');
-  const passwordFieldState = form.getFieldState('password');
-  const confirmPasswordFieldState = form.getFieldState('confirmPassword');
-  const firstNameFieldState = form.getFieldState('firstName');
-  const lastNameFieldState = form.getFieldState('lastName');
-  const degreeFieldState = form.getFieldState('degree');
 
   return (
     <FormCardWrapper title='יצירת משתמש'>
@@ -78,11 +73,9 @@ export const UserCreateForm = () => {
                         <FormInput
                           field={field}
                           placeholder='הכנס שם משתמש כאן'
-                          showValidIcon={usernameFieldState.isTouched}
-                          isValid={!usernameFieldState.invalid}
                         />
                       </FormControl>
-                      <FormMessage />
+                      {/* <FormMessage /> */}
                     </FormItem>
                   )}
                 />
@@ -97,11 +90,9 @@ export const UserCreateForm = () => {
                           field={field}
                           placeholder='הכנס סיסמה כאן'
                           type='password'
-                          showValidIcon={passwordFieldState.isTouched}
-                          isValid={!passwordFieldState.invalid}
                         />
                       </FormControl>
-                      <FormMessage />
+                      {/* <FormMessage /> */}
                     </FormItem>
                   )}
                 />
@@ -110,17 +101,15 @@ export const UserCreateForm = () => {
                   name='confirmPassword'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>ודא סיסמה</FormLabel>
+                      <FormLabel>וידוא סיסמה</FormLabel>
                       <FormControl>
                         <FormInput
                           field={field}
                           placeholder='הכנס סיסמה שנית'
                           type='password'
-                          showValidIcon={confirmPasswordFieldState.isTouched}
-                          isValid={!confirmPasswordFieldState.invalid}
                         />
                       </FormControl>
-                      <FormMessage />
+                      {/* <FormMessage /> */}
                     </FormItem>
                   )}
                 />
@@ -139,11 +128,9 @@ export const UserCreateForm = () => {
                         <FormInput
                           field={field}
                           placeholder='הכנס  שם פרטי כאן'
-                          showValidIcon={firstNameFieldState.isTouched}
-                          isValid={!firstNameFieldState.invalid}
                         />
                       </FormControl>
-                      <FormMessage />
+                      {/* <FormMessage /> */}
                     </FormItem>
                   )}
                 />
@@ -157,11 +144,9 @@ export const UserCreateForm = () => {
                         <FormInput
                           field={field}
                           placeholder='הכנס  שם משפחה כאן'
-                          showValidIcon={lastNameFieldState.isTouched}
-                          isValid={!lastNameFieldState.invalid}
                         />
                       </FormControl>
-                      <FormMessage />
+                      {/* <FormMessage /> */}
                     </FormItem>
                   )}
                 />
@@ -172,14 +157,9 @@ export const UserCreateForm = () => {
                     <FormItem>
                       <FormLabel>תואר</FormLabel>
                       <FormControl>
-                        <FormInput
-                          field={field}
-                          placeholder='הכנס תואר כאן'
-                          showValidIcon={degreeFieldState.isTouched}
-                          isValid={!degreeFieldState.invalid}
-                        />
+                        <FormInput field={field} placeholder='הכנס תואר כאן' />
                       </FormControl>
-                      <FormMessage />
+                      {/* <FormMessage /> */}
                     </FormItem>
                   )}
                 />
