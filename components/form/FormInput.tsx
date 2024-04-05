@@ -1,3 +1,5 @@
+'use client';
+
 import { ControllerRenderProps, useFormState } from 'react-hook-form';
 import { useId } from 'react';
 
