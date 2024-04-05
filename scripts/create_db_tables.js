@@ -1,4 +1,3 @@
-// import { sql } from '@vercel/postgres';
 const { db } = require('@vercel/postgres');
 
 const createUserTable = async (client) => {
@@ -7,11 +6,11 @@ const createUserTable = async (client) => {
 
     await client.sql`
       CREATE TABLE IF NOT EXISTS "user" (
-        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY, 
-        username VARCHAR(255) NOT NULL UNIQUE, 
-        hashed_password CHAR(255) NOT NULL, 
-        first_name VARCHAR(255), 
-        last_name VARCHAR(255), 
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        username VARCHAR(255) NOT NULL UNIQUE,
+        hashed_password CHAR(255) NOT NULL,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
         degree VARCHAR(255)
       );
     `;
