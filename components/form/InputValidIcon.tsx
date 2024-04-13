@@ -1,5 +1,5 @@
-import { CiCircleCheck } from 'react-icons/ci';
-import { CiCircleRemove } from 'react-icons/ci';
+import { CircleCheck } from 'lucide-react';
+import { CircleX } from 'lucide-react';
 
 interface InputValidIconProps {
   show?: boolean;
@@ -13,9 +13,15 @@ export const InputValidIcon = ({
   return (
     show &&
     (isValid ? (
-      <CiCircleCheck className='w-6 h-6 absolute left-2 text-[#99ce97]' />
+      <CircleCheck
+        strokeWidth={1}
+        className='w-6 h-6 absolute left-2 text-[#99ce97]'
+      />
     ) : (
-      <CiCircleRemove className='w-6 h-6 absolute left-2 text-[#fc8585]' />
+      <CircleX
+        strokeWidth={1}
+        className='w-6 h-6 absolute left-2 text-[#fc8585]'
+      />
     ))
   );
 };
