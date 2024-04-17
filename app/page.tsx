@@ -1,4 +1,5 @@
 import { PatientCard } from '@/components/PatientCard';
+import { TaskCard } from '@/components/TaskCard';
 import Link from 'next/link';
 
 const page = () => {
@@ -11,6 +12,7 @@ const page = () => {
         Create user page
       </Link>
       <PatientCard />
+      <TaskCard />
     </main>
   );
 };

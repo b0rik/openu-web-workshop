@@ -19,7 +19,7 @@ const mockPatientData = {
   socialId: '123456789', // social id
   department: 'גריאטריה',
   room: '420',
-  bed: 2,
+  bed: '2',
   addmissionDate: new Date(Date.now() - 1000000000),
 };
 
@@ -54,14 +54,16 @@ export const PatientCard = () => {
     <Card className='w-80 sm:w-96'>
       <CardHeader
         className={cn(
-          'flex flex-row justify-between items-center text-white rounded-t-lg p-3',
-          isUrgent ? 'bg-[#B40000]' : 'bg-[#096F9F]'
+          'flex flex-row justify-between items-center text-white rounded-t-lg p-3 border-b-4 relative',
+          isUrgent
+            ? 'bg-[#B40000] border-[#D43902]'
+            : 'bg-[#096F9F] border-[#00AEEF]'
         )}
       >
         <div className='flex items-center gap-2'>
           <UserRound size='52px' />
-          <div className='space-y-2'>
-            <CardTitle>
+          <div className='space-y-2 max-w-40 text-wrap break-words sm:max-w-52'>
+            <CardTitle className=''>
               <span>{name}</span>
               {', '}
               <span>{age}</span>
@@ -72,7 +74,7 @@ export const PatientCard = () => {
           </div>
         </div>
         {isUrgent && (
-          <div className='self-start'>
+          <div className='absolute left-3 top-1'>
             <div className='flex gap-1'>
               <Bell />
               <p>דחוף</p>
