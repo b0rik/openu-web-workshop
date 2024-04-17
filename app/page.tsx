@@ -1,3 +1,4 @@
+import { PatientCard } from '@/components/PatientCard';
 import Link from 'next/link';
 
 const page = () => {
@@ -9,6 +10,7 @@ const page = () => {
       <Link className='underline' href='/auth/create-user'>
         Create user page
       </Link>
+      <PatientCard />
     </main>
   );
 };
