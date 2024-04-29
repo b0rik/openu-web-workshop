@@ -11,49 +11,49 @@ import {
 // max length const
 
 export const LoginFormSchema = z.object({
-  username: z.string().min(1, { message: '.חובה להזין שם משתמש' }),
-  password: z.string().min(1, { message: '.חובה להזין סיסמה' }),
+  username: z.string().min(1, { message: 'username required.' }),
+  password: z.string().min(1, { message: 'password required.' }),
 });
 
 export const UserCreateFormSchema = z
   .object({
-    firstName: z.string().min(1, { message: 'חובה להזין שם פרטי.' }).max(255, {
-      message: 'שם פרטי ארוך מדי. מותר 50 תוים לכל היותר.',
+    firstName: z.string().min(1, { message: 'first name required.' }).max(50, {
+      message: 'first name is too long, max 50 allowed.',
     }),
-    lastName: z.string().min(1, { message: 'חובה להזין שם משפחה.' }).max(255, {
-      message: 'שם משפחה ארוך מדי. מותר 50 תוים לכל היותר.',
+    lastName: z.string().min(1, { message: 'last name required' }).max(50, {
+      message: 'last name is too long, max 50 allowed.',
     }),
-    degree: z.string().min(1, { message: 'חובה להזין תואר.' }).max(255, {
-      message: 'תואר ארוך מדי. מותר 50 תוים לכל היותר.',
+    degree: z.string().min(1, { message: 'degree required' }).max(50, {
+      message: 'degree is too long, max 50 allowed.',
     }),
-    username: z.string().min(1, { message: 'חובה להזין שם משתמש.' }).max(255, {
-      message: 'שם משתמש ארוך מדי. מותר להזין 50 תוים לכל היותר.',
+    username: z.string().min(1, { message: 'user name required' }).max(50, {
+      message: 'username is too long, max 50 allowed.',
     }),
     password: z
       .string()
-      .min(8, { message: 'הסיסמה חייבת להכיל לפחות 8 תוים.' })
+      .min(8, { message: 'password must containt at least 8 characters.' })
       .max(50, {
-        message: 'סיסמה ארוכה מדי. מותר 50 תוים לכל היותר.',
+        message: 'password is too long, max 50 allowed.',
       }),
     confirmPassword: z.string(),
   })
   .refine((data) => containsUpperLetter(data.password), {
-    message: 'הסיסמה חייבת להכיל לפחות אות לועזית גדולה אחת.',
+    message: 'password must contain at least 1 upper case letter.',
     path: ['password'],
   })
   .refine((data) => containsLowerLetter(data.password), {
-    message: 'הסיסמה חייבת להכיל לפחות אות לועזית קטנה אחת.',
+    message: 'password must contain at least 1 lower case letter.',
     path: ['password'],
   })
   .refine((data) => containsDigit(data.password), {
-    message: 'הסיסמה חייבת להכיל לפחות מספר אחד.',
+    message: 'password must contain at least 1 digit.',
     path: ['password'],
   })
   .refine((data) => containsSymbol(data.password), {
-    message: 'הסיסמה חייבת להכיל לפחות סימן אחד.',
+    message: 'password must contain at least 1 special symbol.',
     path: ['password'],
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'סיסמאות לא תואמות.',
+    message: 'passwords dont match.',
     path: ['confirmPassword'],
   });

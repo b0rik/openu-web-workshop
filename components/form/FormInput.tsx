@@ -46,7 +46,7 @@ export const FormInput = ({
           name={name}
           render={({ messages }) =>
             messages && (
-              <ul className='mt-1 mr-2'>
+              <ul className='mt-2'>
                 {Object.values(messages)
                   .flat()
                   .map((error, index) => (

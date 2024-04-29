@@ -15,12 +15,12 @@ export const InputValidIcon = ({
     (isValid ? (
       <CircleCheck
         strokeWidth={1}
-        className='w-6 h-6 absolute left-2 text-[#99ce97]'
+        className='w-6 h-6 absolute right-2 text-[#99ce97]'
       />
     ) : (
       <CircleX
         strokeWidth={1}
-        className='w-6 h-6 absolute left-2 text-[#fc8585]'
+        className='w-6 h-6 absolute right-2 text-[#fc8585]'
       />
     ))
   );

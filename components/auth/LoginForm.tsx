@@ -34,34 +34,29 @@ export const LoginForm = () => {
 
   const currentHour = new Date().getHours();
   const title =
-    currentHour < 6
-      ? 'לילה טוב!'
+    currentHour < 4
+      ? 'Good Evening'
       : currentHour < 12
-        ? 'בוקר טוב!'
-        : currentHour < 18
-          ? 'צהריים טובים!'
-          : currentHour < 22
-            ? 'ערב טוב!'
-            : 'לילה טוב!';
+        ? 'Good Morning'
+        : currentHour < 22
+          ? 'Good Afternoon'
+          : 'Good Evening';
 
   return (
     <FormCardWrapper
-      title={`היי, ${title}`}
-      description='הכנס פרטי הזדהות על מנת להתחבר למערכת'
+      title={`Hi, ${title}!`}
+      description='Please enter your credentials to login to the system.'
     >
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-6 w-[240px] sm:w-[320px]'
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <FormField
             control={form.control}
             name='username'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>שם משתמש</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <FormInput field={field} placeholder='הכנס שם משתמש כאן' />
+                  <FormInput field={field} placeholder='Enter username' />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -72,11 +67,11 @@ export const LoginForm = () => {
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>סיסמא</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <FormInput
                     field={field}
-                    placeholder='הכנס סיסמא כאן'
+                    placeholder='Enter password'
                     type='password'
                   />
                 </FormControl>
@@ -84,7 +79,7 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
-          <FormButton>כניסה למחלקה</FormButton>
+          <FormButton>Login</FormButton>
         </form>
       </Form>
     </FormCardWrapper>

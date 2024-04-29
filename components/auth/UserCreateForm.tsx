@@ -55,24 +55,21 @@ export const UserCreateForm = () => {
   };
 
   return (
-    <FormCardWrapper title='יצירת משתמש'>
+    <FormCardWrapper title='Create a user'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
             <div className='w-[240px] md:w-[320px] space-y-1'>
-              <h4 className='text-lg font-semibold'>פרטי משתמש</h4>
+              <h4 className='text-lg font-semibold'>User details</h4>
               <div className='space-y-3'>
                 <FormField
                   control={form.control}
                   name='username'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>שם משתמש</FormLabel>
+                      <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <FormInput
-                          field={field}
-                          placeholder='הכנס שם משתמש כאן'
-                        />
+                        <FormInput field={field} placeholder='Enter username' />
                       </FormControl>
                       {/* <FormMessage /> */}
                     </FormItem>
@@ -83,11 +80,11 @@ export const UserCreateForm = () => {
                   name='password'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>סיסמה</FormLabel>
+                      <FormLabel>Password</FormLabel>
                       <FormControl>
                         <FormInput
                           field={field}
-                          placeholder='הכנס סיסמה כאן'
+                          placeholder='Enter password'
                           type='password'
                         />
                       </FormControl>
@@ -100,11 +97,11 @@ export const UserCreateForm = () => {
                   name='confirmPassword'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>וידוא סיסמה</FormLabel>
+                      <FormLabel>Confirm password</FormLabel>
                       <FormControl>
                         <FormInput
                           field={field}
-                          placeholder='הכנס סיסמה שנית'
+                          placeholder='Re-enter password'
                           type='password'
                         />
                       </FormControl>
@@ -115,18 +112,18 @@ export const UserCreateForm = () => {
               </div>
             </div>
             <div className='w-[240px] md:w-[320px] space-y-1'>
-              <h4 className='text-lg font-semibold'>פרטים אישיים</h4>
+              <h4 className='text-lg font-semibold'>Personal details</h4>
               <div className='space-y-3'>
                 <FormField
                   control={form.control}
                   name='firstName'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>שם פרטי</FormLabel>
+                      <FormLabel>First name</FormLabel>
                       <FormControl>
                         <FormInput
                           field={field}
-                          placeholder='הכנס  שם פרטי כאן'
+                          placeholder='Enter first name'
                         />
                       </FormControl>
                       {/* <FormMessage /> */}
@@ -138,11 +135,11 @@ export const UserCreateForm = () => {
                   name='lastName'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>שם משפחה</FormLabel>
+                      <FormLabel>Last name</FormLabel>
                       <FormControl>
                         <FormInput
                           field={field}
-                          placeholder='הכנס  שם משפחה כאן'
+                          placeholder='Enter last name'
                         />
                       </FormControl>
                       {/* <FormMessage /> */}
@@ -154,9 +151,9 @@ export const UserCreateForm = () => {
                   name='degree'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>תואר</FormLabel>
+                      <FormLabel>Degree</FormLabel>
                       <FormControl>
-                        <FormInput field={field} placeholder='הכנס תואר כאן' />
+                        <FormInput field={field} placeholder='Enter degree' />
                       </FormControl>
                       {/* <FormMessage /> */}
                     </FormItem>
@@ -167,7 +164,7 @@ export const UserCreateForm = () => {
           </div>
           <FormSuccess message={success} />
           <FormError message={error} />
-          <FormButton>צור משתמש</FormButton>
+          <FormButton>Create</FormButton>
         </form>
       </Form>
     </FormCardWrapper>

@@ -14,22 +14,22 @@ import { CircleUserRound, Bed, Bone, Circle } from 'lucide-react';
 const mockTaskData = {
   patient: {
     socialId: '123456789',
-    name: 'איש סובל ',
-    department: 'גריאטריה',
+    name: 'sick person',
+    department: 'medical',
     room: '420',
     bed: '2',
     age: 80,
   },
-  type: 'דימות',
-  subTypes: ['PATCH', 'MRI', 'CT'],
-  status: 'ממתינה',
+  type: 'imaging',
+  subTypes: ['PATCT', 'MRI', 'CT'],
+  status: 'pending',
   createdAt: new Date(Date.now() - 1000000000),
   isUrgent: false,
 };
 
 const TaskIcon = ({ type }: { type: string }) => {
   switch (type) {
-    case 'דימות':
+    case 'imaging':
       return <Bone size='32px' />;
     default:
       return null;
@@ -56,7 +56,7 @@ export const TaskCard = () => {
   const statusColors: {
     [status: string]: string;
   } = {
-    ['ממתינה']: '#00AEEF',
+    ['pending']: '#00AEEF',
   };
 
   return (
@@ -78,11 +78,11 @@ export const TaskCard = () => {
               <span>{patientAge}</span>
             </CardTitle>
             <CardDescription className='text-white'>
-              <span>ת.ז. {patientSocialId}</span>
+              <span>ID {patientSocialId}</span>
             </CardDescription>
           </div>
         </div>
-        <div className='flex items-center self-end gap-1 absolute left-2 -bottom-3'>
+        <div className='flex items-center self-end gap-1 absolute right-2 -bottom-3'>
           <p className='text-xl'>{type}</p>
           <div
             className={cn(
@@ -109,21 +109,21 @@ export const TaskCard = () => {
           <Bed />
           <p>{department}</p>
           <Separator orientation='vertical' className='h-auto' />
-          <p>חדר {room}</p>
+          <p>Room {room}</p>
           {bed && (
             <>
               <Separator orientation='vertical' className='h-auto' />
-              <p>מיטה {bed}</p>
+              <p>Bed {bed}</p>
             </>
           )}
         </div>
         <div className='flex gap-1 items-center'>
-          <p>{'סטטוס:'}</p>
+          <p>{'status:'}</p>
           <Circle size='0.75rem' stroke='none' fill={statusColors[status]} />
           <p>{status}</p>
         </div>
         <p>
-          נוצר בתאריך: <span>{createdAt.toLocaleString()}</span>
+          Created at: <span>{createdAt.toLocaleString('en-GB')}</span>
         </p>
       </CardContent>
     </Card>
