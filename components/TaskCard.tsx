@@ -64,9 +64,7 @@ export const TaskCard = () => {
       <CardHeader
         className={cn(
           'relative flex flex-row items-center  justify-between rounded-t-lg border-b-4 p-3 text-white',
-          isUrgent
-            ? 'border-[#D43902] bg-[#B40000]'
-            : 'border-[#00AEEF] bg-[#096F9F]',
+          isUrgent ? 'border-red-500 bg-red-700' : 'border-sky-500 bg-sky-700',
         )}
       >
         <div className='flex items-center gap-2'>
@@ -87,18 +85,18 @@ export const TaskCard = () => {
           <div
             className={cn(
               'rounded-full p-2',
-              isUrgent ? 'bg-[#FE7725]' : 'bg-[#17A1BA]',
+              isUrgent ? 'bg-red-500' : 'bg-sky-500',
             )}
           >
             <TaskIcon type={type} />
           </div>
         </div>
       </CardHeader>
-      <CardContent className='space-y-4 p-4 text-[#1e7489]'>
+      <CardContent className='space-y-4 p-4 text-sky-700'>
         <div className='flex gap-2'>
           {subTypes.map((subType, index) => (
             <div
-              className='bg-[#1BA1A4]/25 px-2 py-1 text-sm text-[#1e7489]'
+              className='bg-sky-600/25 px-2 py-1 text-sm text-sky-700'
               key={index}
             >
               {subType}

@@ -34,7 +34,7 @@ const mockPatientTasks = [
 ];
 
 export const PatientCard = () => {
-  // get as prop?
+  // get as prop
   const { name, age, socialId, bed, department, room, addmissionDate } =
     mockPatientData;
   // get for every user? seems wasteful fetches how to improve?
@@ -55,9 +55,7 @@ export const PatientCard = () => {
       <CardHeader
         className={cn(
           'relative flex flex-row items-center justify-between rounded-t-lg border-b-4 p-3 text-white',
-          isUrgent
-            ? 'border-[#D43902] bg-[#B40000]'
-            : 'border-[#00AEEF] bg-[#096F9F]',
+          isUrgent ? 'border-red-500 bg-red-700' : 'border-sky-500 bg-sky-700',
         )}
       >
         <div className='flex items-center gap-2'>
@@ -82,7 +80,7 @@ export const PatientCard = () => {
           </div>
         )}
       </CardHeader>
-      <CardContent className='space-y-4 p-4 text-[#1e7489]'>
+      <CardContent className='space-y-4 p-4 text-sky-700'>
         <p>{`${tasks.length ? tasks.length : 'no'} tasks`}</p>
         <div className='flex gap-2'>
           <Bed />

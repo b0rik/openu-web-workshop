@@ -4,7 +4,7 @@ export const FormButton = ({ children }: { children: React.ReactNode }) => {
   return (
     <Button
       type='submit'
-      className='w-full rounded-full bg-[#17a1bb] text-lg hover:bg-[#1e7489]'
+      className='w-full rounded-full bg-sky-500 text-lg hover:bg-sky-600'
     >
       {children}
     </Button>

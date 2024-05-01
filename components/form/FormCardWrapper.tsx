@@ -18,7 +18,7 @@ export const FormCardWrapper = ({
   children,
 }: FormCardWrapperProps) => {
   return (
-    <Card className='bg-[#eaf5f9] text-[#1e7489]'>
+    <Card className='bg-sky-50 text-sky-800'>
       <CardHeader className='text-center'>
         {title && <CardTitle>{title}</CardTitle>}
         {description && <CardDescription>{description}</CardDescription>}

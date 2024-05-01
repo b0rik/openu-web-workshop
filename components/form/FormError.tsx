@@ -5,9 +5,7 @@ interface FormErrorProps {
 export const FormError = ({ message }: FormErrorProps) => {
   return (
     message && (
-      <div className='rounded-md bg-[#B40000] p-3 text-[#ffffff]'>
-        {message}
-      </div>
+      <div className='rounded-md bg-red-600 p-3 text-white'>{message}</div>
     )
   );
 };
