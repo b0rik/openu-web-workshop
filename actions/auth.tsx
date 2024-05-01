@@ -10,7 +10,7 @@ import { UserCreateFormSchema } from '@/models/FormSchemas';
 const SALT_ROUNDS = 10;
 
 export const createUser = async (
-  value: z.infer<typeof UserCreateFormSchema>
+  value: z.infer<typeof UserCreateFormSchema>,
 ) => {
   const validatedFields = UserCreateFormSchema.safeParse(value);
 

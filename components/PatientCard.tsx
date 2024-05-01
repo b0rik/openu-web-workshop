@@ -54,15 +54,15 @@ export const PatientCard = () => {
     <Card className='w-80 sm:w-96'>
       <CardHeader
         className={cn(
-          'flex flex-row justify-between items-center text-white rounded-t-lg p-3 border-b-4 relative',
+          'relative flex flex-row items-center justify-between rounded-t-lg border-b-4 p-3 text-white',
           isUrgent
-            ? 'bg-[#B40000] border-[#D43902]'
-            : 'bg-[#096F9F] border-[#00AEEF]'
+            ? 'border-[#D43902] bg-[#B40000]'
+            : 'border-[#00AEEF] bg-[#096F9F]',
         )}
       >
         <div className='flex items-center gap-2'>
           <UserRound size='52px' />
-          <div className='space-y-2 max-w-40 text-wrap break-words sm:max-w-52'>
+          <div className='max-w-40 space-y-2 text-wrap break-words sm:max-w-52'>
             <CardTitle className=''>
               <span>{name}</span>
               {', '}
@@ -82,7 +82,7 @@ export const PatientCard = () => {
           </div>
         )}
       </CardHeader>
-      <CardContent className='p-4 space-y-4 text-[#1e7489]'>
+      <CardContent className='space-y-4 p-4 text-[#1e7489]'>
         <p>{`${tasks.length ? tasks.length : 'no'} tasks`}</p>
         <div className='flex gap-2'>
           <Bed />
@@ -97,14 +97,14 @@ export const PatientCard = () => {
             </>
           )}
         </div>
-        <div className='flex flex-col sm:flex-row justify-between'>
-          <div className='flex gap-2 items-center'>
+        <div className='flex flex-col justify-between sm:flex-row'>
+          <div className='flex items-center gap-2'>
             <Calendar className='self-start' />
             <p>{`${hospitalizationDays(addmissionDate)} Days of hospitalization`}</p>
           </div>
           <Button
             variant='ghost'
-            className='flex self-end items-center gap-1 text-lg'
+            className='flex items-center gap-1 self-end text-lg'
           >
             <span>
               <Plus />

@@ -27,12 +27,12 @@ export const FormInput = ({
 
   return (
     <div>
-      <div className='flex items-center relative'>
+      <div className='relative flex items-center'>
         <Input
           className={cn(
-            'border-[#88ced8] focus-visible:ring-[#1e7489] rounded-full',
+            'rounded-full border-[#88ced8] focus-visible:ring-[#1e7489]',
             (isTouched || invalid) &&
-              (invalid ? 'border-[#fc8585]' : 'border-[#99ce97]')
+              (invalid ? 'border-[#fc8585]' : 'border-[#99ce97]'),
           )}
           placeholder={placeholder}
           type={type}

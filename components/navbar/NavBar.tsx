@@ -2,10 +2,10 @@ import { Hospital } from 'lucide-react';
 
 export const NavBar = () => {
   return (
-    <nav className='h-16 w-full bg-[#096F9F] text-white flex items-center'>
-      <div className='flex items-center gap-3 m-4'>
-        <Hospital className='w-10 h-10' />
-        <span className='font-bold text-xl tracking-wide'>
+    <nav className='flex h-16 w-full items-center bg-[#096F9F] text-white'>
+      <div className='m-4 flex items-center gap-3'>
+        <Hospital className='h-10 w-10' />
+        <span className='text-xl font-bold tracking-wide'>
           Meditask Manager
         </span>
       </div>

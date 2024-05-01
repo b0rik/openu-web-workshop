@@ -5,7 +5,7 @@ interface FormSuccessProps {
 export const FormSuccess = ({ message }: FormSuccessProps) => {
   return (
     message && (
-      <div className='bg-[#8ACA8B] text-[#363636] p-3 rounded-md'>
+      <div className='rounded-md bg-[#8ACA8B] p-3 text-[#363636]'>
         {message}
       </div>
     )

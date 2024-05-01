@@ -63,15 +63,15 @@ export const TaskCard = () => {
     <Card className='w-80 sm:w-96'>
       <CardHeader
         className={cn(
-          'flex flex-row justify-between items-center  text-white rounded-t-lg p-3 border-b-4 relative',
+          'relative flex flex-row items-center  justify-between rounded-t-lg border-b-4 p-3 text-white',
           isUrgent
-            ? 'bg-[#B40000] border-[#D43902]'
-            : 'bg-[#096F9F] border-[#00AEEF]'
+            ? 'border-[#D43902] bg-[#B40000]'
+            : 'border-[#00AEEF] bg-[#096F9F]',
         )}
       >
         <div className='flex items-center gap-2'>
           <CircleUserRound size='52px' />
-          <div className='space-y-2 max-w-40 sm:max-w-52 text-wrap break-words'>
+          <div className='max-w-40 space-y-2 text-wrap break-words sm:max-w-52'>
             <CardTitle>
               <span>{patientName}</span>
               {', '}
@@ -82,23 +82,23 @@ export const TaskCard = () => {
             </CardDescription>
           </div>
         </div>
-        <div className='flex items-center self-end gap-1 absolute right-2 -bottom-3'>
+        <div className='absolute -bottom-3 right-2 flex items-center gap-1 self-end'>
           <p className='text-xl'>{type}</p>
           <div
             className={cn(
-              'p-2 rounded-full',
-              isUrgent ? 'bg-[#FE7725]' : 'bg-[#17A1BA]'
+              'rounded-full p-2',
+              isUrgent ? 'bg-[#FE7725]' : 'bg-[#17A1BA]',
             )}
           >
             <TaskIcon type={type} />
           </div>
         </div>
       </CardHeader>
-      <CardContent className='p-4 space-y-4 text-[#1e7489]'>
+      <CardContent className='space-y-4 p-4 text-[#1e7489]'>
         <div className='flex gap-2'>
           {subTypes.map((subType, index) => (
             <div
-              className='bg-[#1BA1A4]/25 text-[#1e7489] text-sm px-2 py-1'
+              className='bg-[#1BA1A4]/25 px-2 py-1 text-sm text-[#1e7489]'
               key={index}
             >
               {subType}
@@ -117,7 +117,7 @@ export const TaskCard = () => {
             </>
           )}
         </div>
-        <div className='flex gap-1 items-center'>
+        <div className='flex items-center gap-1'>
           <p>{'status:'}</p>
           <Circle size='0.75rem' stroke='none' fill={statusColors[status]} />
           <p>{status}</p>
