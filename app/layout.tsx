@@ -22,7 +22,9 @@ export default function RootLayout({
     <html lang='en' className='h-full'>
       <body className={cn('flex min-h-full flex-col', inter.className)}>
         <NavBar />
-        {children}
+        <div className='flex grow items-center justify-center bg-gradient-to-b from-sky-800 to-sky-400 p-6'>
+          {children}
+        </div>
       </body>
     </html>
   );
