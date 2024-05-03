@@ -25,7 +25,7 @@ export const LoginForm = () => {
       username: '',
       password: '',
     },
-    mode: 'onChanged',
+    mode: 'onChange',
   });
 
   const onSubmit = (values: z.infer<typeof LoginFormSchema>) => {
