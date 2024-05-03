@@ -5,41 +5,54 @@ import { useId } from 'react';
 
 import { cn } from '@/lib/utils';
 
-import { Input } from '@/components/ui/input';
-import { InputValidIcon } from '@/components/form/InputValidIcon';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 import { useFormField } from '../ui/form';
 import { ErrorMessage } from '@hookform/error-message';
 
-interface FormInputProps {
+interface FormSelectProps {
   field: ControllerRenderProps<any, any>;
   placeholder?: string;
-  type?: 'text' | 'password' | 'email' | 'number';
+  roles?: string[];
 }
 
-export const FormInput = ({
+export const FormSelect = ({
   field,
   placeholder = '',
-  type = 'text',
-}: FormInputProps) => {
-  const { isDirty, invalid, name } = useFormField();
+  roles = [],
+}: FormSelectProps) => {
+  const { invalid, name, isDirty } = useFormField();
   const { errors } = useFormState(field);
   const errorIdPrefix = useId();
+  const roleIdPrefix = useId();
 
   return (
     <div>
-      <div className='relative flex items-center'>
-        <Input
+      <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <SelectTrigger
           className={cn(
-            'rounded-full border-sky-300 focus-visible:ring-sky-600',
+            'rounded-full border-sky-300 focus:ring-sky-600',
             (isDirty || invalid) &&
               (invalid ? 'border-red-400' : 'border-green-400'),
           )}
-          placeholder={placeholder}
-          type={type}
-          {...field}
-        />
-        <InputValidIcon show={isDirty || invalid} isValid={!invalid} />
-      </div>
+        >
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          {roles.map((role, index) => {
+            return (
+              <SelectItem key={roleIdPrefix + index} value={role}>
+                {role}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
       <ErrorMessage
         errors={errors}
         name={name}

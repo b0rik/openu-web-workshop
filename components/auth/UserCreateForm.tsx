@@ -19,8 +19,11 @@ import {
 } from '@/components/ui/form';
 import { FormButton } from '@/components/form/FormButton';
 import { FormInput } from '@/components/form/FormInput';
+import { FormSelect } from '../form/FormSelect';
 import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
+
+const ROLES = ['role1', 'role2', 'role3'];
 
 export const UserCreateForm = () => {
   const [success, setSuccess] = useState<string | undefined>('');
@@ -35,7 +38,7 @@ export const UserCreateForm = () => {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onTouched',
+    mode: 'onChange',
     criteriaMode: 'all',
   });
 
@@ -78,7 +81,13 @@ export const UserCreateForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
-                  <FormControl></FormControl>
+                  <FormControl>
+                    <FormSelect
+                      field={field}
+                      placeholder='Select a role'
+                      roles={ROLES}
+                    />
+                  </FormControl>
                   {/* <FormMessage /> */}
                 </FormItem>
               )}
