@@ -25,7 +25,7 @@ export const LoginForm = () => {
       username: '',
       password: '',
     },
-    mode: 'onTouched',
+    mode: 'onChanged',
   });
 
   const onSubmit = (values: z.infer<typeof LoginFormSchema>) => {
