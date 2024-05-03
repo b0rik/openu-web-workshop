@@ -5,6 +5,7 @@ import {
   containsLowerLetter,
   containsSymbol,
   containsUpperLetter,
+  containsWhitespace,
 } from '@/lib/utils';
 
 // TODO:
@@ -23,9 +24,6 @@ export const UserCreateFormSchema = z
     lastName: z.string().min(1, { message: 'last name required' }).max(50, {
       message: 'last name is too long, max 50 allowed.',
     }),
-    degree: z.string().min(1, { message: 'degree required' }).max(50, {
-      message: 'degree is too long, max 50 allowed.',
-    }),
     username: z.string().min(1, { message: 'user name required' }).max(50, {
       message: 'username is too long, max 50 allowed.',
     }),
@@ -36,6 +34,11 @@ export const UserCreateFormSchema = z
         message: 'password is too long, max 50 allowed.',
       }),
     confirmPassword: z.string(),
+    role: z.string().min(1, 'role is required.'),
+  })
+  .refine((data) => !containsWhitespace(data.username), {
+    message: 'username cannot contain whitespace.',
+    path: ['username'],
   })
   .refine((data) => containsUpperLetter(data.password), {
     message: 'password must contain at least 1 upper case letter.',

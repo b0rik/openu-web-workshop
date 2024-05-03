@@ -4,6 +4,7 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 
 import { getUserByUsername, insertUser } from '@/data/user';
+import { getRoles } from '@/data/roles';
 
 import { UserCreateFormSchema } from '@/models/FormSchemas';
 
@@ -18,11 +19,13 @@ export const createUser = async (
     return { error: 'Invalid data.' };
   }
 
-  const { firstName, lastName, degree, username, password, confirmPassword } =
+  const { firstName, lastName, role, username, password } =
     validatedFields.data;
 
-  if (password !== confirmPassword) {
-    return { error: 'Passwords do not match.' };
+  const roleNames = await getRoles();
+
+  if (!roleNames.some(({ name: roleName }) => role === roleName)) {
+    return { error: 'Invalid data.' };
   }
 
   try {
@@ -37,7 +40,7 @@ export const createUser = async (
     await insertUser({
       firstName,
       lastName,
-      degree,
+      role,
       username,
       hashedPassword,
     });
