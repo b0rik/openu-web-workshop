@@ -5,7 +5,7 @@ export const patientsTable = pgTable('patients', {
   id: varchar('id', { length: 9 }).primaryKey().notNull().unique(),
   firstName: varchar('first_name', { length: 50 }).notNull(),
   lastName: varchar('last_name', { length: 50 }).notNull(),
-  dateOfBirth: date('date_of_birth').notNull(),
+  dateOfBirth: date('date_of_birth', { mode: 'date' }).notNull(),
   unitName: varchar('unit_name')
     .references(() => unitsTable.name)
     .notNull(),

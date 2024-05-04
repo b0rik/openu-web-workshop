@@ -12,7 +12,7 @@ import { taskStatusTable } from '@/models/drizzle/taskStatusSchema';
 import { usersTable } from '@/models/drizzle/usersSchema';
 
 export const tasksTable = pgTable('tasks', {
-  id: uuid('id').primaryKey().notNull().unique(),
+  id: uuid('id').defaultRandom().primaryKey().notNull().unique(),
   categoryName: varchar('category_name')
     .references(() => taskCategoriesTable.name)
     .notNull(),
@@ -20,12 +20,12 @@ export const tasksTable = pgTable('tasks', {
     .references(() => taskSubCategoriesTable.name)
     .notNull(),
   comments: text('comments'),
-  status: text('status')
+  status: varchar('status')
     .references(() => taskStatusTable.name)
     .notNull(),
   assignedToUser: varchar('assigned_to_user').references(
     () => usersTable.username,
   ),
-  dueDate: date('due_date'),
-  isUrgent: boolean('is_urgent'),
+  dueDate: date('due_date', { mode: 'date' }),
+  isUrgent: boolean('is_urgent').notNull(),
 });
