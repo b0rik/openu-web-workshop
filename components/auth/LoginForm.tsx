@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 
 import { LoginFormSchema } from '@/models/FormSchemas';
 
-import { FormCardWrapper } from '@/components/form/FormCardWrapper';
 import {
   Form,
   FormControl,
@@ -15,6 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { FormCardWrapper } from '@/components/form/FormCardWrapper';
 import { FormInput } from '@/components/form/FormInput';
 import { FormButton } from '@/components/form/FormButton';
 
