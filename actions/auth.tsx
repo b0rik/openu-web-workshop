@@ -3,17 +3,19 @@
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 
+import { signIn } from '@/auth';
+
 import { getUserByUsername, insertUser } from '@/data/user';
 import { getRoles } from '@/data/roles';
 
-import { UserCreateFormSchema } from '@/models/FormSchemas';
+import { UserCreateFormSchema, LoginFormSchema } from '@/models/FormSchemas';
 
 const SALT_ROUNDS = 10;
 
 export const createUser = async (
-  value: z.infer<typeof UserCreateFormSchema>,
+  values: z.infer<typeof UserCreateFormSchema>
 ) => {
-  const validatedFields = UserCreateFormSchema.safeParse(value);
+  const validatedFields = UserCreateFormSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return { error: 'Invalid data.' };
@@ -49,5 +51,23 @@ export const createUser = async (
   } catch (error) {
     console.error('Error creating user:', error);
     return { error: 'Something went wrong.' };
+  }
+};
+
+export const loginUser = async (values: z.infer<typeof LoginFormSchema>) => {
+  const validatedFields = UserCreateFormSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid data.' };
+  }
+
+  const { username, password } = validatedFields.data;
+
+  try {
+    await signIn('credentials', { username, password });
+    return { success: 'You are logged in!' };
+  } catch (error) {
+    console.error('error login in user: ', error);
+    return { error: 'Wrong credentials.' };
   }
 };

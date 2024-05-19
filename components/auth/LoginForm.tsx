@@ -3,8 +3,10 @@
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 import { LoginFormSchema } from '@/models/FormSchemas';
+import { loginUser } from '@/actions/auth';
 
 import {
   Form,
@@ -19,6 +21,8 @@ import { FormInput } from '@/components/form/FormInput';
 import { FormButton } from '@/components/form/FormButton';
 
 export const LoginForm = () => {
+  const [error, setError] = useState<string | undefined>('');
+  const [success, setSuccess] = useState<string | undefined>('');
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
@@ -28,8 +32,18 @@ export const LoginForm = () => {
     mode: 'onChange',
   });
 
-  const onSubmit = (values: z.infer<typeof LoginFormSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof LoginFormSchema>) => {
+    const result = await loginUser(values);
+    if (result.error) {
+      form.reset();
+      setSuccess(result.success);
+      setError(undefined);
+      setTimeout(() => {
+        setSuccess(undefined);
+      }, 3000);
+    } else {
+      setError(result.error);
+    }
   };
 
   const currentHour = new Date().getHours();
