@@ -4,6 +4,7 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 
 import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
 
 import { getUserByUsername, insertUser } from '@/data/user';
 import { getRoles } from '@/data/roles';
@@ -55,7 +56,7 @@ export const createUser = async (
 };
 
 export const loginUser = async (values: z.infer<typeof LoginFormSchema>) => {
-  const validatedFields = UserCreateFormSchema.safeParse(values);
+  const validatedFields = LoginFormSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return { error: 'Invalid data.' };
@@ -64,10 +65,18 @@ export const loginUser = async (values: z.infer<typeof LoginFormSchema>) => {
   const { username, password } = validatedFields.data;
 
   try {
-    await signIn('credentials', { username, password });
+    await signIn('credentials', { username, password, redirectTo: '/' });
     return { success: 'You are logged in!' };
   } catch (error) {
-    console.error('error login in user: ', error);
-    return { error: 'Wrong credentials.' };
+    if (error instanceof AuthError) {
+      if (error.type === 'CredentialsSignin') {
+        return { error: 'Wrong credentials.' };
+      }
+
+      console.error('error login in user: ', error);
+      return { error: 'Something went wrong.' };
+    }
+
+    throw error;
   }
 };

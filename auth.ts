@@ -7,6 +7,15 @@ import { getUserByUsername } from '@/data/user';
 
 import { LoginFormSchema } from '@/models/FormSchemas';
 
+declare module 'next-auth' {
+  interface User {
+    username: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+  }
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -29,7 +38,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             );
 
             if (passwordsMatch) {
-              return user;
+              const { hashedPassword, ...userData } = user;
+              return userData;
             }
           }
         }
