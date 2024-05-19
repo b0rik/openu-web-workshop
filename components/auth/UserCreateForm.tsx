@@ -23,10 +23,7 @@ import { FormSelect } from '../form/FormSelect';
 import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
 
-// fetch from db?
-const ROLES = ['role1', 'role2', 'role3'];
-
-export const UserCreateForm = () => {
+export const UserCreateForm = ({ roles }: { roles: string[] }) => {
   const [success, setSuccess] = useState<string | undefined>('');
   const [error, setError] = useState<string | undefined>('');
   const form = useForm<z.infer<typeof UserCreateFormSchema>>({
@@ -86,7 +83,7 @@ export const UserCreateForm = () => {
                     <FormSelect
                       field={field}
                       placeholder='Select a role'
-                      roles={ROLES}
+                      roles={roles}
                     />
                   </FormControl>
                   {/* <FormMessage /> */}
