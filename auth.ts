@@ -29,18 +29,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (validatedFields.success) {
           const { username, password } = validatedFields.data;
 
-          const user = await getUserByUsername(username);
+          try {
+            const user = await getUserByUsername(username);
+            if (user) {
+              const passwordsMatch = await bcrypt.compare(
+                password,
+                user.hashedPassword
+              );
 
-          if (user) {
-            const passwordsMatch = await bcrypt.compare(
-              password,
-              user.hashedPassword
-            );
-
-            if (passwordsMatch) {
-              const { hashedPassword, ...userData } = user;
-              return userData;
+              if (passwordsMatch) {
+                const { hashedPassword, ...userData } = user;
+                return userData;
+              }
             }
+          } catch (error) {
+            console.error('failed authorizing user.', error);
+            throw error;
           }
         }
 

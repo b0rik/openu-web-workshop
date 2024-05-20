@@ -11,7 +11,7 @@ export const getUserByUsername = async (username: string) => {
 
     return result ? result[0] : null;
   } catch (error) {
-    console.error('Error getting user by username.');
+    console.error('Error getting user by username.', error);
     throw error;
   }
 };
@@ -20,7 +20,7 @@ export const insertUser = async (user: typeof usersTable.$inferInsert) => {
   try {
     await db.insert(usersTable).values(user);
   } catch (error) {
-    console.error('Error creating user.');
+    console.error('Error creating user.', error);
     throw error;
   }
 };

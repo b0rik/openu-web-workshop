@@ -6,7 +6,7 @@ export const getRoles = async () => {
     const result = await db.select().from(rolesTable);
     return result; // asusming there are always roles in the db
   } catch (error) {
-    console.error('Error getting roles.');
+    console.error('Error getting roles.', error);
     throw error;
   }
 };

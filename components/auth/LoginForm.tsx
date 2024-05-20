@@ -19,12 +19,10 @@ import {
 import { FormCardWrapper } from '@/components/form/FormCardWrapper';
 import { FormInput } from '@/components/form/FormInput';
 import { FormButton } from '@/components/form/FormButton';
-import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
 
 export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>('');
-  const [success, setSuccess] = useState<string | undefined>('');
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
@@ -35,15 +33,9 @@ export const LoginForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof LoginFormSchema>) => {
+    setError(undefined);
     const result = await loginUser(values);
-    if (result.success) {
-      form.reset();
-      setSuccess(result.success);
-      setError(undefined);
-      setTimeout(() => {
-        setSuccess(undefined);
-      }, 3000);
-    } else {
+    if (result?.error) {
       setError(result.error);
     }
   };
@@ -96,7 +88,6 @@ export const LoginForm = () => {
                 </FormItem>
               )}
             />
-            <FormSuccess message={success} />
             <FormError message={error} />
             <FormButton>Login</FormButton>
           </form>

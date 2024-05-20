@@ -65,8 +65,11 @@ export const loginUser = async (values: z.infer<typeof LoginFormSchema>) => {
   const { username, password } = validatedFields.data;
 
   try {
-    await signIn('credentials', { username, password, redirectTo: '/' });
-    return { success: 'You are logged in!' };
+    await signIn('credentials', {
+      username,
+      password,
+      redirectTo: '/',
+    });
   } catch (error) {
     if (error instanceof AuthError) {
       if (error.type === 'CredentialsSignin') {
