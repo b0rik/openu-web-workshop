@@ -25,13 +25,13 @@ export const createUser = async (
   const { firstName, lastName, role, username, password } =
     validatedFields.data;
 
-  const roleNames = await getRoles();
-
-  if (!roleNames.some(({ name: roleName }) => role === roleName)) {
-    return { error: 'Invalid data.' };
-  }
-
   try {
+    const roleNames = await getRoles();
+
+    if (!roleNames.some(({ name: roleName }) => role === roleName)) {
+      return { error: 'Invalid data.' };
+    }
+
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     const userExists = await getUserByUsername(username);

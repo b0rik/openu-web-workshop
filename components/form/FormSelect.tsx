@@ -18,36 +18,40 @@ import { ErrorMessage } from '@hookform/error-message';
 interface FormSelectProps {
   field: ControllerRenderProps<any, any>;
   placeholder?: string;
-  roles?: string[];
+  options?: string[];
 }
 
 export const FormSelect = ({
   field,
   placeholder = '',
-  roles = [],
+  options = [],
 }: FormSelectProps) => {
   const { invalid, name, isDirty } = useFormField();
   const { errors } = useFormState(field);
   const errorIdPrefix = useId();
-  const roleIdPrefix = useId();
+  const optionIdPrefix = useId();
 
   return (
     <div>
-      <Select onValueChange={field.onChange} defaultValue={field.value}>
+      <Select
+        onValueChange={field.onChange}
+        defaultValue={field.value}
+        value={field.value}
+      >
         <SelectTrigger
           className={cn(
             'rounded-full border-sky-300 focus:ring-sky-600',
             (isDirty || invalid) &&
-              (invalid ? 'border-red-400' : 'border-green-400'),
+              (invalid ? 'border-red-400' : 'border-green-400')
           )}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          {roles.map((role, index) => {
+          {options.map((option, index) => {
             return (
-              <SelectItem key={roleIdPrefix + index} value={role}>
-                {role}
+              <SelectItem key={optionIdPrefix + index} value={option}>
+                {option}
               </SelectItem>
             );
           })}

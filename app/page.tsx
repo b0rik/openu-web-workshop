@@ -9,12 +9,15 @@ const page = async () => {
 
   if (!session) return <div>Not authenticated</div>; //test
   return (
-    <main className='flex flex-col items-center'>
+    <div className='flex flex-col items-center'>
       <Link className='underline' href='/auth/login'>
         Login page
       </Link>
       <Link className='underline' href='/auth/create-user'>
         Create user page
+      </Link>
+      <Link className='underline' href='/patients/create'>
+        Create patient page
       </Link>
       <PatientCard />
       <TaskCard />
@@ -26,7 +29,7 @@ const page = async () => {
       >
         <button type='submit'>Sign Out</button>
       </form>
-    </main>
+    </div>
   );
 };
 

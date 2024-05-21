@@ -20,7 +20,7 @@ export const insertUser = async (user: typeof usersTable.$inferInsert) => {
   try {
     await db.insert(usersTable).values(user);
   } catch (error) {
-    console.error('Error creating user.', error);
+    console.error('Error inserting user.', error);
     throw error;
   }
 };

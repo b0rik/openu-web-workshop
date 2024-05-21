@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 import { Input } from '@/components/ui/input';
 import { InputValidIcon } from '@/components/form/InputValidIcon';
-import { useFormField } from '../ui/form';
+import { useFormField } from '@/components/ui/form';
 import { ErrorMessage } from '@hookform/error-message';
 
 interface FormInputProps {
@@ -32,7 +32,7 @@ export const FormInput = ({
           className={cn(
             'rounded-full border-sky-300 focus-visible:ring-sky-600',
             (isDirty || invalid) &&
-              (invalid ? 'border-red-400' : 'border-green-400'),
+              (invalid ? 'border-red-400' : 'border-green-400')
           )}
           placeholder={placeholder}
           type={type}

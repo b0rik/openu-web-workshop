@@ -6,10 +6,10 @@ import {
   containsSymbol,
   containsUpperLetter,
   containsWhitespace,
+  isDigits,
 } from '@/lib/utils';
 
-// TODO:
-// max length const
+const MAX_LENGTH = 50;
 
 export const LoginFormSchema = z.object({
   username: z.string().min(1, { message: 'username required.' }),
@@ -18,20 +18,29 @@ export const LoginFormSchema = z.object({
 
 export const UserCreateFormSchema = z
   .object({
-    firstName: z.string().min(1, { message: 'first name required.' }).max(50, {
-      message: 'first name is too long, max 50 allowed.',
-    }),
-    lastName: z.string().min(1, { message: 'last name required' }).max(50, {
-      message: 'last name is too long, max 50 allowed.',
-    }),
-    username: z.string().min(1, { message: 'user name required' }).max(50, {
-      message: 'username is too long, max 50 allowed.',
-    }),
+    firstName: z
+      .string()
+      .min(1, { message: 'first name required.' })
+      .max(MAX_LENGTH, {
+        message: `first name is too long, max ${MAX_LENGTH} allowed.`,
+      }),
+    lastName: z
+      .string()
+      .min(1, { message: 'last name required' })
+      .max(MAX_LENGTH, {
+        message: `last name is too long, max ${MAX_LENGTH} allowed.`,
+      }),
+    username: z
+      .string()
+      .min(1, { message: 'user name required' })
+      .max(MAX_LENGTH, {
+        message: `username is too long, max ${MAX_LENGTH} allowed.`,
+      }),
     password: z
       .string()
-      .min(8, { message: 'password must containt at least 8 characters.' })
-      .max(50, {
-        message: 'password is too long, max 50 allowed.',
+      .min(8, { message: `password must containt at least 8 characters.` })
+      .max(MAX_LENGTH, {
+        message: `password is too long, max ${MAX_LENGTH} allowed.`,
       }),
     confirmPassword: z.string(),
     role: z.string().min(1, 'role is required.'),
@@ -60,3 +69,44 @@ export const UserCreateFormSchema = z
     message: 'passwords dont match.',
     path: ['confirmPassword'],
   });
+
+export const PatientCreateFormSchema = z.object({
+  id: z
+    .string()
+    .min(1, { message: 'id required.' })
+    .length(9, { message: 'id length must be 9.' })
+    .refine(isDigits, { message: 'id must containt only numbers.' }),
+  firstName: z
+    .string()
+    .min(1, { message: 'first name required.' })
+    .max(MAX_LENGTH, {
+      message: `first name is too long, max ${MAX_LENGTH} allowed.`,
+    }),
+  lastName: z
+    .string()
+    .min(1, { message: 'last name required' })
+    .max(MAX_LENGTH, {
+      message: `last name is too long, max ${MAX_LENGTH} allowed.`,
+    }),
+  dateOfBirth: z
+    .string()
+    .date()
+    .refine(
+      (val) => {
+        return new Date(val) <= new Date();
+      },
+      { message: 'birth date invalid.' }
+    ),
+  unitName: z
+    .string()
+    .min(1, { message: 'unit required.' })
+    .max(MAX_LENGTH, {
+      message: `unit name is to long, max ${MAX_LENGTH} allowed.`,
+    }),
+  roomNumber: z
+    .string()
+    .max(MAX_LENGTH, {
+      message: `room number is to long, max ${MAX_LENGTH} allowed.`,
+    })
+    .refine(isDigits, { message: 'room number must contain only numbers.' }),
+});

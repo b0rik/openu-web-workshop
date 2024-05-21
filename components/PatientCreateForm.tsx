@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
-import { UserCreateFormSchema } from '@/models/FormSchemas';
-import { createUser } from '@/actions/auth';
+import { PatientCreateFormSchema } from '@/models/FormSchemas';
+import { createPatient } from '@/actions/patients';
 
 import {
   Form,
@@ -22,26 +22,28 @@ import { FormInput } from '@/components/form/FormInput';
 import { FormSelect } from '@/components/form/FormSelect';
 import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
+import { FormDatePicker } from '@/components/form/FormDatePicker';
 
-export const UserCreateForm = ({ roles }: { roles: string[] }) => {
+const PatientCreateForm = ({ units }: { units: string[] }) => {
   const [success, setSuccess] = useState<string | undefined>('');
   const [error, setError] = useState<string | undefined>('');
-  const form = useForm<z.infer<typeof UserCreateFormSchema>>({
-    resolver: zodResolver(UserCreateFormSchema),
+
+  const form = useForm<z.infer<typeof PatientCreateFormSchema>>({
+    resolver: zodResolver(PatientCreateFormSchema),
     defaultValues: {
+      id: '',
       firstName: '',
       lastName: '',
-      role: '',
-      username: '',
-      password: '',
-      confirmPassword: '',
+      dateOfBirth: undefined,
+      unitName: '',
+      roomNumber: '',
     },
     mode: 'onChange',
     criteriaMode: 'all',
   });
 
-  const onSubmit = async (values: z.infer<typeof UserCreateFormSchema>) => {
-    const result = await createUser(values);
+  const onSubmit = async (values: z.infer<typeof PatientCreateFormSchema>) => {
+    const result = await createPatient(values);
 
     if (result.success) {
       form.reset();
@@ -50,24 +52,25 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
       setTimeout(() => {
         setSuccess(undefined);
       }, 3000);
+      // redirect to patients list?
     } else {
       setError(result.error);
     }
   };
 
   return (
-    <FormCardWrapper title='Create a user'>
+    <FormCardWrapper title='Create a patient'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='grid gap-6 md:grid-cols-2'>
             <FormField
               control={form.control}
-              name='username'
+              name='id'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>ID</FormLabel>
                   <FormControl>
-                    <FormInput field={field} placeholder='Enter username' />
+                    <FormInput field={field} placeholder='Enter id' />
                   </FormControl>
                   {/* <FormMessage /> */}
                 </FormItem>
@@ -75,49 +78,15 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
             />
             <FormField
               control={form.control}
-              name='role'
+              name='unitName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>Unit</FormLabel>
                   <FormControl>
                     <FormSelect
                       field={field}
-                      placeholder='Select a role'
-                      options={roles}
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <FormInput
-                      field={field}
-                      placeholder='Enter password'
-                      type='password'
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='confirmPassword'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm password</FormLabel>
-                  <FormControl>
-                    <FormInput
-                      field={field}
-                      placeholder='Re-enter password'
-                      type='password'
+                      placeholder='Select a unit'
+                      options={units}
                     />
                   </FormControl>
                   {/* <FormMessage /> */}
@@ -150,6 +119,32 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name='roomNumber'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Room number</FormLabel>
+                  <FormControl>
+                    <FormInput field={field} placeholder='Enter room number' />
+                  </FormControl>
+                  {/* <FormMessage /> */}
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='dateOfBirth'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date of birth</FormLabel>
+                  <FormControl>
+                    <FormDatePicker field={field} />
+                  </FormControl>
+                  {/* <FormMessage /> */}
+                </FormItem>
+              )}
+            />
           </div>
           <FormSuccess message={success} />
           <FormError message={error} />
@@ -159,3 +154,5 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
     </FormCardWrapper>
   );
 };
+
+export default PatientCreateForm;
