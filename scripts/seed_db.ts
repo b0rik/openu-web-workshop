@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { faker } from '@faker-js/faker';
 import bcrypt from 'bcryptjs';
 
@@ -164,7 +166,7 @@ const usersPerUnit: (typeof usersPerUnitTable.$inferInsert)[] = users.map(
   ({ username }) => ({
     userUsername: username,
     unitName: faker.helpers.arrayElement(units).name,
-  }),
+  })
 );
 
 import { tasksTable } from '@/models/drizzle/tasksSchema';
