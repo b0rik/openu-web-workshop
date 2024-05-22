@@ -10,6 +10,7 @@ import { taskCategoriesTable } from '@/models/drizzle/taskCategoriesSchema';
 import { taskSubCategoriesTable } from '@/models/drizzle/taskSubCategoriesSchema';
 import { taskStatusTable } from '@/models/drizzle/taskStatusSchema';
 import { usersTable } from '@/models/drizzle/usersSchema';
+import { patientsTable } from './patientsSchema';
 
 export const tasksTable = pgTable('tasks', {
   id: uuid('id').defaultRandom().primaryKey().notNull().unique(),
@@ -24,8 +25,11 @@ export const tasksTable = pgTable('tasks', {
     .references(() => taskStatusTable.name)
     .notNull(),
   assignedToUser: varchar('assigned_to_user').references(
-    () => usersTable.username,
+    () => usersTable.username
   ),
   dueDate: date('due_date', { mode: 'date' }),
   isUrgent: boolean('is_urgent').notNull(),
+  patientId: varchar('patient_id')
+    .references(() => patientsTable.id)
+    .notNull(),
 });

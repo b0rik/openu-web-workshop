@@ -1,5 +1,5 @@
 {
-  "id": "034a9c62-e59e-4a43-a6a9-57fad4cc96c0",
+  "id": "67f5349c-bc2f-4179-b90e-abd3fc92aef2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -158,7 +158,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "category_name": {
           "name": "category_name",
@@ -180,7 +181,7 @@
         },
         "status": {
           "name": "status",
-          "type": "text",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -200,7 +201,13 @@
           "name": "is_urgent",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -256,6 +263,19 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "tasks_patient_id_patients_id_fk": {
+          "name": "tasks_patient_id_patients_id_fk",
+          "tableFrom": "tasks",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -277,12 +297,6 @@
           "name": "name",
           "type": "varchar(50)",
           "primaryKey": true,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
           "notNull": true
         }
       },
@@ -308,10 +322,30 @@
           "type": "varchar(50)",
           "primaryKey": true,
           "notNull": true
+        },
+        "category_name": {
+          "name": "category_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "task_sub_categories_category_name_task_categories_name_fk": {
+          "name": "task_sub_categories_category_name_task_categories_name_fk",
+          "tableFrom": "task_sub_categories",
+          "tableTo": "task_categories",
+          "columnsFrom": [
+            "category_name"
+          ],
+          "columnsTo": [
+            "name"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "task_sub_categories_name_unique": {
