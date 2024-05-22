@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 
 import { getUserByUsername, insertUser } from '@/data/user';
@@ -82,4 +82,8 @@ export const loginUser = async (values: z.infer<typeof LoginFormSchema>) => {
 
     throw error;
   }
+};
+
+export const logoutUser = async () => {
+  await signOut();
 };
