@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   Card,
@@ -11,10 +11,9 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Bell, Bed, Calendar, UserRound, Plus } from 'lucide-react';
-import {differenceInYears,differenceInDays } from 'date-fns';
+import { differenceInYears, differenceInDays } from 'date-fns';
 import { useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
-
 
 const mockPatientTasks = [
   { urgent: false },
@@ -26,17 +25,17 @@ const mockPatientTasks = [
   { urgent: false },
 ];
 
-const hospitalizationDays = (date: Date):number => differenceInDays(new Date() ,date);
-const age = (dateOfBirth: Date):number => differenceInYears(new Date() ,dateOfBirth);
+const hospitalizationDays = (date: Date): number =>
+  differenceInDays(new Date(), date);
+const age = (dateOfBirth: Date): number =>
+  differenceInYears(new Date(), dateOfBirth);
 
-
-export const PatientCard = ({patient}: {patient: typeof patientsTable.$inferSelect}) => {
-  const { id,
-    firstName,
-    lastName,
-    unitName,
-    roomNumber} =
-  patient; 
+export const PatientCard = ({
+  patient,
+}: {
+  patient: typeof patientsTable.$inferSelect;
+}) => {
+  const { id, firstName, lastName, unitName, roomNumber } = patient;
 
   // get for every user? seems wasteful fetches how to improve?
   const tasks = mockPatientTasks;
@@ -48,7 +47,7 @@ export const PatientCard = ({patient}: {patient: typeof patientsTable.$inferSele
       <CardHeader
         className={cn(
           'relative flex flex-row items-center justify-between rounded-t-lg border-b-4 p-3 text-white',
-          isUrgent ? 'border-red-500 bg-red-700' : 'border-sky-500 bg-sky-700',
+          isUrgent ? 'border-red-500 bg-red-700' : 'border-sky-500 bg-sky-700'
         )}
       >
         <div className='flex items-center gap-2'>
@@ -80,7 +79,8 @@ export const PatientCard = ({patient}: {patient: typeof patientsTable.$inferSele
           <Separator orientation='vertical' className='h-auto' />
           {roomNumber && (
             <>
-              <Bed /><p>{roomNumber}</p>
+              <Bed />
+              <p>{roomNumber}</p>
             </>
           )}
         </div>
