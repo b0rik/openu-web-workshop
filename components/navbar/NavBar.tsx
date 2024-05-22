@@ -2,8 +2,9 @@ import Link from 'next/link';
 
 import { auth } from '@/auth';
 
-import { LogoutButton } from '@/components/auth/LogoutButton';
+import { NavMenu } from '@/components/navbar/NavMenu';
 import { NavLink } from '@/components/navbar/NavLink';
+import { LogoutButton } from '@/components/auth/LogoutButton';
 
 import { Hospital } from 'lucide-react';
 
@@ -31,6 +32,7 @@ export const NavBar = async () => {
           <NavLink href='/auth/login'>Login</NavLink>
         )}
       </ul>
+      {/* <NavMenu /> */}
     </nav>
   );
 };
