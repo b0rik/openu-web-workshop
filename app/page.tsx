@@ -1,4 +1,3 @@
-import { PatientCard } from '@/components/PatientCard';
 import { TaskCard } from '@/components/TaskCard';
 import Link from 'next/link';
 
@@ -19,7 +18,6 @@ const page = async () => {
       <Link className='underline' href='/patients/create'>
         Create patient page
       </Link>
-      <PatientCard />
       <TaskCard />
       <form //test
         action={async () => {
