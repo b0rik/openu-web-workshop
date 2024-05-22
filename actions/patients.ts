@@ -2,6 +2,8 @@
 
 import { z } from 'zod';
 
+import { revalidatePath } from 'next/cache';
+
 import { getPatientById, insertPatient } from '@/data/patients';
 import { getUnits } from '@/data/units';
 
@@ -48,6 +50,8 @@ export const createPatient = async (
       unitName,
       roomNumber,
     });
+
+    revalidatePath('/patients');
 
     return { success: 'Patient created.' };
   } catch (error) {
