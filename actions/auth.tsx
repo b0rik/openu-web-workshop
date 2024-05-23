@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 
-import { getUserByUsername, insertUser } from '@/data/user';
+import { getUserByUsername, insertUser } from '@/data/users';
 import { getRoles } from '@/data/roles';
 
 import { UserCreateFormSchema, LoginFormSchema } from '@/models/FormSchemas';

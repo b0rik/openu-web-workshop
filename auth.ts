@@ -3,7 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 
 import bcrypt from 'bcryptjs';
 
-import { getUserByUsername } from '@/data/user';
+import { getUserByUsername } from '@/data/users';
 
 import { LoginFormSchema } from '@/models/FormSchemas';
 
