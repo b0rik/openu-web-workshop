@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-interface NavLinkProps {
+type NavLinkProps = {
   href: string;
   children: React.ReactNode;
-}
+};
 
 export const NavLink = ({ href, children }: NavLinkProps) => {
   return (

@@ -1,10 +1,10 @@
 import { CircleCheck } from 'lucide-react';
 import { CircleX } from 'lucide-react';
 
-interface InputValidIconProps {
+type InputValidIconProps = {
   show?: boolean;
   isValid?: boolean;
-}
+};
 
 export const InputValidIcon = ({
   show = false,

@@ -7,11 +7,12 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 
-interface FormCardWrapperProps {
+type FormCardWrapperProps = {
   title: string;
   description?: string;
   children?: React.ReactNode;
-}
+};
+
 export const FormCardWrapper = ({
   title,
   description,

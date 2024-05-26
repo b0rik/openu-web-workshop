@@ -10,9 +10,9 @@ import { LogoutButton } from '@/components/auth/LogoutButton';
 import { NavLink } from '@/components/navbar/NavLink';
 
 import { Menu } from 'lucide-react';
-interface NavMenuProps {
+type NavMenuProps = {
   navLinks: { title: string; href: string }[];
-}
+};
 export const NavMenu = async ({ navLinks }: NavMenuProps) => {
   const session = await auth();
 
