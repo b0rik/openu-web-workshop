@@ -6,6 +6,21 @@ import { Hospital } from 'lucide-react';
 
 const appName = 'Meditask Manager';
 
+const navLinks = [
+  {
+    title: 'Home',
+    href: '/',
+  },
+  {
+    title: 'Patients',
+    href: '/patients',
+  },
+  {
+    title: 'Tasks',
+    href: '/tasks',
+  },
+];
+
 export const NavBar = async () => {
   return (
     <nav className='flex h-16 w-full items-center justify-between bg-sky-800 px-4 text-white'>
@@ -13,7 +28,7 @@ export const NavBar = async () => {
         <Hospital className='h-10 w-10' />
         <span className='text-xl font-bold tracking-wide'>{appName}</span>
       </Link>
-      <NavMenu />
+      <NavMenu navLinks={navLinks} />
     </nav>
   );
 };

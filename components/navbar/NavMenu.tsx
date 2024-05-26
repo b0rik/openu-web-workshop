@@ -3,9 +3,6 @@ import { auth } from '@/auth';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
   SheetClose,
 } from '@/components/ui/sheet';
@@ -13,8 +10,10 @@ import { LogoutButton } from '@/components/auth/LogoutButton';
 import { NavLink } from '@/components/navbar/NavLink';
 
 import { Menu } from 'lucide-react';
-
-export const NavMenu = async () => {
+interface NavMenuProps {
+  navLinks: { title: string; href: string }[];
+}
+export const NavMenu = async ({ navLinks }: NavMenuProps) => {
   const session = await auth();
 
   return (
@@ -22,9 +21,11 @@ export const NavMenu = async () => {
       <div className='hidden items-center gap-6 md:flex'>
         {session ? (
           <>
-            <NavLink href='/'>Home</NavLink>
-            <NavLink href='/patients'>Patients</NavLink>
-            <NavLink href='/tasks'>Tasks</NavLink>
+            {navLinks.map((link, i) => (
+              <NavLink href={link.href} key={i}>
+                {link.title}
+              </NavLink>
+            ))}
             <LogoutButton />
           </>
         ) : (
@@ -36,20 +37,16 @@ export const NavMenu = async () => {
           <Menu />
         </SheetTrigger>
         <SheetContent className='md:hidden'>
-          <div className='flex flex-col gap-6'>
+          <div className='mt-6 flex flex-col gap-6'>
             {session ? (
               <>
-                <NavLink href='/'>
-                  <SheetClose>Home</SheetClose>
-                </NavLink>
-                <NavLink href='/patients'>
-                  <SheetClose>Patients</SheetClose>
-                </NavLink>
-                <NavLink href='/tasks'>
-                  <SheetClose>Tasks</SheetClose>
-                </NavLink>
+                {navLinks.map((link, i) => (
+                  <NavLink key={i} href={link.href}>
+                    <SheetClose>{link.title}</SheetClose>
+                  </NavLink>
+                ))}
                 <SheetClose>
-                  <LogoutButton />
+                  <LogoutButton className='w-full' />
                 </SheetClose>
               </>
             ) : (
