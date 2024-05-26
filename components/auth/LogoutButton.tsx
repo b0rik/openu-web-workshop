@@ -1,11 +1,18 @@
+'use client';
+
 import { logoutUser } from '@/actions/auth';
 
 import { Button } from '@/components/ui/button';
 
-export const LogoutButton = () => {
+export const LogoutButton = ({ className = '' }: { className?: string }) => {
   return (
-    <form action={logoutUser}>
-      <Button>Logout</Button>
-    </form>
+    <Button
+      onClick={async () => {
+        await logoutUser();
+      }}
+      className={className}
+    >
+      Logout
+    </Button>
   );
 };
