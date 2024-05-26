@@ -1,6 +1,8 @@
 import { auth } from '@/auth';
 
 const loginPath = '/auth/login';
+const createUserPath = '/auth/create-user';
+const createPatientPath = '/patients/create';
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
@@ -15,6 +17,14 @@ export default auth((req) => {
 
   if (!isLoggedIn) {
     return Response.redirect(new URL('/auth/login', req.url));
+  }
+
+  if (path === createUserPath && !req.auth?.user?.canManageUsers) {
+    return Response.redirect(new URL('/', req.url));
+  }
+
+  if (path === createPatientPath && !req.auth?.user?.canManagePatients) {
+    return Response.redirect(new URL('/', req.url));
   }
 });
 
