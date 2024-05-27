@@ -179,6 +179,7 @@ const createTask = () => {
     subCategoryName: taskSubCategory.name,
     status: faker.helpers.arrayElement(taskStatus).name,
     isUrgent: faker.helpers.maybe(() => true) || false,
+    patientId: faker.helpers.arrayElement(patients).id,
   };
 
   if (faker.helpers.maybe(() => true, { probability: 0.8 })) {

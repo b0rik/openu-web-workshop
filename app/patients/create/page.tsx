@@ -1,4 +1,4 @@
-import PatientCreateForm from '@/components/PatientCreateForm';
+import PatientCreateForm from '@/components/patient-create-form/PatientCreateForm';
 import { getUnits } from '@/data/units';
 
 const PatientCreatePage = async () => {

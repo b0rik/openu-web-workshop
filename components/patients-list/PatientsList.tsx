@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
 import { PatientCard } from '@/components/PatientCard';
-import { ScrollArea } from "@/components/ui/scrollarea";
+import { ScrollArea } from '@/components/ui/scrollarea';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Dialog,
   DialogContent,
@@ -17,62 +17,75 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import {Button} from "@/components/ui/button";
-import { Filter, Search, Plus} from 'lucide-react';
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Filter, Search, Plus } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
+import { useSession } from 'next-auth/react';
 
-export const PatientsList = ({allPatients}: {allPatients: typeof patientsTable.$inferSelect[]}) => {
+export const PatientsList = ({
+  allPatients,
+}: {
+  allPatients: (typeof patientsTable.$inferSelect)[];
+}) => {
   const [filter, setFilter] = useState('Name');
   const [searchInput, setSearchInput] = useState('');
   const [patients, setPatients] = useState(allPatients);
+  const session = useSession();
 
   return (
-    <div>
-        <Button asChild className='mb-5'>
-          <Link href="/auth/login">logout</Link>
-        </Button>
+    <div className='rounded-xl bg-cyan-50 p-10'>
+      <div className='flex justify-between text-sky-700'>
+        <p className='flex items-center text-xl font-bold tracking-wide'>
+          Internal Medicine A
+        </p>
+        {session?.data?.user?.canManagePatients && (
+          <Button asChild>
+            <Link href='/patients/create'>
+              New
+              <Plus />
+            </Link>
+          </Button>
+        )}
+      </div>
 
-      <div className="bg-cyan-50 p-10 rounded-xl">
-        <div className="grid-rows-4 grid-flow-col gap-4">
-          
-
-          <div className="flex justify-between text-sky-700">
-            <p className="font-bold text-xl tracking-wide flex items-center">Internal Medicine A</p>
-            <Button asChild>
-              <Link href="/create-patient">New<Plus></Plus></Link>
-            </Button>
-          </div>
+      <div className='mb-5 mt-10 flex items-center text-sky-700'>
+        <div className='flex items-center'>
+          <DropdownMenu>
+            <DropdownMenuTrigger id='filter-dropdown'>
+              <Filter></Filter>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setFilter('ID')}>
+                ID
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilter('Name')}>
+                Name
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilter('Room')}>
+                Room
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Label htmlFor='filter-dropdown'>Filter</Label>
         </div>
-      
-
-        <div className="flex text-sky-700 items-center mt-10 mb-5">
-          <div className="flex items-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger id="filter-dropdown"><Filter></Filter></DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFilter('ID')}>ID</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter('Name')}>Name</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter('Room')}>Room</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Label htmlFor="filter-dropdown">Filter</Label>
-          </div>
-          <div className="flex items-center ml-8">
-            <Dialog>
-              <DialogTrigger id="search-dialog"><Search></Search></DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Filter By {filter}</DialogTitle>
-                  <DialogDescription>
+        <div className='ml-8 flex items-center'>
+          <Dialog>
+            <DialogTrigger id='search-dialog'>
+              <Search></Search>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Filter By {filter}</DialogTitle>
+                <DialogDescription>
                   <Input
-                    id="search-input"
-                    className="col-span-3"
+                    id='search-input'
+                    className='col-span-3'
                     value={searchInput}
                     onChange={(event) => {
                       const value = event.target.value.trim();
@@ -86,9 +99,18 @@ export const PatientsList = ({allPatients}: {allPatients: typeof patientsTable.$
                             case 'ID':
                               return patient.id.includes(value);
                             case 'Name':
-                              return (patient.firstName + " " + patient.lastName).toLowerCase().includes(value.toLowerCase());
+                              return (
+                                patient.firstName +
+                                ' ' +
+                                patient.lastName
+                              )
+                                .toLowerCase()
+                                .includes(value.toLowerCase());
                             case 'Room':
-                              return parseInt(patient.roomNumber || '0') === parseInt(value);
+                              return (
+                                parseInt(patient.roomNumber || '0') ===
+                                parseInt(value)
+                              );
                             default:
                               return true;
                           }
@@ -96,28 +118,23 @@ export const PatientsList = ({allPatients}: {allPatients: typeof patientsTable.$
                       );
                     }}
                   />
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
-            <Label htmlFor="search-dialog">Search</Label>
-          </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+          <Label htmlFor='search-dialog'>Search</Label>
         </div>
-        
-
-
-        <ScrollArea className="h-screen rounded-md">
-          <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-            {allPatients.map((patient) => (
-              <div key={patient.id}>
-                  <PatientCard patient={patient} />
-              </div>
-              ))}
-          </div>
-        </ScrollArea>
       </div>
+
+      <ScrollArea className='h-screen rounded-md'>
+        <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
+          {allPatients.map((patient) => (
+            <div key={patient.id}>
+              <PatientCard patient={patient} />
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
-  )
+  );
 };
-
-

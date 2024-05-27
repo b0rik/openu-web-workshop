@@ -10,11 +10,11 @@ import { InputValidIcon } from '@/components/form/InputValidIcon';
 import { useFormField } from '@/components/ui/form';
 import { ErrorMessage } from '@hookform/error-message';
 
-interface FormInputProps {
+type FormInputProps = {
   field: ControllerRenderProps<any, any>;
   placeholder?: string;
   type?: 'text' | 'password' | 'email' | 'number';
-}
+};
 
 export const FormInput = ({
   field,

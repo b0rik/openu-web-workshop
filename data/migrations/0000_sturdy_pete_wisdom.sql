@@ -24,25 +24,26 @@ CREATE TABLE IF NOT EXISTS "task_categories" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tasks" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"category_name" varchar NOT NULL,
 	"sub_category_name" varchar NOT NULL,
 	"comments" text,
-	"status" text NOT NULL,
+	"status" varchar NOT NULL,
 	"assigned_to_user" varchar,
 	"due_date" date,
-	"is_urgent" boolean,
+	"is_urgent" boolean NOT NULL,
+	"patient_id" varchar NOT NULL,
 	CONSTRAINT "tasks_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "task_status" (
 	"name" varchar(50) PRIMARY KEY NOT NULL,
-	"description" text NOT NULL,
 	CONSTRAINT "task_status_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "task_sub_categories" (
 	"name" varchar(50) PRIMARY KEY NOT NULL,
+	"category_name" varchar NOT NULL,
 	CONSTRAINT "task_sub_categories_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
@@ -92,6 +93,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "tasks" ADD CONSTRAINT "tasks_assigned_to_user_users_username_fk" FOREIGN KEY ("assigned_to_user") REFERENCES "users"("username") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "tasks" ADD CONSTRAINT "tasks_patient_id_patients_id_fk" FOREIGN KEY ("patient_id") REFERENCES "patients"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "task_sub_categories" ADD CONSTRAINT "task_sub_categories_category_name_task_categories_name_fk" FOREIGN KEY ("category_name") REFERENCES "task_categories"("name") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

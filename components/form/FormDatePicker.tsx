@@ -16,9 +16,9 @@ import { ErrorMessage } from '@hookform/error-message';
 
 import { CalendarIcon } from 'lucide-react';
 
-interface FormDatePickerProps {
+type FormDatePickerProps = {
   field: ControllerRenderProps<any, any>;
-}
+};
 
 export const FormDatePicker = ({ field }: FormDatePickerProps) => {
   const [calendarOpen, setCalendarOpen] = useState(false);

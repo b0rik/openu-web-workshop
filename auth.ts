@@ -3,16 +3,21 @@ import Credentials from 'next-auth/providers/credentials';
 
 import bcrypt from 'bcryptjs';
 
-import { getUserByUsername } from '@/data/user';
+import { getUserByUsername, getUserByUsernameWithRole } from '@/data/users';
 
 import { LoginFormSchema } from '@/models/FormSchemas';
 
 declare module 'next-auth' {
   interface User {
+    canManageUsers: boolean;
+    canManagePatients: boolean;
+    canManageUnits: boolean;
+    canManageTaskSettings: boolean;
+    canManageTasks: boolean;
     username: string;
+    role: string;
     firstName: string;
     lastName: string;
-    role: string;
   }
 }
 
@@ -30,16 +35,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { username, password } = validatedFields.data;
 
           try {
-            const user = await getUserByUsername(username);
+            const user = await getUserByUsernameWithRole(username);
             if (user) {
               const passwordsMatch = await bcrypt.compare(
                 password,
-                user.hashedPassword
+                user.users.hashedPassword
               );
 
               if (passwordsMatch) {
-                const { hashedPassword, ...userData } = user;
-                return userData;
+                const { name, hashedPassword, ...userWithRole } = {
+                  ...user.users,
+                  ...user.roles,
+                };
+                return userWithRole;
               }
             }
           } catch (error) {
@@ -52,4 +60,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    jwt: ({ user, token }) => {
+      if (user) {
+        token.user = user;
+      }
+
+      return token;
+    },
+    session: ({ session, token }) => {
+      if (token.user) {
+        session.user = { ...session.user, ...token.user };
+      }
+
+      return session;
+    },
+  },
 });

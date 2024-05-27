@@ -15,11 +15,11 @@ import {
 import { useFormField } from '../ui/form';
 import { ErrorMessage } from '@hookform/error-message';
 
-interface FormSelectProps {
+type FormSelectProps = {
   field: ControllerRenderProps<any, any>;
   placeholder?: string;
   options?: string[];
-}
+};
 
 export const FormSelect = ({
   field,
