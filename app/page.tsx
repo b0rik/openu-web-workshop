@@ -18,7 +18,6 @@ const page = async () => {
       <Link className='underline' href='/patients/create'>
         Create patient page
       </Link>
-      <TaskCard />
       <form //test
         action={async () => {
           'use server';
