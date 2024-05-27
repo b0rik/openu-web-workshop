@@ -25,6 +25,7 @@ import { Filter, Search, Plus } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
+import { useSession } from 'next-auth/react';
 
 export const PatientsList = ({
   allPatients,
@@ -34,6 +35,7 @@ export const PatientsList = ({
   const [filter, setFilter] = useState('Name');
   const [searchInput, setSearchInput] = useState('');
   const [patients, setPatients] = useState(allPatients);
+  const session = useSession();
 
   return (
     <div className='rounded-xl bg-cyan-50 p-10'>
@@ -41,12 +43,14 @@ export const PatientsList = ({
         <p className='flex items-center text-xl font-bold tracking-wide'>
           Internal Medicine A
         </p>
-        <Button asChild>
-          <Link href='/patients/create'>
-            New
-            <Plus />
-          </Link>
-        </Button>
+        {session?.data?.user?.canManagePatients && (
+          <Button asChild>
+            <Link href='/patients/create'>
+              New
+              <Plus />
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className='mb-5 mt-10 flex items-center text-sky-700'>
