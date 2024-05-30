@@ -20,12 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Filter, Search, Plus } from 'lucide-react';
-<<<<<<< HEAD
 import React, { useState } from 'react';
-=======
-import Link from 'next/link';
-import React, { useContext, useState } from 'react';
->>>>>>> main
 import { patientsTable } from '@/models/drizzle/patientsSchema';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { useSession } from 'next-auth/react';
@@ -51,27 +46,10 @@ export const PatientsList = ({
   }
 
   return (
-<<<<<<< HEAD
     <div className='space-y-6 rounded-lg bg-sky-50 p-6'>
       <p className='text-xl font-bold tracking-wide text-sky-700'>
-        Internal Medicine A
+        {activeUnit}
       </p>
-=======
-    <div className='rounded-xl bg-cyan-50 p-10'>
-      <div className='flex justify-between text-sky-700'>
-        <p className='flex items-center text-xl font-bold tracking-wide'>
-          {activeUnit}
-        </p>
-        {session?.data?.user?.canManagePatients && (
-          <Button asChild>
-            <Link href='/patients/create'>
-              New
-              <Plus />
-            </Link>
-          </Button>
-        )}
-      </div>
->>>>>>> main
 
       <div className='flex items-center gap-8 text-sky-700'>
         <DropdownMenu>

@@ -3,6 +3,7 @@
 import { updateUserActiveUnit } from '@/data/users';
 import { getUnits } from '@/data/units';
 import { getUserByUsername, getUserUnits } from '@/data/users';
+import { revalidatePath } from 'next/cache';
 
 export const updateActiveUnit = async (username: string, unit: string) => {
   try {
@@ -27,6 +28,9 @@ export const updateActiveUnit = async (username: string, unit: string) => {
     }
 
     await updateUserActiveUnit(username, unit);
+
+    revalidatePath('/patients');
+    revalidatePath('/tasks');
 
     return { success: 'Updated active unit for user.' };
   } catch (error) {
