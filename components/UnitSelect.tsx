@@ -1,7 +1,5 @@
 'use client';
 
-import { useContext } from 'react';
-
 import {
   Select,
   SelectContent,
@@ -12,23 +10,25 @@ import {
   SelectGroup,
 } from '@/components/ui/select';
 
-import { ActiveUnitContext } from './ActiveUnitProvider';
+import { updateActiveUnit } from '@/actions/users';
+import { useSession } from 'next-auth/react';
 
 export const UnitSelect = ({ units }: { units: string[] }) => {
-  const { currentActiveUnit, setCurrentActiveUnit } =
-    useContext(ActiveUnitContext);
-  console.log(units.length);
+  const session = useSession();
+  const { activeUnit, username } = session.data?.user || {};
+
   return (
     <Select
-      onValueChange={(value) => {
-        setCurrentActiveUnit(value);
+      onValueChange={async (value) => {
+        // setCurrentActiveUnit(value);
+        // TODO: handle error
+        await updateActiveUnit(username as string, value);
+        await session.update({ activeUnit: value });
       }}
     >
       <SelectTrigger>
         <SelectValue
-          placeholder={
-            currentActiveUnit ? currentActiveUnit : 'No active unit.'
-          }
+          placeholder={activeUnit ? activeUnit : 'No active unit.'}
         />
       </SelectTrigger>
       <SelectContent>

@@ -63,3 +63,15 @@ export const getUserUnits = async (username: string) => {
     throw error;
   }
 };
+
+export const updateUserActiveUnit = async (username: string, unit: string) => {
+  try {
+    await db
+      .update(usersTable)
+      .set({ activeUnit: unit })
+      .where(eq(usersTable.username, username));
+  } catch (error) {
+    console.error('Error updating user active unit in db.', error);
+    throw error;
+  }
+};

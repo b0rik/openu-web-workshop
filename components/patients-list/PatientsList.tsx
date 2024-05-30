@@ -23,7 +23,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Filter, Search, Plus } from 'lucide-react';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
 import { useSession } from 'next-auth/react';
 
@@ -36,12 +36,18 @@ export const PatientsList = ({
   const [searchInput, setSearchInput] = useState('');
   const [patients, setPatients] = useState(allPatients);
   const session = useSession();
+  const activeUnit = session.data?.user?.activeUnit;
+
+  if (!activeUnit) {
+    // show something more...friendly
+    return <div>select a unit first.</div>;
+  }
 
   return (
     <div className='rounded-xl bg-cyan-50 p-10'>
       <div className='flex justify-between text-sky-700'>
         <p className='flex items-center text-xl font-bold tracking-wide'>
-          Internal Medicine A
+          {activeUnit}
         </p>
         {session?.data?.user?.canManagePatients && (
           <Button asChild>

@@ -56,9 +56,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt: ({ user, token }) => {
+    jwt: ({ user, token, session }) => {
       if (user) {
         token.user = user;
+      }
+
+      if (session?.activeUnit) {
+        token.activeUnit = session.activeUnit;
       }
 
       return token;
@@ -66,6 +70,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session: ({ session, token }) => {
       if (token.user) {
         session.user = { ...session.user, ...token.user };
+      }
+
+      if (token.activeUnit) {
+        session.user.activeUnit = token.activeUnit as string;
       }
 
       return session;
