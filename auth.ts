@@ -7,18 +7,13 @@ import { getUserByUsername, getUserByUsernameWithRole } from '@/data/users';
 
 import { LoginFormSchema } from '@/models/FormSchemas';
 
+import { usersTable } from './models/drizzle/usersSchema';
+import { rolesTable } from './models/drizzle/rolesSchema';
+
+type UserType = Omit<typeof usersTable.$inferSelect, 'hashedPassword'>;
+type RoleType = typeof rolesTable.$inferSelect;
 declare module 'next-auth' {
-  interface User {
-    canManageUsers: boolean;
-    canManagePatients: boolean;
-    canManageUnits: boolean;
-    canManageTaskSettings: boolean;
-    canManageTasks: boolean;
-    username: string;
-    role: string;
-    firstName: string;
-    lastName: string;
-  }
+  interface User extends UserType, RoleType {}
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
