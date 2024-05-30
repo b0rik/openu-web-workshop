@@ -1,5 +1,5 @@
 {
-  "id": "67f5349c-bc2f-4179-b90e-abd3fc92aef2",
+  "id": "04809347-4bdc-4816-8ee5-3928d634c68e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -43,6 +43,13 @@
           "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
+        },
+        "admission_time": {
+          "name": "admission_time",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -471,6 +478,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "active_unit": {
+          "name": "active_unit",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -481,6 +494,19 @@
           "tableTo": "roles",
           "columnsFrom": [
             "role"
+          ],
+          "columnsTo": [
+            "name"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_active_unit_units_name_fk": {
+          "name": "users_active_unit_units_name_fk",
+          "tableFrom": "users",
+          "tableTo": "units",
+          "columnsFrom": [
+            "active_unit"
           ],
           "columnsTo": [
             "name"

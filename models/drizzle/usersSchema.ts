@@ -1,5 +1,6 @@
 import { pgTable, varchar } from 'drizzle-orm/pg-core';
 import { rolesTable } from '@/models/drizzle/rolesSchema';
+import { unitsTable } from './unitsSchema';
 
 export const usersTable = pgTable('users', {
   username: varchar('username', { length: 50 }).primaryKey().notNull().unique(),
@@ -9,4 +10,5 @@ export const usersTable = pgTable('users', {
   role: varchar('role')
     .references(() => rolesTable.name)
     .notNull(),
+  activeUnit: varchar('active_unit').references(() => unitsTable.name),
 });

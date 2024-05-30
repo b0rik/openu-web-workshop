@@ -9,6 +9,7 @@
     "lint": "next lint",
     "generate_db": "drizzle-kit generate:pg",
     "push_db": "drizzle-kit push:pg",
+    "seed_db": "npx tsx ./scripts/seed_db",
     "studio": "drizzle-kit studio"
   },
   "dependencies": {

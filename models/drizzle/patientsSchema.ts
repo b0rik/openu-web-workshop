@@ -10,4 +10,7 @@ export const patientsTable = pgTable('patients', {
     .references(() => unitsTable.name)
     .notNull(),
   roomNumber: varchar('room_number', { length: 50 }),
+  admissionTime: date('admission_time', { mode: 'date' })
+    .notNull()
+    .defaultNow(),
 });
