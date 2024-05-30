@@ -1,7 +1,6 @@
 'use client';
 
 import { PatientCard } from '@/components/PatientCard';
-import { ScrollArea } from '@/components/ui/scrollarea';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,17 +19,20 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { Filter, Search, Plus } from 'lucide-react';
-import Link from 'next/link';
 import React, { useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
+import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { useSession } from 'next-auth/react';
+import { PatientCreateForm } from '@/components/patient-create-form/PatientCreateForm';
 
 export const PatientsList = ({
   allPatients,
 }: {
-  allPatients: (typeof patientsTable.$inferSelect)[];
+  allPatients: {
+    patient: typeof patientsTable.$inferSelect;
+    tasks: (typeof tasksTable.$inferSelect)[];
+  }[];
 }) => {
   const [filter, setFilter] = useState('Name');
   const [searchInput, setSearchInput] = useState('');
@@ -38,103 +40,106 @@ export const PatientsList = ({
   const session = useSession();
 
   return (
-    <div className='rounded-xl bg-cyan-50 p-10'>
-      <div className='flex justify-between text-sky-700'>
-        <p className='flex items-center text-xl font-bold tracking-wide'>
-          Internal Medicine A
-        </p>
-        {session?.data?.user?.canManagePatients && (
-          <Button asChild>
-            <Link href='/patients/create'>
-              New
-              <Plus />
-            </Link>
-          </Button>
-        )}
+    <div className='space-y-6 rounded-lg bg-sky-50 p-6'>
+      <p className='text-xl font-bold tracking-wide text-sky-700'>
+        Internal Medicine A
+      </p>
+
+      <div className='flex items-center gap-8 text-sky-700'>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            id='filter-dropdown'
+            className='flex cursor-pointer items-center gap-1'
+          >
+            <Filter></Filter>
+            <Label htmlFor='filter-dropdown' className='cursor-pointer'>
+              Filter
+            </Label>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setFilter('ID')}>
+              ID
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFilter('Name')}>
+              Name
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFilter('Room')}>
+              Room
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Dialog>
+          <DialogTrigger
+            id='search-dialog'
+            className='flex cursor-pointer items-center gap-1'
+          >
+            <Search></Search>
+            <Label htmlFor='search-dialog' className='cursor-pointer'>
+              Search
+            </Label>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Search By {filter}</DialogTitle>
+            </DialogHeader>
+            <Input
+              id='search-input'
+              value={searchInput}
+              onChange={(event) => {
+                const value = event.target.value.trim();
+                setSearchInput(value);
+
+                setPatients(
+                  patients.filter((patient) => {
+                    if (value === '') return true;
+
+                    switch (filter) {
+                      case 'ID':
+                        return patient.patient.id.includes(value);
+                      case 'Name':
+                        return (
+                          patient.patient.firstName +
+                          ' ' +
+                          patient.patient.lastName
+                        )
+                          .toLowerCase()
+                          .includes(value.toLowerCase());
+                      case 'Room':
+                        return (
+                          parseInt(patient.patient.roomNumber || '0') ===
+                          parseInt(value)
+                        );
+                      default:
+                        return true;
+                    }
+                  })
+                );
+              }}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <div className='mb-5 mt-10 flex items-center text-sky-700'>
-        <div className='flex items-center'>
-          <DropdownMenu>
-            <DropdownMenuTrigger id='filter-dropdown'>
-              <Filter></Filter>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setFilter('ID')}>
-                ID
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilter('Name')}>
-                Name
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilter('Room')}>
-                Room
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Label htmlFor='filter-dropdown'>Filter</Label>
-        </div>
-        <div className='ml-8 flex items-center'>
-          <Dialog>
-            <DialogTrigger id='search-dialog'>
-              <Search></Search>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Filter By {filter}</DialogTitle>
-                <DialogDescription>
-                  <Input
-                    id='search-input'
-                    className='col-span-3'
-                    value={searchInput}
-                    onChange={(event) => {
-                      const value = event.target.value.trim();
-                      setSearchInput(value);
-
-                      setPatients(
-                        patients.filter((patient) => {
-                          if (value === '') return true;
-
-                          switch (filter) {
-                            case 'ID':
-                              return patient.id.includes(value);
-                            case 'Name':
-                              return (
-                                patient.firstName +
-                                ' ' +
-                                patient.lastName
-                              )
-                                .toLowerCase()
-                                .includes(value.toLowerCase());
-                            case 'Room':
-                              return (
-                                parseInt(patient.roomNumber || '0') ===
-                                parseInt(value)
-                              );
-                            default:
-                              return true;
-                          }
-                        })
-                      );
-                    }}
-                  />
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-          <Label htmlFor='search-dialog'>Search</Label>
-        </div>
+      <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
+        {allPatients.map((patient) => (
+          <div key={patient.patient.id}>
+            <PatientCard patient={patient} />
+          </div>
+        ))}
       </div>
-
-      <ScrollArea className='h-screen rounded-md'>
-        <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
-          {allPatients.map((patient) => (
-            <div key={patient.id}>
-              <PatientCard patient={patient} />
+      {session?.data?.user?.canManagePatients && (
+        <Dialog>
+          <DialogTrigger id='search-dialog'>
+            <div className='fixed bottom-4 right-4 z-10 rounded-full bg-sky-900 p-2 text-white shadow-lg hover:bg-sky-700'>
+              <Plus strokeWidth={'2px'} size={'48px'} />
             </div>
-          ))}
-        </div>
-      </ScrollArea>
+          </DialogTrigger>
+          <DialogContent className='max-w-md p-0 md:max-w-3xl'>
+            <PatientCreateForm units={[]} />
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };

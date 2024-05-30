@@ -12,18 +12,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Bell, Bed, Calendar, UserRound, Plus } from 'lucide-react';
 import { differenceInYears, differenceInDays } from 'date-fns';
-import { useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
-
-const mockPatientTasks = [
-  { urgent: false },
-  { urgent: false },
-  { urgent: false },
-  { urgent: false },
-  { urgent: false },
-  { urgent: true },
-  { urgent: false },
-];
+import { tasksTable } from '@/models/drizzle/tasksSchema';
 
 const hospitalizationDays = (date: Date): number =>
   differenceInDays(new Date(), date);
@@ -33,14 +23,14 @@ const age = (dateOfBirth: Date): number =>
 export const PatientCard = ({
   patient,
 }: {
-  patient: typeof patientsTable.$inferSelect;
+  patient: {
+    patient: typeof patientsTable.$inferSelect;
+    tasks: (typeof tasksTable.$inferSelect)[];
+  };
 }) => {
-  const { id, firstName, lastName, unitName, roomNumber } = patient;
+  const { id, firstName, lastName, unitName, roomNumber } = patient.patient;
 
-  // get for every user? seems wasteful fetches how to improve?
-  const tasks = mockPatientTasks;
-
-  const isUrgent = tasks.some((task) => task.urgent);
+  const isUrgent = patient.tasks.some((task) => task.isUrgent);
 
   return (
     <Card className='w-80 sm:w-96'>
@@ -73,7 +63,7 @@ export const PatientCard = ({
         )}
       </CardHeader>
       <CardContent className='space-y-4 p-4 text-sky-700'>
-        <p>{`${tasks.length ? tasks.length : 'no'} tasks`}</p>
+        <p>{`${patient.tasks.length ? patient.tasks.length : 'no'} tasks`}</p>
         <div className='flex  gap-2'>
           <p>{unitName}</p>
           <Separator orientation='vertical' className='h-auto' />

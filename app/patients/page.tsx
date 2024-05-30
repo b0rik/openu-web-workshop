@@ -1,11 +1,11 @@
 import { PatientsList } from '@/components/patients-list/PatientsList';
-import { getAllPatients } from '@/data/patients';
+import { getPatientsWithTasks } from '@/data/patients';
 
 const PatientsListPage = async () => {
-  const allPatients = await getAllPatients();
+  const allPatients = await getPatientsWithTasks();
 
   return (
-    <div>
+    <div className=''>
       <PatientsList allPatients={allPatients} />
     </div>
   );
