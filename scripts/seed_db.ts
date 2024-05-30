@@ -144,12 +144,17 @@ const createUser = (() => {
 
     const hashedPassword = bcrypt.hashSync(PASSWORD, SALT_ROUNDS);
 
+    const activeUnit = faker.helpers.maybe(() => true, { probability: 0.8 })
+      ? faker.helpers.arrayElement(units).name
+      : null;
+
     return {
       firstName,
       lastName,
       username,
       hashedPassword,
       role,
+      activeUnit,
     };
   };
 })();
