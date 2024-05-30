@@ -5,7 +5,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 
 import { SessionProvider } from 'next-auth/react';
-import { ActiveUnitProvider } from '@/components/ActiveUnitProvider';
 
 import { auth } from '@/auth';
 import { NavBar } from '@/components/navbar/NavBar';
@@ -26,16 +25,14 @@ export default async function RootLayout({
 
   return (
     <SessionProvider session={session}>
-      <ActiveUnitProvider activeUnit={session?.user?.activeUnit}>
-        <html lang='en' className='h-full'>
-          <body className={cn('flex min-h-full flex-col', inter.className)}>
-            <NavBar />
-            <main className='flex grow flex-col items-center justify-center bg-gradient-to-b from-sky-800 to-sky-400 p-6'>
-              <div className='w-full'>{children}</div>
-            </main>
-          </body>
-        </html>
-      </ActiveUnitProvider>
+      <html lang='en' className='h-full'>
+        <body className={cn('flex min-h-full flex-col', inter.className)}>
+          <NavBar />
+          <main className='flex grow flex-col items-center justify-center bg-gradient-to-b from-sky-800 to-sky-400 p-6'>
+            <div className='w-full'>{children}</div>
+          </main>
+        </body>
+      </html>
     </SessionProvider>
   );
 }
