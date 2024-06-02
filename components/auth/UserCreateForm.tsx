@@ -90,7 +90,34 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
                 </FormItem>
               )}
             />
+
             <FormField
+              control={form.control}
+              name='firstName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First name</FormLabel>
+                  <FormControl>
+                    <FormInput field={field} placeholder='Enter first name' />
+                  </FormControl>
+                  {/* <FormMessage /> */}
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='lastName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last name</FormLabel>
+                  <FormControl>
+                    <FormInput field={field} placeholder='Enter last name' />
+                  </FormControl>
+                  {/* <FormMessage /> */}
+                </FormItem>
+              )}
+            />
+                        <FormField
               control={form.control}
               name='password'
               render={({ field }) => (
@@ -119,32 +146,6 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
                       placeholder='Re-enter password'
                       type='password'
                     />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='firstName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First name</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter first name' />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='lastName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last name</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter last name' />
                   </FormControl>
                   {/* <FormMessage /> */}
                 </FormItem>

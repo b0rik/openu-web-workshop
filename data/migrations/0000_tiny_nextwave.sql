@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "patients" (
 	"date_of_birth" date NOT NULL,
 	"unit_name" varchar NOT NULL,
 	"room_number" varchar(50),
+	"admission_time" date DEFAULT now() NOT NULL,
 	CONSTRAINT "patients_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
@@ -64,6 +65,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"first_name" varchar(50) NOT NULL,
 	"last_name" varchar(50) NOT NULL,
 	"role" varchar NOT NULL,
+	"active_unit" varchar,
 	CONSTRAINT "users_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint
@@ -123,6 +125,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "users" ADD CONSTRAINT "users_role_roles_name_fk" FOREIGN KEY ("role") REFERENCES "roles"("name") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "users" ADD CONSTRAINT "users_active_unit_units_name_fk" FOREIGN KEY ("active_unit") REFERENCES "units"("name") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

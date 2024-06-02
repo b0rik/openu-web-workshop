@@ -3,22 +3,17 @@ import Credentials from 'next-auth/providers/credentials';
 
 import bcrypt from 'bcryptjs';
 
-import { getUserByUsername, getUserByUsernameWithRole } from '@/data/users';
+import { getUserByUsernameWithRole } from '@/data/users';
 
 import { LoginFormSchema } from '@/models/FormSchemas';
 
+import { usersTable } from './models/drizzle/usersSchema';
+import { rolesTable } from './models/drizzle/rolesSchema';
+
+type UserType = Omit<typeof usersTable.$inferSelect, 'hashedPassword'>;
+type RoleType = typeof rolesTable.$inferSelect;
 declare module 'next-auth' {
-  interface User {
-    canManageUsers: boolean;
-    canManagePatients: boolean;
-    canManageUnits: boolean;
-    canManageTaskSettings: boolean;
-    canManageTasks: boolean;
-    username: string;
-    role: string;
-    firstName: string;
-    lastName: string;
-  }
+  interface User extends UserType, RoleType {}
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -61,9 +56,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt: ({ user, token }) => {
+    jwt: ({ user, token, session }) => {
       if (user) {
         token.user = user;
+      }
+
+      if (session?.activeUnit) {
+        token.activeUnit = session.activeUnit;
       }
 
       return token;
@@ -71,6 +70,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session: ({ session, token }) => {
       if (token.user) {
         session.user = { ...session.user, ...token.user };
+      }
+
+      if (token.activeUnit) {
+        session.user.activeUnit = token.activeUnit as string;
       }
 
       return session;

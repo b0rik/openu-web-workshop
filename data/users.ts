@@ -2,6 +2,8 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/data/db';
 import { usersTable } from '@/models/drizzle/usersSchema';
 import { rolesTable } from '@/models/drizzle/rolesSchema';
+import { usersPerUnitTable } from '@/models/drizzle/usersPerUnitSchema';
+import { unitsTable } from '@/models/drizzle/unitsSchema';
 
 export const getUserByUsername = async (username: string) => {
   try {
@@ -41,4 +43,35 @@ export const insertUser = async (user: typeof usersTable.$inferInsert) => {
   }
 };
 
+export const getUserUnits = async (username: string) => {
+  try {
+    const result = await db
+      .select({ unit: unitsTable })
+      .from(usersTable)
+      .innerJoin(
+        usersPerUnitTable,
+        eq(usersTable.username, usersPerUnitTable.userUsername)
+      )
+      .innerJoin(unitsTable, eq(usersPerUnitTable.unitName, unitsTable.name))
+      .where(eq(usersTable.username, username));
 
+    const units = result.map(({ unit }) => unit);
+
+    return units;
+  } catch (error) {
+    console.error('Error getting user units.', error);
+    throw error;
+  }
+};
+
+export const updateUserActiveUnit = async (username: string, unit: string) => {
+  try {
+    await db
+      .update(usersTable)
+      .set({ activeUnit: unit })
+      .where(eq(usersTable.username, username));
+  } catch (error) {
+    console.error('Error updating user active unit in db.', error);
+    throw error;
+  }
+};

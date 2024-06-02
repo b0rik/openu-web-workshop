@@ -24,7 +24,7 @@ import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
 import { FormDatePicker } from '@/components/form/FormDatePicker';
 
-const PatientCreateForm = ({ units }: { units: string[] }) => {
+export const PatientCreateForm = ({ units }: { units: string[] }) => {
   const [success, setSuccess] = useState<string | undefined>('');
   const [error, setError] = useState<string | undefined>('');
 
@@ -154,5 +154,3 @@ const PatientCreateForm = ({ units }: { units: string[] }) => {
     </FormCardWrapper>
   );
 };
-
-export default PatientCreateForm;
