@@ -6,7 +6,10 @@ import { eq } from 'drizzle-orm';
 export const getTasksWithPatient = async () => {
     try {
       const result = await db
-        .select()
+        .select({
+          taskDetails: tasksTable,
+          patient: patientsTable
+        })
         .from(tasksTable)
         .innerJoin(patientsTable, eq(patientsTable.id, tasksTable.patientId));
       return result; 
