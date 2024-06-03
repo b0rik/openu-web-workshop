@@ -6,26 +6,8 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-
 import { cn } from '@/lib/utils';
-
 import { CircleUserRound, Bed, Bone, Circle } from 'lucide-react';
-
-const mockTaskData = {
-  patient: {
-    socialId: '123456789',
-    name: 'sick person',
-    department: 'medical',
-    room: '420',
-    bed: '2',
-    age: 80,
-  },
-  type: 'imaging',
-  subTypes: ['PATCT', 'MRI', 'CT'],
-  status: 'pending',
-  createdAt: new Date(Date.now() - 1000000000),
-  isUrgent: false,
-};
 
 const TaskIcon = ({ type }: { type: string }) => {
   switch (type) {
@@ -36,7 +18,25 @@ const TaskIcon = ({ type }: { type: string }) => {
   }
 };
 
-export const TaskCard = () => {
+export const TaskCard = ({
+  task,
+}: {
+  task: {
+    patient: {
+      socialId: string,
+      name: string,
+      department: string,
+      room: string,
+      bed: string,
+      age: number,
+    },
+    type: string,
+    subTypes: string[],
+    status: string,
+    createdAt: Date,
+    isUrgent: boolean,
+  };
+})  => {
   const {
     patient: {
       name: patientName,
@@ -51,7 +51,7 @@ export const TaskCard = () => {
     status,
     subTypes,
     type,
-  } = mockTaskData;
+  } = task;
 
   const statusColors: {
     [status: string]: string;
