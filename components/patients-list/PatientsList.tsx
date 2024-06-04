@@ -25,16 +25,20 @@ import { Filter, Search, Plus } from 'lucide-react';
 import Link from 'next/link';
 import React, { useContext, useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
+import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { useSession } from 'next-auth/react';
 
 export const PatientsList = ({
-  allPatients,
+  data,
 }: {
-  allPatients: (typeof patientsTable.$inferSelect)[];
+  data: {
+    patient: typeof patientsTable.$inferSelect;
+    tasks: (typeof tasksTable.$inferSelect)[];
+  }[];
 }) => {
   const [filter, setFilter] = useState('Name');
   const [searchInput, setSearchInput] = useState('');
-  const [patients, setPatients] = useState(allPatients);
+  const [patients, setPatients] = useState(data);
   const session = useSession();
   const activeUnit = session.data?.user?.activeUnit;
 
@@ -98,23 +102,23 @@ export const PatientsList = ({
                       setSearchInput(value);
 
                       setPatients(
-                        patients.filter((patient) => {
+                        patients.filter((patientData) => {
                           if (value === '') return true;
 
                           switch (filter) {
                             case 'ID':
-                              return patient.id.includes(value);
+                              return patientData.patient.id.includes(value);
                             case 'Name':
                               return (
-                                patient.firstName +
+                                patientData.patient.firstName +
                                 ' ' +
-                                patient.lastName
+                                patientData.patient.lastName
                               )
                                 .toLowerCase()
                                 .includes(value.toLowerCase());
                             case 'Room':
                               return (
-                                parseInt(patient.roomNumber || '0') ===
+                                parseInt(patientData.patient.roomNumber || '0') ===
                                 parseInt(value)
                               );
                             default:
@@ -134,9 +138,9 @@ export const PatientsList = ({
 
       <ScrollArea className='h-screen rounded-md'>
         <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
-          {allPatients.map((patient) => (
-            <div key={patient.id}>
-              <PatientCard patient={patient} />
+          {patients.map((patientData) => (
+            <div key={patientData.patient.id}>
+              <PatientCard data={patientData} />
             </div>
           ))}
         </div>
