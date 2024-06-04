@@ -11,26 +11,28 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Bell, Bed, Calendar, UserRound, Plus } from 'lucide-react';
-import { differenceInYears, differenceInDays } from 'date-fns';
+import { differenceInDays } from 'date-fns';
+import { useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
 
 const hospitalizationDays = (date: Date): number =>
   differenceInDays(new Date(), date);
-const age = (dateOfBirth: Date): number =>
-  differenceInYears(new Date(), dateOfBirth);
 
 export const PatientCard = ({
-  patient,
+  data,
 }: {
-  patient: {
+  data: {
     patient: typeof patientsTable.$inferSelect;
     tasks: (typeof tasksTable.$inferSelect)[];
   };
 }) => {
-  const { id, firstName, lastName, unitName, roomNumber } = patient.patient;
+  const { id, firstName, lastName, unitName, roomNumber, admissionTime } =
+    data.patient;
 
-  const isUrgent = patient.tasks.some((task) => task.isUrgent);
+  const isUrgent = data.tasks.some((task) => task.isUrgent);
 
   return (
     <Card className='w-80 sm:w-96'>
@@ -63,7 +65,7 @@ export const PatientCard = ({
         )}
       </CardHeader>
       <CardContent className='space-y-4 p-4 text-sky-700'>
-        <p>{`${patient.tasks.length ? patient.tasks.length : 'no'} tasks`}</p>
+        <p>{`${data.tasks.length ? data.tasks.length : 'no'} tasks`}</p>
         <div className='flex  gap-2'>
           <p>{unitName}</p>
           <Separator orientation='vertical' className='h-auto' />
@@ -74,19 +76,23 @@ export const PatientCard = ({
             </>
           )}
         </div>
+        <div>
+          <p>
+            hospitalized duration: {hospitalizationDays(admissionTime)} days
+          </p>
+        </div>
         <div className='flex items-center justify-end'>
-          {/* <div className='flex items-center gap-2'>
-            <Calendar className='self-start' />
-            <p>{`${hospitalizationDays(admissionDate)} Days of hospitalization`}</p>
-          </div> */}
-          <Button
-            variant='ghost'
-            className='flex items-center gap-1 self-end text-lg'
-          >
-            <span>
+          <Button variant='ghost'>
+            <Link
+              href={{
+                pathname: '/tasks/create',
+                query: { patient: JSON.stringify(data.patient) },
+              }}
+              className='flex items-center gap-1 self-end text-lg'
+            >
               <Plus />
-            </span>
-            New Task
+              <span>New Task</span>
+            </Link>
           </Button>
         </div>
       </CardContent>

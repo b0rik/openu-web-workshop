@@ -5,14 +5,13 @@ import { getPatientsWithTasksByUnit } from '@/data/patients';
 
 const PatientsListPage = async () => {
   const session = await auth();
-
-  const allPatients = await getPatientsWithTasksByUnit(
-    session?.user?.activeUnit as string
+  const patientsWithTasksByUnit = await getPatientsWithTasksByUnit(
+    session?.user?.activeUnit!
   );
 
   return (
-    <div className=''>
-      <PatientsList allPatients={allPatients} />
+    <div>
+      <PatientsList data={patientsWithTasksByUnit} />
     </div>
   );
 };
