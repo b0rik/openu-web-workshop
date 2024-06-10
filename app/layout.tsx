@@ -18,8 +18,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   const session = await auth();
 
@@ -29,6 +31,7 @@ export default async function RootLayout({
         <body className={cn('flex min-h-full flex-col', inter.className)}>
           <NavBar />
           <main className='flex grow flex-col items-center justify-center bg-gradient-to-b from-sky-800 to-sky-400 p-6'>
+            <div>{modal}</div>
             <div className='w-full'>{children}</div>
           </main>
         </body>
