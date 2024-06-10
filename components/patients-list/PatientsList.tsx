@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { PatientCard } from '@/components/PatientCard';
 import {
   DropdownMenu,
@@ -135,16 +136,22 @@ export const PatientsList = ({
         ))}
       </div>
       {session?.data?.user?.canManagePatients && (
-        <Dialog>
-          <DialogTrigger id='search-dialog'>
-            <div className='fixed bottom-4 right-4 z-10 rounded-full bg-sky-900 p-2 text-white shadow-lg hover:bg-sky-700'>
-              <Plus strokeWidth={'2px'} size={'48px'} />
-            </div>
-          </DialogTrigger>
-          <DialogContent className='max-w-md p-0 md:max-w-3xl'>
-            <PatientCreateForm units={[]} />
-          </DialogContent>
-        </Dialog>
+        // <Dialog>
+        //   <DialogTrigger id='search-dialog'>
+        //     <div className='fixed bottom-4 right-4 z-10 rounded-full bg-sky-900 p-2 text-white shadow-lg hover:bg-sky-700'>
+        //       <Plus strokeWidth={'2px'} size={'48px'} />
+        //     </div>
+        //   </DialogTrigger>
+        //   <DialogContent className='max-w-md p-0 md:max-w-3xl'>
+        //     <PatientCreateForm units={[]} />
+        //   </DialogContent>
+        // </Dialog>
+        <Link
+          href='/patients/create'
+          className='fixed bottom-4 right-4 z-10 rounded-full bg-sky-900 p-2 text-white shadow-lg hover:bg-sky-700'
+        >
+          <Plus strokeWidth={'2px'} size={'48px'} />
+        </Link>
       )}
     </div>
   );
