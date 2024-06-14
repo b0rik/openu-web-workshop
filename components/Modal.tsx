@@ -14,6 +14,7 @@ export const Modal = ({ children }: ModalProps) => {
   return (
     <Dialog
       defaultOpen
+      open
       onOpenChange={() => {
         router.back();
       }}
