@@ -62,18 +62,23 @@ import { taskCategoriesTable } from '@/models/drizzle/taskCategoriesSchema';
 const taskCategories: (typeof taskCategoriesTable.$inferInsert)[] = [
   {
     name: 'Imaging',
+    iconName: 'camera',
   },
   {
     name: 'Consult',
+    iconName: 'contact',
   },
   {
     name: 'Laboratory',
+    iconName: 'test-tube',
   },
   {
     name: 'Letters',
+    iconName: 'mails',
   },
   {
     name: 'Discharge',
+    iconName: 'user-check',
   },
 ];
 

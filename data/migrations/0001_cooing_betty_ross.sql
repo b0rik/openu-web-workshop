@@ -1,1 +1,0 @@
-ALTER TABLE "patients" ADD COLUMN "addmision_time" date;
