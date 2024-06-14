@@ -8,14 +8,7 @@ import { useState } from 'react';
 import { UserCreateFormSchema } from '@/models/FormSchemas';
 import { createUser } from '@/actions/auth';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { FormCardWrapper } from '@/components/form/FormCardWrapper';
 import { FormButton } from '@/components/form/FormButton';
 import { FormInput } from '@/components/form/FormInput';
@@ -60,96 +53,43 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='grid gap-6 md:grid-cols-2'>
-            <FormField
-              control={form.control}
+            <FormInput
               name='username'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter username' />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='role'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <FormControl>
-                    <FormSelect
-                      field={field}
-                      placeholder='Select a role'
-                      options={roles}
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='Username'
+              placeholder='Enter username'
             />
 
-            <FormField
-              control={form.control}
+            <FormSelect
+              name='role'
+              label='Role'
+              placeholder='Select a role'
+              options={roles}
+            />
+
+            <FormInput
               name='firstName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First name</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter first name' />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='First Name'
+              placeholder='Enter first name'
             />
-            <FormField
-              control={form.control}
+
+            <FormInput
               name='lastName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last name</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter last name' />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='Last Name'
+              placeholder='Enter last name'
             />
-                        <FormField
-              control={form.control}
+
+            <FormInput
               name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <FormInput
-                      field={field}
-                      placeholder='Enter password'
-                      type='password'
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='Password'
+              placeholder='Enter password'
+              type='password'
             />
-            <FormField
-              control={form.control}
+
+            <FormInput
               name='confirmPassword'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm password</FormLabel>
-                  <FormControl>
-                    <FormInput
-                      field={field}
-                      placeholder='Re-enter password'
-                      type='password'
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='Confirm password'
+              placeholder='Re-enter password'
+              type='password'
             />
           </div>
           <FormSuccess message={success} />
