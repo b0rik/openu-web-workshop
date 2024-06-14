@@ -4,8 +4,9 @@ import dynamicIconImports from 'lucide-react/dynamicIconImports';
 
 const fallback = <div style={{ background: '#ddd', width: 24, height: 24 }} />;
 
+export type iconNameType = keyof typeof dynamicIconImports;
 interface IconProps extends Omit<LucideProps, 'ref'> {
-  name: keyof typeof dynamicIconImports;
+  name: iconNameType;
 }
 
 export const Icon = ({ name, ...props }: IconProps) => {
