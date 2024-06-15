@@ -17,8 +17,13 @@ import { ErrorMessage } from '@hookform/error-message';
 type FormToggleGroupType = {
   name: string;
   label: string;
-  items: { item: React.ReactNode; value: string }[];
-  onChange: () => void;
+  items: {
+    item: React.ReactNode;
+    value: string;
+  }[];
+  multiple?: boolean;
+  onChange?: () => void;
+  outline?: boolean;
 };
 
 export const FormToggleGroup = ({
@@ -26,6 +31,8 @@ export const FormToggleGroup = ({
   label,
   items,
   onChange,
+  multiple = false,
+  outline = false,
 }: FormToggleGroupType) => {
   const form = useFormContext();
   const errorIdPrefix = useId();
@@ -42,17 +49,17 @@ export const FormToggleGroup = ({
             <div>
               <ToggleGroup
                 className='grid grid-cols-2 gap-2 min-[425px]:grid-cols-3 md:grid-cols-6'
-                type='single'
-                onValueChange={(value) => {
+                type={multiple ? 'multiple' : 'single'}
+                onValueChange={(value: any) => {
                   field.onChange(value);
-                  onChange();
+                  onChange && onChange();
                 }}
                 defaultValue={field.value}
                 value={field.value}
               >
                 {items.map((item, index) => (
                   <ToggleGroupItem
-                    className='h-auto py-2'
+                    className='h-auto p-2'
                     key={itemIdPrefix + index}
                     value={item.value}
                   >

@@ -44,6 +44,7 @@ export const UserCreateFormSchema = z
       }),
     confirmPassword: z.string(),
     role: z.string().min(1, 'role is required.'),
+    userUnits: z.string().array(),
   })
   .refine((data) => !containsWhitespace(data.username), {
     message: 'username cannot contain whitespace.',

@@ -15,8 +15,14 @@ import { FormInput } from '@/components/form/FormInput';
 import { FormSelect } from '@/components/form/FormSelect';
 import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
+import { FormToggleGroup } from '@/components/form/FormToggleGroup';
 
-export const UserCreateForm = ({ roles }: { roles: string[] }) => {
+type UserCreateFormType = {
+  roles: string[];
+  units: string[];
+};
+
+export const UserCreateForm = ({ roles, units }: UserCreateFormType) => {
   const [success, setSuccess] = useState<string | undefined>('');
   const [error, setError] = useState<string | undefined>('');
   const form = useForm<z.infer<typeof UserCreateFormSchema>>({
@@ -28,6 +34,7 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
       username: '',
       password: '',
       confirmPassword: '',
+      userUnits: [],
     },
     mode: 'onChange',
     criteriaMode: 'all',
@@ -91,7 +98,19 @@ export const UserCreateForm = ({ roles }: { roles: string[] }) => {
               placeholder='Re-enter password'
               type='password'
             />
+            <div className='col-span-full rounded border border-sky-300 bg-white p-2'>
+              <FormToggleGroup
+                name='userUnits'
+                label='Units'
+                multiple
+                items={units.map((unit) => ({
+                  item: <div className='flex flex-col'>{unit}</div>,
+                  value: unit,
+                }))}
+              />
+            </div>
           </div>
+
           <FormSuccess message={success} />
           <FormError message={error} />
           <FormButton>Create</FormButton>
