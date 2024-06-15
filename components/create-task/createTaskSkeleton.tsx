@@ -56,41 +56,43 @@ export const CreateTaskSkeleton = () => {
         </div>
       </CardHeader>
       <CardContent className='space-y-4 p-4 text-sky-700'>
-        <div className='space-y-2'>
-          <Skeleton className='h-[17px] w-[60px]' />
-          <div className='grid grid-cols-2 gap-2 min-[425px]:grid-cols-3 md:grid-cols-6'>
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className='h-[60px]' />
-            ))}
+        <div className='space-y-6'>
+          <div className='space-y-2'>
+            <Skeleton className='h-[17px] w-[60px]' />
+            <div className='grid grid-cols-2 gap-2 min-[425px]:grid-cols-3 md:grid-cols-6'>
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className='h-[60px]' />
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className='space-y-2'>
-          <Skeleton className='h-[17px] w-[90px]' />
+          <div className='space-y-2'>
+            <Skeleton className='h-[17px] w-[90px]' />
+            <Skeleton className='h-[40px] w-full' />
+          </div>
+
+          <div className='space-y-2'>
+            <Skeleton className='h-[17px] w-[65px]' />
+            <Skeleton className='h-[80px] w-full' />
+          </div>
+
+          <div className='space-y-2'>
+            <Skeleton className='h-[17px] w-[43px]' />
+            <Skeleton className='h-[40px] w-full' />
+          </div>
+
+          <div className='space-y-2'>
+            <Skeleton className='h-[17px] w-[80px]' />
+            <Skeleton className='h-[40px] w-full' />
+          </div>
+
+          <Skeleton className='h-[24px] w-[220px]' />
+
+          <Skeleton className='h-[17px] w-[45px]' />
+          <Skeleton className='h-[24px] w-[44px]' />
+
           <Skeleton className='h-[40px] w-full' />
         </div>
-
-        <div className='space-y-2'>
-          <Skeleton className='h-[17px] w-[65px]' />
-          <Skeleton className='h-[80px] w-full' />
-        </div>
-
-        <div className='space-y-2'>
-          <Skeleton className='h-[17px] w-[43px]' />
-          <Skeleton className='h-[40px] w-full' />
-        </div>
-
-        <div className='space-y-2'>
-          <Skeleton className='h-[17px] w-[80px]' />
-          <Skeleton className='h-[40px] w-full' />
-        </div>
-
-        <Skeleton className='h-[24px] w-[220px]' />
-
-        <Skeleton className='h-[17px] w-[45px]' />
-        <Skeleton className='h-[24px] w-[44px]' />
-
-        <Skeleton className='h-[40px] w-full' />
       </CardContent>
     </Card>
   );
