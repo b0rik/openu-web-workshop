@@ -83,7 +83,7 @@ export const PatientCreateForm = ({ units }: { units: string[] }) => {
               placeholder='Enter room number'
             />
 
-            <FormDatePicker name='dateOfBirth' label='Date of birth' />
+            <FormDatePicker name='dateOfBirth' label='Date of birth' past />
           </div>
           <FormSuccess message={success} />
           <FormError message={error} />
