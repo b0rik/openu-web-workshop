@@ -15,3 +15,12 @@ export const getTasksByPatientId = async (patientId: string) => {
     throw error;
   }
 };
+
+export const insertTask = async (task: typeof tasksTable.$inferInsert) => {
+  try {
+    await db.insert(tasksTable).values(task);
+  } catch (error) {
+    console.error('Error inserting task.', error);
+    throw error;
+  }
+};

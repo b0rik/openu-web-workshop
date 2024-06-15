@@ -1,8 +1,20 @@
 'use client';
 
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'next/navigation';
+import { CircleUserRound } from 'lucide-react';
+import { differenceInYears, set } from 'date-fns';
+import { useRouter } from 'next/navigation';
+
 import { taskCategoriesTable } from '@/models/drizzle/taskCategoriesSchema';
 import { taskStatusTable } from '@/models/drizzle/taskStatusSchema';
 import { usersTable } from '@/models/drizzle/usersSchema';
+import { taskSubCategoriesTable } from '@/models/drizzle/taskSubCategoriesSchema';
+import { cn } from '@/lib/utils';
+import { createTask } from '@/actions/tasks';
 
 import {
   Card,
@@ -11,35 +23,20 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { CircleUserRound } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/text-area';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
-import { PencilLine, Dot } from 'lucide-react';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import * as React from 'react';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { Switch } from '@/components/ui/switch';
-import { useSearchParams } from 'next/navigation';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
-import { differenceInYears } from 'date-fns';
 import { Icon, iconNameType } from '@/components/Icon';
+import { Form } from '@/components/ui/form';
+import { FormToggleGroup } from '@/components/form/FormToggleGroup';
+import { FormTextArea } from '@/components/form/FormTextArea';
+import { FormSelect } from '@/components/form/FormSelect';
+import { FormDatePicker } from '@/components/form/FormDatePicker';
+import { FormSwitch } from '@/components/form/FormSwitch';
+import { FormButton } from '@/components/form/FormButton';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { TaskCreateFormSchema } from '@/models/FormSchemas';
+import { FormSuccess } from '@/components/form/FormSuccess';
+import { FormError } from '@/components/form/FormError';
 
 const age = (date: Date): number => differenceInYears(new Date(), date);
 
@@ -47,19 +44,37 @@ type createTaskType = {
   taskCategories: (typeof taskCategoriesTable.$inferSelect)[];
   taskStatuses: (typeof taskStatusTable.$inferSelect)[];
   users: Omit<typeof usersTable.$inferSelect, 'hashedPassword'>[];
+  taskSubCategories: (typeof taskSubCategoriesTable.$inferSelect)[];
 };
 
 export const CreateTask = ({
   taskCategories,
   taskStatuses,
   users,
+  taskSubCategories,
 }: createTaskType) => {
-  const [date, setDate] = React.useState<Date>();
-  const [isSelectTime, setIsSelectTime] = React.useState(false);
-  const [isUrgent, setIsUrgent] = React.useState(false);
-  const [taskCategory, setTaskCategory] = React.useState<string | undefined>();
-  const [taskComment, setTaskComment] = React.useState('');
-  const [taskStatus, setTaskStatus] = React.useState<string>('');
+  const form = useForm<z.infer<typeof TaskCreateFormSchema>>({
+    resolver: zodResolver(TaskCreateFormSchema.omit({ patientId: true })),
+    defaultValues: {
+      assignedToUser: undefined,
+      categoryName: '',
+      comments: undefined,
+      dueDate: undefined,
+      isUrgent: false,
+      status: '',
+      subCategoryName: '',
+      patientId: '',
+    },
+    mode: 'onChange',
+    criteriaMode: 'all',
+  });
+
+  const router = useRouter();
+  const [success, setSuccess] = useState<string | undefined>('');
+  const [error, setError] = useState<string | undefined>('');
+  const [category, setCategory] = useState<string>('');
+  const [subCategories, setSubCategories] = useState<string[]>([]);
+  const [isSelectTime, setIsSelectTime] = useState(false);
   const searchParams = useSearchParams();
   const patientJson = searchParams.get('patient');
   const {
@@ -69,13 +84,12 @@ export const CreateTask = ({
     dateOfBirth,
     unitName,
     roomNumber,
-    admissionTime,
   }: typeof patientsTable.$inferSelect = JSON.parse(patientJson!);
-  const [taskCategoriesWithIcon, setTaskCategoriesWithIcon] = React.useState<
+  const [taskCategoriesWithIcon, setTaskCategoriesWithIcon] = useState<
     { name: string; icon: React.ReactNode }[]
   >([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setTaskCategoriesWithIcon(
       taskCategories.map(({ name, iconName }) => ({
         name,
@@ -83,14 +97,32 @@ export const CreateTask = ({
       }))
     );
   }, [taskCategories]);
-  // const taskCategories = [
-  //   {id: 'Ultrasound', name: <span>Ultrasound</span>, logo: <Skull/>},
-  //   {id: 'Lab', name: <span>Lab</span>, logo: <TestTube2/>},
-  //   {id: 'Imaging', name: <span>Imaging</span>, logo: <Camera/>},
-  //   {id: 'Medicines', name: <span>Medicines</span>, logo: <Pill/>},
-  //   {id: 'Monitoring', name: <span>Monitoring</span>, logo: <Activity/>},
-  //   {id: 'Shots', name: <span>Shots</span>, logo: <Syringe/>},
-  // ];
+
+  useEffect(() => {
+    setSubCategories(
+      taskSubCategories
+        .filter(
+          (subCategory) =>
+            subCategory.categoryName === form.getValues().categoryName
+        )
+        .map(({ name }) => name)
+    );
+  }, [category, form, taskSubCategories]);
+
+  const onSubmit = async (values: z.infer<typeof TaskCreateFormSchema>) => {
+    const result = await createTask({ ...values, patientId: id });
+    if (result.success) {
+      form.reset();
+      setSuccess(result.success);
+      setError(undefined);
+      setTimeout(() => {
+        setSuccess(undefined);
+        router.push('/tasks');
+      }, 1000);
+    } else {
+      setError(result.error);
+    }
+  };
 
   return (
     <Card className='w-1f20 sm:w-100'>
@@ -115,138 +147,95 @@ export const CreateTask = ({
         </div>
         <div className='flex flex-col'>
           <p>{unitName}</p>
-          <Separator orientation='vertical' className='h-auto' />
           {roomNumber && <p>Room: {roomNumber}</p>}
         </div>
       </CardHeader>
       <CardContent className='space-y-4 p-4 text-sky-700'>
-        <span>Category</span>
-        <div className='grid grid-cols-2 gap-2 min-[425px]:grid-cols-3 md:grid-cols-6'>
-          {taskCategoriesWithIcon.map(({ name, icon }) => (
-            <div
-              key={name + id}
-              id={name + id}
-              className={cn(
-                'flex cursor-pointer flex-col items-center rounded-lg border-4 border-transparent p-2',
-                taskCategory === name ? 'border-gray-100' : ''
-              )}
-              onClick={() => setTaskCategory(name)}
-            >
-              {icon}
-              {name}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+            <FormToggleGroup
+              name='categoryName'
+              label='Category'
+              items={taskCategoriesWithIcon.map(({ name, icon }) => ({
+                item: (
+                  <div className='flex flex-col items-center'>
+                    {icon}
+                    {name}
+                  </div>
+                ),
+                value: name,
+              }))}
+              onChange={() => {
+                setCategory(form.getValues().categoryName);
+              }}
+            />
+
+            <FormSelect
+              name='subCategoryName'
+              label='Sub category'
+              placeholder='Select a a sub category'
+              options={subCategories}
+            />
+
+            <FormTextArea
+              name='comments'
+              label='Comment'
+              placeholder='Type your message here.'
+            />
+
+            <FormSelect
+              name='status'
+              label='Status'
+              placeholder='Select a status'
+              options={taskStatuses.map((status) => status.name)}
+            />
+
+            <FormSelect
+              name='assignedToUser'
+              label='Assigned to'
+              placeholder='Select user to assign'
+              options={users.map((user) => user.username)}
+            />
+
+            <div className='flex gap-3'>
+              <span>Due at:</span>
+              <RadioGroup defaultValue='option-one' className='flex'>
+                <div className='flex items-center space-x-2'>
+                  <RadioGroupItem
+                    value='option-one'
+                    id='option-one'
+                    onClick={() => setIsSelectTime(false)}
+                  />
+                  <Label htmlFor='option-one'>Now</Label>
+                </div>
+                <div className='flex items-center space-x-2'>
+                  <RadioGroupItem
+                    value='option-two'
+                    id='option-two'
+                    onClick={() => setIsSelectTime(true)}
+                  />
+                  <Label htmlFor='option-two'>Select Time</Label>
+                </div>
+              </RadioGroup>
             </div>
-          ))}
-        </div>
 
-        <div>
-          <span>Comment</span>
-          <Textarea
-            id='comments-text-area'
-            placeholder='Type your message here.'
-            onChange={(event) => {
-              setTaskComment(event.target.value);
-            }}
-          />
-        </div>
-
-        <div className='flex items-center gap-3'>
-          <Select
-            value={taskStatus}
-            onValueChange={(value) => setTaskStatus(value)}
-          >
-            <SelectTrigger className='w-[180px]'>
-              <SelectValue placeholder='Select status' />
-            </SelectTrigger>
-            <SelectContent>
-              {/* <SelectItem value='Pending'>Pending</SelectItem>
-              <SelectItem value='Done'>Done</SelectItem> */}
-              {taskStatuses.map((status, i) => (
-                <SelectItem key={status.name + i} value={status.name}>
-                  {status.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <span>Assigned To</span>
-          <div className='flex items-center gap-3'>
-            <PencilLine />
-            <Select key='assigned-to-select'>
-              <SelectTrigger className='w-[180px]'>
-                <SelectValue placeholder='Select user to assign' />
-              </SelectTrigger>
-              <SelectContent>
-                {/* <SelectItem value='Doctor 1'>Doctor 1</SelectItem>
-                <SelectItem value='Doctor 2'>Doctor 2</SelectItem> */}
-                {users.map((user, i) => {
-                  const name = `${user.firstName} ${user.lastName}`;
-
-                  return (
-                    <SelectItem key={user.username} value={user.username}>
-                      {name}
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className='flex gap-3'>
-          <span>Due at:</span>
-          <RadioGroup defaultValue='option-one' className='flex'>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem
-                value='option-one'
-                id='option-one'
-                onClick={() => setIsSelectTime(false)}
+            {isSelectTime && (
+              <FormDatePicker
+                name='dueDate'
+                label=''
+                fromYear={2024}
+                toYear={2025}
+                future
               />
-              <Label htmlFor='option-one'>Now</Label>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem
-                value='option-two'
-                id='option-two'
-                onClick={() => setIsSelectTime(true)}
-              />
-              <Label htmlFor='option-two'>Select Time</Label>
-            </div>
-          </RadioGroup>
-        </div>
+            )}
 
-        {isSelectTime && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={'outline'}
-                className={cn(
-                  'w-[280px] justify-start text-left font-normal',
-                  !date && 'text-muted-foreground'
-                )}
-              >
-                <CalendarIcon className='mr-2 h-4 w-4' />
-                {date ? format(date, 'PPP') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className='w-auto p-0'>
-              <Calendar
-                mode='single'
-                selected={date}
-                onSelect={setDate}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        )}
+            <FormSwitch name='isUrgent' label='Urgent' />
 
-        <div className='flex items-center gap-3'>
-          <span>Urgent</span>
-          <Switch onCheckedChange={() => setIsUrgent(!isUrgent)} />
-        </div>
-
-        <Button className='w-full rounded-full'>Save Task</Button>
+            <FormSuccess message={success} />
+            <FormError message={error} />
+            <FormButton>Save Task</FormButton>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );
