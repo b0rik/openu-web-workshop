@@ -24,9 +24,22 @@ import { useFormContext } from 'react-hook-form';
 type FormDatePickerProps = {
   name: string;
   label: string;
+  fromYear?: number;
+  toYear?: number;
+  past?: boolean;
+  future?: boolean;
 };
 
-export const FormDatePicker = ({ name, label }: FormDatePickerProps) => {
+const currentYear = new Date().getFullYear();
+
+export const FormDatePicker = ({
+  name,
+  label,
+  fromYear = currentYear - 120,
+  toYear = currentYear,
+  past = false,
+  future = false,
+}: FormDatePickerProps) => {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const form = useFormContext();
   const errorIdPrefix = useId();
@@ -71,13 +84,20 @@ export const FormDatePicker = ({ name, label }: FormDatePickerProps) => {
                       date?.setDate(date.getDate() + 1); //date is offseted by one because on time zone diff
                       field.onChange(date?.toISOString().split('T')[0]);
                     }}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date('1900-01-01')
-                    }
+                    disabled={(date) => {
+                      if (future) {
+                        return date < new Date();
+                      }
+
+                      if (past) {
+                        return date > new Date();
+                      }
+                      return false;
+                    }}
                     initialFocus
                     captionLayout='dropdown-buttons'
-                    fromYear={1900}
-                    toYear={2024}
+                    fromYear={fromYear}
+                    toYear={toYear}
                     classNames={{
                       caption_label: 'hidden',
                       vhidden: 'hidden',
