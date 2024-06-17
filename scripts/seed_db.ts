@@ -132,20 +132,20 @@ import { usersTable } from '@/models/drizzle/usersSchema';
 const createUser = (() => {
   const SALT_ROUNDS = 10;
   const PASSWORD = 'aA!23456';
-
-  const usernames = new Set();
+  const emailBase = '@meditaskmanager.com';
+  const emails = new Set();
 
   return (role: 'admin' | 'shift manager' | 'doctor') => {
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
-    let username = firstName + lastName;
+    let email = firstName + lastName + emailBase;
 
     let num = 1;
-    while (usernames.has(username)) {
-      username = firstName + lastName + num++;
+    while (emails.has(email)) {
+      email = firstName + lastName + num++ + emailBase;
     }
 
-    usernames.add(username);
+    emails.add(email);
 
     const hashedPassword = bcrypt.hashSync(PASSWORD, SALT_ROUNDS);
 
@@ -156,7 +156,7 @@ const createUser = (() => {
     return {
       firstName,
       lastName,
-      username,
+      email,
       hashedPassword,
       role,
       activeUnit,
@@ -173,8 +173,8 @@ users.push(createUser('shift manager'));
 import { usersPerUnitTable } from '@/models/drizzle/usersPerUnitSchema';
 
 const usersPerUnit: (typeof usersPerUnitTable.$inferInsert)[] = users.map(
-  ({ username }) => ({
-    userUsername: username,
+  ({ email }) => ({
+    userEmail: email,
     unitName: faker.helpers.arrayElement(units).name,
   })
 );
@@ -193,7 +193,7 @@ const createTask = () => {
   };
 
   if (faker.helpers.maybe(() => true, { probability: 0.8 })) {
-    task.assignedToUser = faker.helpers.arrayElement(users).username;
+    task.assignedToUser = faker.helpers.arrayElement(users).email;
   }
 
   if (faker.helpers.maybe(() => true, { probability: 0.7 })) {
@@ -215,16 +215,6 @@ import { db } from '@/data/db';
 
 const main = async () => {
   try {
-    await db.delete(tasksTable);
-    await db.delete(usersPerUnitTable);
-    await db.delete(usersTable);
-    await db.delete(patientsTable);
-    await db.delete(taskSubCategoriesTable);
-    await db.delete(taskCategoriesTable);
-    await db.delete(rolesTable);
-    await db.delete(taskStatusTable);
-    await db.delete(unitsTable);
-
     await db.insert(unitsTable).values(units);
     await db.insert(taskStatusTable).values(taskStatus);
     await db.insert(rolesTable).values(roles);

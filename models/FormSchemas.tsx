@@ -12,7 +12,7 @@ import {
 const MAX_LENGTH = 50;
 
 export const LoginFormSchema = z.object({
-  username: z.string().min(1, { message: 'username required.' }),
+  email: z.string().min(1, { message: 'email required.' }),
   password: z.string().min(1, { message: 'password required.' }),
 });
 
@@ -30,11 +30,12 @@ export const UserCreateFormSchema = z
       .max(MAX_LENGTH, {
         message: `last name is too long, max ${MAX_LENGTH} allowed.`,
       }),
-    username: z
+    email: z
       .string()
-      .min(1, { message: 'user name required' })
+      .email()
+      .min(1, { message: 'email required' })
       .max(MAX_LENGTH, {
-        message: `username is too long, max ${MAX_LENGTH} allowed.`,
+        message: `email is too long, max ${MAX_LENGTH} allowed.`,
       }),
     password: z
       .string()
@@ -46,7 +47,7 @@ export const UserCreateFormSchema = z
     role: z.string().min(1, 'role is required.'),
     userUnits: z.string().array(),
   })
-  .refine((data) => !containsWhitespace(data.username), {
+  .refine((data) => !containsWhitespace(data.email), {
     message: 'username cannot contain whitespace.',
     path: ['username'],
   })
