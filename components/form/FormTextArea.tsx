@@ -1,17 +1,10 @@
 'use client';
 
-import { useFormContext } from 'react-hook-form';
 import { useId } from 'react';
 
 import { cn } from '@/lib/utils';
 
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import {
   FormControl,
   FormField,
@@ -19,23 +12,21 @@ import {
   FormLabel,
 } from '@/components/ui/form';
 import { ErrorMessage } from '@hookform/error-message';
+import { useFormContext } from 'react-hook-form';
 
-type FormSelectProps = {
+type FormTextAreaProps = {
   name: string;
   label: string;
   placeholder?: string;
-  options?: string[];
 };
 
-export const FormSelect = ({
+export const FormTextArea = ({
   name,
   label,
   placeholder = '',
-  options = [],
-}: FormSelectProps) => {
+}: FormTextAreaProps) => {
   const form = useFormContext();
   const errorIdPrefix = useId();
-  const optionIdPrefix = useId();
 
   return (
     <FormField
@@ -46,32 +37,9 @@ export const FormSelect = ({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <div>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectTrigger
-                  className={cn(
-                    'rounded-full border-sky-300 focus:ring-sky-600',
-                    (fieldState.isDirty || fieldState.invalid) &&
-                      (fieldState.invalid
-                        ? 'border-red-400'
-                        : 'border-green-400')
-                  )}
-                >
-                  <SelectValue placeholder={placeholder} />
-                </SelectTrigger>
-                <SelectContent>
-                  {options.map((option, index) => {
-                    return (
-                      <SelectItem key={optionIdPrefix + index} value={option}>
-                        {option}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
+              <div className='relative flex items-center'>
+                <Textarea placeholder={placeholder} {...field} />
+              </div>
               <ErrorMessage
                 errors={form.formState.errors}
                 name={name}

@@ -2,11 +2,12 @@
 
 import { updateUserActiveUnit } from '@/data/users';
 import { getUnits } from '@/data/units';
-import { getUserByUsername, getUserUnits } from '@/data/users';
+import { getUserByEmail, getUserUnits } from '@/data/users';
+import { revalidatePath } from 'next/cache';
 
-export const updateActiveUnit = async (username: string, unit: string) => {
+export const updateActiveUnit = async (email: string, unit: string) => {
   try {
-    const user = await getUserByUsername(username);
+    const user = await getUserByEmail(email);
 
     if (!user) {
       return { error: 'User not found' };
@@ -19,14 +20,17 @@ export const updateActiveUnit = async (username: string, unit: string) => {
       return { error: 'Invalid data.' };
     }
 
-    const userUnits = await getUserUnits(username);
+    const userUnits = await getUserUnits(email);
     const userUnitsNames = userUnits.map((unit) => unit.name);
 
     if (!userUnitsNames.includes(unit)) {
       return { error: 'Unit is not authorized for user.' };
     }
 
-    await updateUserActiveUnit(username, unit);
+    await updateUserActiveUnit(email, unit);
+
+    revalidatePath('/patients');
+    revalidatePath('/tasks');
 
     return { success: 'Updated active unit for user.' };
   } catch (error) {

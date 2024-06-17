@@ -5,8 +5,8 @@ import { unitsTable } from '@/models/drizzle/unitsSchema';
 export const usersPerUnitTable = pgTable(
   'users_per_unit',
   {
-    userUsername: varchar('user_username')
-      .references(() => usersTable.username)
+    userEmail: varchar('user_username')
+      .references(() => usersTable.email)
       .notNull(),
     unitName: varchar('unit_name')
       .references(() => unitsTable.name)
@@ -14,7 +14,7 @@ export const usersPerUnitTable = pgTable(
   },
   (table) => {
     return {
-      pk: primaryKey({ columns: [table.userUsername, table.unitName] }),
+      pk: primaryKey({ columns: [table.userEmail, table.unitName] }),
     };
-  },
+  }
 );

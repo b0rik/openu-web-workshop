@@ -15,14 +15,13 @@ import { useSession } from 'next-auth/react';
 
 export const UnitSelect = ({ units }: { units: string[] }) => {
   const session = useSession();
-  const { activeUnit, username } = session.data?.user || {};
+  const { activeUnit, email } = session.data?.user || {};
 
   return (
     <Select
       onValueChange={async (value) => {
-        // setCurrentActiveUnit(value);
         // TODO: handle error
-        await updateActiveUnit(username as string, value);
+        await updateActiveUnit(email as string, value);
         await session.update({ activeUnit: value });
       }}
     >
