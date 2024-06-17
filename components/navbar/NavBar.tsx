@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 import { NavMenu } from '@/components/navbar/NavMenu';
 
-import { Hospital } from 'lucide-react';
 import { auth } from '@/auth';
+import { Hospital, Ribbon } from 'lucide-react';
 
 const appName = 'Meditask Manager';
 
@@ -34,6 +34,7 @@ export const NavBar = async () => {
       <Link href='/' className='my-4 flex cursor-pointer items-center gap-3'>
         <Hospital className='h-10 w-10' />
         <span className='text-xl font-bold tracking-wide'>{appName}</span>
+        <Ribbon className='h-8 w-8 text-yellow-300' />
       </Link>
       <NavMenu navLinks={navLinks} />
     </nav>

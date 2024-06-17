@@ -1,5 +1,5 @@
 {
-  "id": "04809347-4bdc-4816-8ee5-3928d634c68e",
+  "id": "42f43550-f1db-4288-8719-115f8735ee5e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -142,6 +142,12 @@
           "type": "varchar(50)",
           "primaryKey": true,
           "notNull": true
+        },
+        "icon_name": {
+          "name": "icon_name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -258,15 +264,15 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "tasks_assigned_to_user_users_username_fk": {
-          "name": "tasks_assigned_to_user_users_username_fk",
+        "tasks_assigned_to_user_users_email_fk": {
+          "name": "tasks_assigned_to_user_users_email_fk",
           "tableFrom": "tasks",
           "tableTo": "users",
           "columnsFrom": [
             "assigned_to_user"
           ],
           "columnsTo": [
-            "username"
+            "email"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -407,15 +413,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "users_per_unit_user_username_users_username_fk": {
-          "name": "users_per_unit_user_username_users_username_fk",
+        "users_per_unit_user_username_users_email_fk": {
+          "name": "users_per_unit_user_username_users_email_fk",
           "tableFrom": "users_per_unit",
           "tableTo": "users",
           "columnsFrom": [
             "user_username"
           ],
           "columnsTo": [
-            "username"
+            "email"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -449,8 +455,8 @@
       "name": "users",
       "schema": "",
       "columns": {
-        "username": {
-          "name": "username",
+        "email": {
+          "name": "email",
           "type": "varchar(50)",
           "primaryKey": true,
           "notNull": true
@@ -517,11 +523,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_username_unique": {
-          "name": "users_username_unique",
+        "users_email_unique": {
+          "name": "users_email_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "username"
+            "email"
           ]
         }
       }

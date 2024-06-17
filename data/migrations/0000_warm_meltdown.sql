@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS "roles" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "task_categories" (
 	"name" varchar(50) PRIMARY KEY NOT NULL,
+	"icon_name" varchar(50) NOT NULL,
 	CONSTRAINT "task_categories_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
@@ -60,13 +61,13 @@ CREATE TABLE IF NOT EXISTS "users_per_unit" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
-	"username" varchar(50) PRIMARY KEY NOT NULL,
+	"email" varchar(50) PRIMARY KEY NOT NULL,
 	"hashed_password" varchar(72) NOT NULL,
 	"first_name" varchar(50) NOT NULL,
 	"last_name" varchar(50) NOT NULL,
 	"role" varchar NOT NULL,
 	"active_unit" varchar,
-	CONSTRAINT "users_username_unique" UNIQUE("username")
+	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -94,7 +95,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "tasks" ADD CONSTRAINT "tasks_assigned_to_user_users_username_fk" FOREIGN KEY ("assigned_to_user") REFERENCES "users"("username") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "tasks" ADD CONSTRAINT "tasks_assigned_to_user_users_email_fk" FOREIGN KEY ("assigned_to_user") REFERENCES "users"("email") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -112,7 +113,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "users_per_unit" ADD CONSTRAINT "users_per_unit_user_username_users_username_fk" FOREIGN KEY ("user_username") REFERENCES "users"("username") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "users_per_unit" ADD CONSTRAINT "users_per_unit_user_username_users_email_fk" FOREIGN KEY ("user_username") REFERENCES "users"("email") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

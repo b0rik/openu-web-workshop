@@ -8,14 +8,7 @@ import { useState } from 'react';
 import { PatientCreateFormSchema } from '@/models/FormSchemas';
 import { createPatient } from '@/actions/patients';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { FormCardWrapper } from '@/components/form/FormCardWrapper';
 import { FormButton } from '@/components/form/FormButton';
 import { FormInput } from '@/components/form/FormInput';
@@ -63,88 +56,34 @@ export const PatientCreateForm = ({ units }: { units: string[] }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='grid gap-6 md:grid-cols-2'>
-            <FormField
-              control={form.control}
-              name='id'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ID</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter id' />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
+            <FormInput name='id' label='ID' placeholder='Enter id' />
+
+            <FormSelect
               name='unitName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit</FormLabel>
-                  <FormControl>
-                    <FormSelect
-                      field={field}
-                      placeholder='Select a unit'
-                      options={units}
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='Unit'
+              placeholder='Select a unit'
+              options={units}
             />
-            <FormField
-              control={form.control}
+
+            <FormInput
               name='firstName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First name</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter first name' />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='First Name'
+              placeholder='Enter first name'
             />
-            <FormField
-              control={form.control}
+
+            <FormInput
               name='lastName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last name</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter last name' />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='Last Name'
+              placeholder='Enter last name'
             />
-            <FormField
-              control={form.control}
+
+            <FormInput
               name='roomNumber'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Room number</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter room number' />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
+              label='Room Number'
+              placeholder='Enter room number'
             />
-            <FormField
-              control={form.control}
-              name='dateOfBirth'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date of birth</FormLabel>
-                  <FormControl>
-                    <FormDatePicker field={field} />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
+
+            <FormDatePicker name='dateOfBirth' label='Date of birth' past />
           </div>
           <FormSuccess message={success} />
           <FormError message={error} />

@@ -8,14 +8,7 @@ import { useState } from 'react';
 import { LoginFormSchema } from '@/models/FormSchemas';
 import { loginUser } from '@/actions/auth';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { FormCardWrapper } from '@/components/form/FormCardWrapper';
 import { FormInput } from '@/components/form/FormInput';
 import { FormButton } from '@/components/form/FormButton';
@@ -26,7 +19,7 @@ export const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
     mode: 'onChange',
@@ -58,35 +51,16 @@ export const LoginForm = () => {
       <div className=''>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-            <FormField
-              control={form.control}
-              name='username'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <FormInput field={field} placeholder='Enter username' />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <FormInput
+              name='email'
+              label='Email'
+              placeholder='Enter email'
             />
-            <FormField
-              control={form.control}
+            <FormInput
               name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <FormInput
-                      field={field}
-                      placeholder='Enter password'
-                      type='password'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label='Password'
+              placeholder='Enter password'
+              type='password'
             />
             <FormError message={error} />
             <FormButton>Login</FormButton>
