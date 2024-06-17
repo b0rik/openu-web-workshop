@@ -1,6 +1,12 @@
 'use client';
 
-import { ChangeEvent, useState, useEffect, Dispatch, SetStateAction } from 'react';
+import {
+  ChangeEvent,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import {
   Disclosure,
   DisclosureButton,
@@ -27,7 +33,7 @@ type FiltersType = {
   }[];
   urgency: FilterOption[];
   status: FilterOption[];
-}
+};
 
 const sortOptions = [
   { name: 'Closest Due Date First', href: '#', current: false },
@@ -63,15 +69,31 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
 
     if (entry) {
       entry.checked = event.target.checked;
-
       setFilterList((current) => {
         const allCatsExceptEntry = current.category.filter(
           (cat) => cat.value !== entry.value
         );
+
+        const newSubCategories = current.subCategory.map((subCat) => {
+          if (subCat.category === entry.value) {
+            return {
+              category: subCat.category,
+              subCategory: subCat.subCategory.map((innerSubCat) => ({
+                ...innerSubCat,
+                checked: false,
+              })),
+            };
+          }
+
+          return subCat;
+        });
+
         const newFilters = {
           ...current,
-          category: [...allCatsExceptEntry, entry].sort((a,b)=>
-          a.value.localeCompare(b.value)),
+          category: [...allCatsExceptEntry, entry].sort((a, b) =>
+            a.value.localeCompare(b.value)
+          ),
+          subCategory: newSubCategories,
         };
         return newFilters;
       });
@@ -102,8 +124,8 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
 
           const updatedCategoryEntry = {
             ...categoryEntry,
-            subCategory: [...allSubCatsExceptEntry, subCategoryEntry].sort((a, b) =>
-              a.value.localeCompare(b.value)
+            subCategory: [...allSubCatsExceptEntry, subCategoryEntry].sort(
+              (a, b) => a.value.localeCompare(b.value)
             ),
           };
 
@@ -137,8 +159,9 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
         );
         const newFilters = {
           ...current,
-          urgency: [...allUrgExceptEntry, entry].sort((a,b)=>
-          a.value.localeCompare(b.value)),
+          urgency: [...allUrgExceptEntry, entry].sort((a, b) =>
+            a.value.localeCompare(b.value)
+          ),
         };
         return newFilters;
       });
@@ -160,8 +183,9 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
         );
         const newFilters = {
           ...current,
-          status: [...allStsExceptEntry, entry].sort((a,b)=>
-          a.value.localeCompare(b.value)),
+          status: [...allStsExceptEntry, entry].sort((a, b) =>
+            a.value.localeCompare(b.value)
+          ),
         };
         return newFilters;
       });
@@ -242,7 +266,13 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                           className='flex items-center text-base sm:text-sm'
                         >
                           <input
-                            onChange={(event) => onSubCategoryChanged(event, option, subCategory.category)}
+                            onChange={(event) =>
+                              onSubCategoryChanged(
+                                event,
+                                option,
+                                subCategory.category
+                              )
+                            }
                             id={`subCategory-${optionIdx}`}
                             name='subCategory[]'
                             defaultValue={option.value}
@@ -392,3 +422,5 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
     </div>
   );
 }
+
+

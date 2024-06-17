@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -11,13 +13,8 @@ import {
   TestTubeDiagonal,
   Camera,
 } from 'lucide-react';
-
-type taskCardPropType = {
-  task: {
-    taskDetails: any;
-    patient: any;
-  };
-};
+import type { TaskWithPatientType } from '@/data/tasks';
+import { updateStatus } from '@/actions/tasks';
 
 type TaskStatusType = 'Pending' | 'In progress' | 'Complete';
 
@@ -45,13 +42,18 @@ const getCategoryIcon = (category: string) => {
   }
 };
 
-export const TaskCard = ({ task }: taskCardPropType) => {
+export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
   const formatDate = (date: Date | null) => {
     if (!date) return 'N/A';
     if (date instanceof Date) {
       return date.toLocaleDateString();
     }
     return date;
+  };
+
+  const onCheckboxChecked = async () => {
+    // TODO: handle error
+    await updateStatus(task.taskDetails.id, 'Complete');
   };
 
   return (
@@ -70,7 +72,12 @@ export const TaskCard = ({ task }: taskCardPropType) => {
         {/* Flex container for items on the left */}
         <div className='flex w-full flex-wrap items-start text-xs sm:w-auto sm:items-center'>
           <div className='flex items-start gap-2 sm:items-center'>
-            <Checkbox id={`checkbox-${task.taskDetails.id}`} />
+            <Checkbox
+              id={`checkbox-${task.taskDetails.id}`}
+              onClick={onCheckboxChecked}
+              checked={task.taskDetails.status === 'Complete'}
+              disabled={task.taskDetails.status === 'Complete'}
+            />
             <div>
               <label
                 htmlFor={`checkbox-${task.taskDetails.id}`}

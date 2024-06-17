@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { getTasksWithPatient } from '@/data/tasks';
@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card';
 import Filter from '../filter-bar/Filter';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
+import { TaskWithPatientType } from '@/data/tasks';
 
 const filters = {
   category: [
@@ -44,8 +45,8 @@ const filters = {
     { category: 'discharge', subCategory: [] },
   ],
   urgency: [
-    { value: 'urgent', label: 'Urgent', checked: false },
     { value: 'notUrgent', label: 'Not Urgent', checked: false },
+    { value: 'urgent', label: 'Urgent', checked: false },
   ],
   status: [
     { value: 'complete', label: 'Complete', checked: false },
@@ -54,69 +55,85 @@ const filters = {
   ],
 };
 
-type TasksType = {
-  taskDetails: typeof tasksTable.$inferSelect;
-  patient: typeof patientsTable.$inferSelect;
-}[];
-
-type TasksListPropsType = {
-  tasks: TasksType;
-};
-
-export const TaskList = ({ tasks }: TasksListPropsType) => {
-  // const tasks = await getTasksWithPatient();
+export const TaskList = ({ tasks }: { tasks: TaskWithPatientType[] }) => {
   const [tasksList, setTasksList] = useState(tasks);
+  const [sortedTaskList, setSortedTaskList] = useState<TaskWithPatientType[]>([]);
   const [filterList, setFilterList] = useState(filters);
 
   useEffect(() => {
     // Filter tasks based on the filterList
-    const filteredTasks = tasks.filter(task => {
+    const filteredTasks = tasks.filter((task) => {
       // Category filter
       const categoryMatch = filterList.category.some(
-        cat => cat.checked && cat.value === task.taskDetails.categoryName.toLowerCase()
+        (cat) =>
+          cat.checked &&
+          cat.value === task.taskDetails.categoryName.toLowerCase()
       );
 
       // Subcategory filter
       const subCategoryMatch = filterList.subCategory.some(
-        subCat =>
+        (subCat) =>
           subCat.category === task.taskDetails.categoryName.toLowerCase() &&
           subCat.subCategory.some(
-            sub => sub.checked && sub.value === task.taskDetails.subCategoryName.toLowerCase()
+            (sub) =>
+              sub.checked &&
+              sub.value === task.taskDetails.subCategoryName.toLowerCase()
           )
       );
 
       // Urgency filter
       const urgencyMatch = filterList.urgency.some(
-        urgency =>
-          urgency.checked &&(
-          (urgency.value === 'urgent' && task.taskDetails.isUrgent)
-          ||
-          (urgency.value === 'notUrgent' && !task.taskDetails.isUrgent)
-          )
+        (urgency) =>
+          urgency.checked &&
+          ((urgency.value === 'urgent' && task.taskDetails.isUrgent) ||
+            (urgency.value === 'notUrgent' && !task.taskDetails.isUrgent))
       );
 
       // Status filter
       const statusMatch = filterList.status.some(
-        status => status.checked && status.value.toLowerCase() === task.taskDetails.status.toLowerCase()
+        (status) =>
+          status.checked &&
+          status.value.toLowerCase() === task.taskDetails.status.toLowerCase()
       );
 
       // Combine filters
       return (
-        (categoryMatch || !filterList.category.some(cat => cat.checked)) &&
-        (subCategoryMatch || !filterList.subCategory.some(subCat => subCat.subCategory.some(sub => sub.checked))) &&
-        (urgencyMatch || !filterList.urgency.some(urgency => urgency.checked)) &&
-        (statusMatch || !filterList.status.some(status => status.checked))
+        (categoryMatch || !filterList.category.some((cat) => cat.checked)) &&
+        (subCategoryMatch ||
+          !filterList.subCategory.some((subCat) =>
+            subCat.subCategory.some((sub) => sub.checked)
+          )) &&
+        (urgencyMatch ||
+          !filterList.urgency.some((urgency) => urgency.checked)) &&
+        (statusMatch || !filterList.status.some((status) => status.checked))
       );
     });
 
     setTasksList(filteredTasks);
   }, [filterList, tasks]);
 
+  
+  const compareStatus = (a, b) => {
+    if (a.taskDetails.status === 'Complete' && b.taskDetails.status === 'Complete') {
+      return 0;
+    }
+    
+    if (a.taskDetails.status === 'Complete') {
+      return 1;
+    }
+
+    return -1;
+  }
+
+  useEffect(() => {
+    setSortedTaskList(tasksList.toSorted(compareStatus));
+  }, [tasksList])
+
   return (
-    <Card className='w-full max-w-screen-lg p-6'>
+    <Card className='top-14 z-50 w-full max-w-screen-lg bg-white p-6'>
       <Filter filterList={filterList} setFilterList={setFilterList} />
       <Accordion type='multiple' className=''>
-        {tasksList.map((task) => {
+        {sortedTaskList.map((task) => {
           return <TaskCard key={task.taskDetails.id} task={task} />;
         })}
       </Accordion>
