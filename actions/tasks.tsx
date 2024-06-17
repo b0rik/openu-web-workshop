@@ -7,10 +7,11 @@ import { revalidatePath } from 'next/cache';
 import { insertTask } from '@/data/tasks';
 import { TaskCreateFormSchema } from '@/models/FormSchemas';
 import { getTaskCategoryByName } from '@/data/taskCategories';
-import { getUserByUsername } from '@/data/users';
+import { getUserByEmail } from '@/data/users';
 import { getPatientById } from '@/data/patients';
 import { getTaskStatusByName } from '@/data/taskStatus';
 import { getTaskSubCategoryByName } from '@/data/taskSubCategories';
+import { sendEmailNotificationToUser } from '@/actions/email';
 
 export const createTask = async (
   values: z.infer<typeof TaskCreateFormSchema>
@@ -34,7 +35,7 @@ export const createTask = async (
 
   try {
     if (assignedToUser && assignedToUser !== '') {
-      const userExists = getUserByUsername(assignedToUser);
+      const userExists = getUserByEmail(assignedToUser);
 
       if (!userExists) {
         return { error: 'Invalid data.' };
@@ -81,6 +82,10 @@ export const createTask = async (
     });
 
     revalidatePath('/tasks');
+
+    if (assignedToUser) {
+      await sendEmailNotificationToUser(assignedToUser);
+    }
 
     return { success: 'Task created.' };
   } catch (error) {
