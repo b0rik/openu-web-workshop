@@ -29,55 +29,9 @@ type FiltersType = {
   status: FilterOption[];
 }
 
-// const filters = {
-//   category: [
-//     { value: 'imaging', label: 'Imaging', checked: false },
-//     { value: 'laboratory', label: 'Laboratory', checked: false },
-//     { value: 'consult', label: 'Consult', checked: false },
-//     { value: 'letters', label: 'Letters', checked: false },
-//     { value: 'discharge', label: 'Discharge', checked: false },
-//   ],
-//   subCategory: [
-//     {
-//       category: 'imaging',
-//       subCategory: [
-//         { value: 'us', label: 'US', checked: false },
-//         { value: 'xray', label: 'X-Ray', checked: false },
-//       ],
-//     },
-//     { category: 'consult', subCategory: [] },
-//     {
-//       category: 'laboratory',
-//       subCategory: [
-//         { value: 'hematology', label: 'Hematology', checked: false },
-//         {
-//           value: 'completeBloodCount',
-//           label: 'Complete Blood Count',
-//           checked: false,
-//         },
-//       ],
-//     },
-//     {
-//       category: 'letters',
-//       subCategory: [],
-//     },
-//     { category: 'discharge', subCategory: [] },
-//   ],
-//   urgency: [
-//     { value: 'urgant', label: 'Urgent', checked: false },
-//     { value: 'notUrgent', label: 'Not Urgent', checked: false },
-//   ],
-//   status: [
-//     { value: 'pending', label: 'Pending', checked: false },
-//     { value: 'inProgress', label: 'In progress', checked: false },
-//     { value: 'complete', label: 'Complete', checked: false },
-//   ],
-// };
-
 const sortOptions = [
-  { name: 'Most Popular', href: '#', current: false },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
+  { name: 'Closest Due Date First', href: '#', current: false },
+  { name: 'Farthest Due Date First', href: '#', current: false },
 ];
 
 function classNames(...classes: any) {
@@ -117,6 +71,96 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
         const newFilters = {
           ...current,
           category: [...allCatsExceptEntry, entry].sort((a,b)=>
+          a.value.localeCompare(b.value)),
+        };
+        return newFilters;
+      });
+    }
+  };
+
+  const onSubCategoryChanged = (
+    event: ChangeEvent<HTMLInputElement>,
+    option: FilterOption,
+    parentCategory: string
+  ) => {
+    setFilterList((current) => {
+      const categoryEntry = current.subCategory.find(
+        (subCat) => subCat.category === parentCategory
+      );
+
+      if (categoryEntry) {
+        const subCategoryEntry = categoryEntry.subCategory.find(
+          (sub) => sub.value === option.value
+        );
+
+        if (subCategoryEntry) {
+          subCategoryEntry.checked = event.target.checked;
+
+          const allSubCatsExceptEntry = categoryEntry.subCategory.filter(
+            (sub) => sub.value !== subCategoryEntry.value
+          );
+
+          const updatedCategoryEntry = {
+            ...categoryEntry,
+            subCategory: [...allSubCatsExceptEntry, subCategoryEntry].sort((a, b) =>
+              a.value.localeCompare(b.value)
+            ),
+          };
+
+          const newSubCategories = current.subCategory.map((subCat) =>
+            subCat.category === parentCategory ? updatedCategoryEntry : subCat
+          );
+
+          return {
+            ...current,
+            subCategory: newSubCategories,
+          };
+        }
+      }
+
+      return current;
+    });
+  };
+
+  const onUrgencyChanged = (
+    event: ChangeEvent<HTMLInputElement>,
+    option: FilterOption
+  ) => {
+    const entry = filterList.urgency.find((urg) => urg.value === option.value);
+
+    if (entry) {
+      entry.checked = event.target.checked;
+
+      setFilterList((current) => {
+        const allUrgExceptEntry = current.urgency.filter(
+          (urg) => urg.value !== entry.value
+        );
+        const newFilters = {
+          ...current,
+          urgency: [...allUrgExceptEntry, entry].sort((a,b)=>
+          a.value.localeCompare(b.value)),
+        };
+        return newFilters;
+      });
+    }
+  };
+
+  const onStatusChanged = (
+    event: ChangeEvent<HTMLInputElement>,
+    option: FilterOption
+  ) => {
+    const entry = filterList.status.find((sts) => sts.value === option.value);
+
+    if (entry) {
+      entry.checked = event.target.checked;
+
+      setFilterList((current) => {
+        const allStsExceptEntry = current.status.filter(
+          (sts) => sts.value !== entry.value
+        );
+        const newFilters = {
+          ...current,
+          status: [...allStsExceptEntry, entry].sort((a,b)=>
           a.value.localeCompare(b.value)),
         };
         return newFilters;
@@ -198,6 +242,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                           className='flex items-center text-base sm:text-sm'
                         >
                           <input
+                            onChange={(event) => onSubCategoryChanged(event, option, subCategory.category)}
                             id={`subCategory-${optionIdx}`}
                             name='subCategory[]'
                             defaultValue={option.value}
@@ -248,6 +293,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                       className='flex items-center text-base sm:text-sm'
                     >
                       <input
+                        onChange={(event) => onUrgencyChanged(event, option)}
                         id={`urgency-${optionIdx}`}
                         name='urgency[]'
                         defaultValue={option.value}
@@ -274,6 +320,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                       className='flex items-center text-base sm:text-sm'
                     >
                       <input
+                        onChange={(event) => onStatusChanged(event, option)}
                         id={`status-${optionIdx}`}
                         name='status[]'
                         defaultValue={option.value}
