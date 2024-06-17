@@ -1,8 +1,5 @@
 import React from 'react';
-import { tasksTable } from '@/models/drizzle/tasksSchema';
-import { patientsTable } from '@/models/drizzle/patientsSchema';
 import { Checkbox } from '@/components/ui/checkbox';
-
 import {
   AccordionContent,
   AccordionItem,
@@ -11,21 +8,18 @@ import {
 import {
   CircleUserRound,
   SquareCheck,
-  Microscope,
   TestTubeDiagonal,
   Camera,
-  Scan,
 } from 'lucide-react';
 
 type taskCardPropType = {
   task: {
-    taskDetails: typeof tasksTable.$inferSelect;
-    patient: typeof patientsTable.$inferSelect;
+    taskDetails: any;
+    patient: any;
   };
 };
 
 type TaskStatusType = 'Pending' | 'In progress' | 'Complete';
-type iconType = 'Imaging' | 'Laboratory';
 
 const getStatusStyle = (status: TaskStatusType): string => {
   switch (status) {
@@ -69,14 +63,12 @@ export const TaskCard = ({ task }: taskCardPropType) => {
         <div className='left-3 flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 font-bold text-white'>
           {getCategoryIcon(task.taskDetails.categoryName)}
         </div>
-        {task.taskDetails.categoryName}
+        <div className='ml-1'>{task.taskDetails.categoryName}</div>
       </div>
 
       <div className='flex items-start justify-between rounded-t-lg bg-white p-4 sm:flex-row sm:items-center'>
         {/* Flex container for items on the left */}
         <div className='flex w-full flex-wrap items-start text-xs sm:w-auto sm:items-center'>
-          {' '}
-          {/* Added text-xs class for smaller text */}
           <div className='flex items-start gap-2 sm:items-center'>
             <Checkbox id={`checkbox-${task.taskDetails.id}`} />
             <div>
