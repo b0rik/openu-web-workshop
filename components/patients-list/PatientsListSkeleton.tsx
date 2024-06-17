@@ -7,7 +7,6 @@ export const PatientsListSkeleton = () => {
     <div className='rounded-xl bg-cyan-50 p-10'>
       <div className='flex justify-between'>
         <Skeleton className='h-[40px] w-[200px] bg-sky-700' />
-        <Skeleton className='h-[40px] w-[86px] bg-sky-700' />
       </div>
 
       <div className='mb-5 mt-10 flex items-center'>

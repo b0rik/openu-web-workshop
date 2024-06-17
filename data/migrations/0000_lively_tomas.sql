@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS "roles" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "task_categories" (
 	"name" varchar(50) PRIMARY KEY NOT NULL,
+	"icon_name" varchar(50) NOT NULL,
 	CONSTRAINT "task_categories_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint

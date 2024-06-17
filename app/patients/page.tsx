@@ -1,10 +1,13 @@
+import { auth } from '@/auth';
+
 import { PatientsList } from '@/components/patients-list/PatientsList';
 import { getPatientsWithTasksByUnit } from '@/data/patients';
-import {auth} from '@/auth';
 
 const PatientsListPage = async () => {
   const session = await auth();
-  const patientsWithTasksByUnit = await getPatientsWithTasksByUnit(session?.user?.activeUnit!);
+  const patientsWithTasksByUnit = await getPatientsWithTasksByUnit(
+    session?.user?.activeUnit!
+  );
 
   return (
     <div>

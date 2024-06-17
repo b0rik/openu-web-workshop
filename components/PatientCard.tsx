@@ -18,7 +18,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
 
-
 const hospitalizationDays = (date: Date): number =>
   differenceInDays(new Date(), date);
 
@@ -30,7 +29,8 @@ export const PatientCard = ({
     tasks: (typeof tasksTable.$inferSelect)[];
   };
 }) => {
-  const { id, firstName, lastName, unitName, roomNumber, admissionTime} = data.patient;
+  const { id, firstName, lastName, unitName, roomNumber, admissionTime } =
+    data.patient;
 
   const isUrgent = data.tasks.some((task) => task.isUrgent);
 
@@ -78,12 +78,18 @@ export const PatientCard = ({
         </div>
         <div>
           <p>
-            hositalized duration: {hospitalizationDays(admissionTime)} days
+            hospitalized duration: {hospitalizationDays(admissionTime)} days
           </p>
         </div>
         <div className='flex items-center justify-end'>
           <Button variant='ghost'>
-            <Link href={{ pathname: '/tasks/create', query: { patient: JSON.stringify(data.patient) } }} className='flex items-center gap-1 self-end text-lg'>
+            <Link
+              href={{
+                pathname: '/tasks/create',
+                query: { patient: JSON.stringify(data.patient) },
+              }}
+              className='flex items-center gap-1 self-end text-lg'
+            >
               <Plus />
               <span>New Task</span>
             </Link>

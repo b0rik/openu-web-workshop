@@ -5,6 +5,22 @@ import { rolesTable } from '@/models/drizzle/rolesSchema';
 import { usersPerUnitTable } from '@/models/drizzle/usersPerUnitSchema';
 import { unitsTable } from '@/models/drizzle/unitsSchema';
 
+export const getUsers = async () => {
+  try {
+    const result = await db.select().from(usersTable);
+
+    const users = result.map((user) => {
+      const { hashedPassword, ...rest } = user;
+      return rest;
+    });
+
+    return users;
+  } catch (error) {
+    console.error('Error getting user by username.', error);
+    throw error;
+  }
+};
+
 export const getUserByUsername = async (username: string) => {
   try {
     const result = await db

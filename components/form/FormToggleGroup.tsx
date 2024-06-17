@@ -5,13 +5,7 @@ import { useId } from 'react';
 
 import { cn } from '@/lib/utils';
 
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import {
   FormControl,
   FormField,
@@ -20,22 +14,29 @@ import {
 } from '@/components/ui/form';
 import { ErrorMessage } from '@hookform/error-message';
 
-type FormSelectProps = {
+type FormToggleGroupType = {
   name: string;
   label: string;
-  placeholder?: string;
-  options?: string[];
+  items: {
+    item: React.ReactNode;
+    value: string;
+  }[];
+  multiple?: boolean;
+  onChange?: () => void;
+  outline?: boolean;
 };
 
-export const FormSelect = ({
+export const FormToggleGroup = ({
   name,
   label,
-  placeholder = '',
-  options = [],
-}: FormSelectProps) => {
+  items,
+  onChange,
+  multiple = false,
+  outline = false,
+}: FormToggleGroupType) => {
   const form = useFormContext();
   const errorIdPrefix = useId();
-  const optionIdPrefix = useId();
+  const itemIdPrefix = useId();
 
   return (
     <FormField
@@ -46,32 +47,26 @@ export const FormSelect = ({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <div>
-              <Select
-                onValueChange={field.onChange}
+              <ToggleGroup
+                className='grid grid-cols-2 gap-2 min-[425px]:grid-cols-3 md:grid-cols-6'
+                type={multiple ? 'multiple' : 'single'}
+                onValueChange={(value: any) => {
+                  field.onChange(value);
+                  onChange && onChange();
+                }}
                 defaultValue={field.value}
                 value={field.value}
               >
-                <SelectTrigger
-                  className={cn(
-                    'rounded-full border-sky-300 focus:ring-sky-600',
-                    (fieldState.isDirty || fieldState.invalid) &&
-                      (fieldState.invalid
-                        ? 'border-red-400'
-                        : 'border-green-400')
-                  )}
-                >
-                  <SelectValue placeholder={placeholder} />
-                </SelectTrigger>
-                <SelectContent>
-                  {options.map((option, index) => {
-                    return (
-                      <SelectItem key={optionIdPrefix + index} value={option}>
-                        {option}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
+                {items.map((item, index) => (
+                  <ToggleGroupItem
+                    className='h-auto p-2'
+                    key={itemIdPrefix + index}
+                    value={item.value}
+                  >
+                    {item.item}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
               <ErrorMessage
                 errors={form.formState.errors}
                 name={name}

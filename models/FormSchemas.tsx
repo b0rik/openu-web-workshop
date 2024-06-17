@@ -44,6 +44,7 @@ export const UserCreateFormSchema = z
       }),
     confirmPassword: z.string(),
     role: z.string().min(1, 'role is required.'),
+    userUnits: z.string().array(),
   })
   .refine((data) => !containsWhitespace(data.username), {
     message: 'username cannot contain whitespace.',
@@ -109,4 +110,24 @@ export const PatientCreateFormSchema = z.object({
       message: `room number is to long, max ${MAX_LENGTH} allowed.`,
     })
     .refine(isDigits, { message: 'room number must contain only numbers.' }),
+});
+
+export const TaskCreateFormSchema = z.object({
+  categoryName: z.string().min(1, { message: 'category required.' }),
+  subCategoryName: z.string().min(1, { message: 'sub category required.' }),
+  comments: z.string().optional(),
+  status: z.string().min(1, { message: 'status is required.' }),
+  assignedToUser: z.string().optional(),
+  dueDate: z
+    .string()
+    .date()
+    .refine(
+      (val) => {
+        return new Date(val) >= new Date();
+      },
+      { message: 'due date invalid.' }
+    )
+    .optional(),
+  isUrgent: z.boolean(),
+  patientId: z.string().min(1, { message: 'patient id required.' }),
 });
