@@ -25,7 +25,6 @@ import React, { useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { useSession } from 'next-auth/react';
-import { PatientCreateForm } from '@/components/patient-create-form/PatientCreateForm';
 
 export const PatientsList = ({
   data,

@@ -5,12 +5,12 @@ import { getUserUnits } from '@/data/users';
 const page = async () => {
   const session = await auth();
 
-  const units = await getUserUnits(session?.user?.username as string);
+  const units = await getUserUnits(session?.user?.email as string);
 
   return (
-    <div className='flex items-center justify-center'>
+    < div className='flex items-center justify-center' >
       <UnitSelect units={units.map((unit) => unit.name)} />
-    </div>
+    </ div>
   );
 };
 

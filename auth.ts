@@ -3,7 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 
 import bcrypt from 'bcryptjs';
 
-import { getUserByUsernameWithRole } from '@/data/users';
+import { getUserByEmailWithRole } from '@/data/users';
 
 import { LoginFormSchema } from '@/models/FormSchemas';
 
@@ -20,17 +20,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        username: {},
+        email: {},
         password: {},
       },
       authorize: async (credentials) => {
         const validatedFields = LoginFormSchema.safeParse(credentials);
 
         if (validatedFields.success) {
-          const { username, password } = validatedFields.data;
+          const { email, password } = validatedFields.data;
 
           try {
-            const user = await getUserByUsernameWithRole(username);
+            const user = await getUserByEmailWithRole(email);
             if (user) {
               const passwordsMatch = await bcrypt.compare(
                 password,

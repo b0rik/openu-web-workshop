@@ -19,7 +19,7 @@ export const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
     mode: 'onChange',
@@ -52,9 +52,9 @@ export const LoginForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
             <FormInput
-              name='username'
-              label='Username'
-              placeholder='Enter username'
+              name='email'
+              label='Email'
+              placeholder='Enter email'
             />
             <FormInput
               name='password'

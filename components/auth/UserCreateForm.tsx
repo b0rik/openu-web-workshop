@@ -31,7 +31,7 @@ export const UserCreateForm = ({ roles, units }: UserCreateFormType) => {
       firstName: '',
       lastName: '',
       role: '',
-      username: '',
+      email: '',
       password: '',
       confirmPassword: '',
       userUnits: [],
@@ -61,9 +61,10 @@ export const UserCreateForm = ({ roles, units }: UserCreateFormType) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='grid gap-6 md:grid-cols-2'>
             <FormInput
-              name='username'
-              label='Username'
-              placeholder='Enter username'
+              name='email'
+              label='email'
+              placeholder='Enter email'
+              type='email'
             />
 
             <FormSelect

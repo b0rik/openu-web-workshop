@@ -194,7 +194,7 @@ export const CreateTask = ({
               name='assignedToUser'
               label='Assigned to'
               placeholder='Select user to assign'
-              options={users.map((user) => user.username)}
+              options={users.map((user) => user.email)}
             />
 
             <div className='flex gap-3'>
