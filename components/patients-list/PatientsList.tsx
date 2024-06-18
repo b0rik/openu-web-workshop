@@ -35,8 +35,16 @@ export const PatientsList = ({
   }[];
 }) => {
   const [searchInput, setSearchInput] = useState('');
-  const [patients, setPatients] = useState(data.sort((d1, d2) => d1.patient.firstName + ' ' + d1.patient.lastName > d2.patient.firstName + ' ' + d2.patient.lastName ? 1 : -1
-   ).map((patient) => ({isFiltered: false,...patient})));
+  const [patients, setPatients] = useState(
+    data
+      .sort((d1, d2) =>
+        d1.patient.firstName + ' ' + d1.patient.lastName >
+        d2.patient.firstName + ' ' + d2.patient.lastName
+          ? 1
+          : -1
+      )
+      .map((patient) => ({ isFiltered: false, ...patient }))
+  );
   const session = useSession();
   const activeUnit = session.data?.user?.activeUnit;
 
@@ -64,29 +72,29 @@ export const PatientsList = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={
-              () => {
+            <DropdownMenuItem
+              onClick={() => {
                 setPatients(
                   patients.map((data) => {
-                    return ({...data, isFiltered: false})
+                    return { ...data, isFiltered: false };
                   })
                 );
-              }
-            }>
+              }}
+            >
               All
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={
-              () => {
+            <DropdownMenuItem
+              onClick={() => {
                 setPatients(
                   patients.map((data) => {
                     if (data.tasks.some((task) => task.isUrgent)) {
-                      return ({...data, isFiltered: false})
+                      return { ...data, isFiltered: false };
                     }
-                    return ({...data, isFiltered: true})
+                    return { ...data, isFiltered: true };
                   })
                 );
-              }
-            }>
+              }}
+            >
               Urgent
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -103,7 +111,7 @@ export const PatientsList = ({
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Search By Patient's Name Or ID</DialogTitle>
+              <DialogTitle>{"Search By Patient's Name Or ID"}</DialogTitle>
             </DialogHeader>
             <Input
               id='search-input'
@@ -114,15 +122,19 @@ export const PatientsList = ({
 
                 setPatients(
                   patients.map((data) => {
-                    if (value === '') return {...data, isFiltered: false};
+                    if (value === '') return { ...data, isFiltered: false };
 
                     if (data.patient.id.startsWith(value)) {
-                      return {...data, isFiltered: false}
-                    } else if((data.patient.firstName + ' ' + data.patient.lastName).toLowerCase().startsWith(value)) {
-                      return ({...data, isFiltered: false})
+                      return { ...data, isFiltered: false };
+                    } else if (
+                      (data.patient.firstName + ' ' + data.patient.lastName)
+                        .toLowerCase()
+                        .startsWith(value)
+                    ) {
+                      return { ...data, isFiltered: false };
                     }
 
-                    return ({...data, isFiltered: true})
+                    return { ...data, isFiltered: true };
                   })
                 );
               }}
@@ -138,9 +150,9 @@ export const PatientsList = ({
               <div key={patientData.patient.id}>
                 <PatientCard data={patientData} />
               </div>
-            )
+            );
           }
-          })}
+        })}
       </div>
       {session?.data?.user?.canManagePatients && (
         // <Dialog>
