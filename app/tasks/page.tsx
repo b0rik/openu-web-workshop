@@ -1,11 +1,17 @@
+import { auth } from '@/auth';
+
+
 import { TaskList } from '@/components/taskList/TaskList'
-import { getTasksWithPatient } from '@/data/tasks';
+import { getTasksWithPatientByUnit } from '@/data/tasks';
 
 
 import React from 'react'
 
 const page = async () => {
-  const tasks = await getTasksWithPatient();
+  const session = await auth();
+  const tasks = await getTasksWithPatientByUnit(
+    session?.user?.activeUnit!
+  );
 
   return (
     <div className='flex justify-center'>

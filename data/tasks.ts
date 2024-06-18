@@ -24,6 +24,24 @@ export const getTasksWithPatient = async () => {
   }
 };
 
+export const getTasksWithPatientByUnit = async (unit: string) => {
+  try {
+    const result = await db
+      .select({
+        taskDetails: tasksTable,
+        patient: patientsTable,
+      })
+      .from(tasksTable)
+      .innerJoin(patientsTable, eq(patientsTable.id, tasksTable.patientId))
+      .where(eq(patientsTable.unitName, unit));
+
+    return result;
+  } catch (error) {
+    console.error('Error getting tasks.', error);
+    throw error;
+  }
+};
+
 export const getTasksByPatientId = async (patientId: string) => {
   try {
     const result = await db
