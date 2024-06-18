@@ -24,6 +24,24 @@ export const getTasksWithPatient = async () => {
   }
 };
 
+export const getTaskWithPatientById = async (id: string) => {
+  try {
+    const result = await db
+      .select({
+        taskDetails: tasksTable,
+        patient: patientsTable,
+      })
+      .from(tasksTable)
+      .innerJoin(patientsTable, eq(patientsTable.id, tasksTable.patientId))
+      .where(eq(tasksTable.id, id));
+
+    return result ? result[0] : null;
+  } catch (error) {
+    console.error('Error getting tasks.', error);
+    throw error;
+  }
+};
+
 export const getTasksWithPatientByUnit = async (unit: string) => {
   try {
     const result = await db
@@ -85,6 +103,15 @@ export const getTasksByPatientId = async (patientId: string) => {
 export const insertTask = async (task: typeof tasksTable.$inferInsert) => {
   try {
     await db.insert(tasksTable).values(task);
+  } catch (error) {
+    console.error('Error inserting task.', error);
+    throw error;
+  }
+};
+
+export const updateTask = async (task: typeof tasksTable.$inferSelect) => {
+  try {
+    await db.update(tasksTable).set(task).where(eq(tasksTable.id, task.id));
   } catch (error) {
     console.error('Error inserting task.', error);
     throw error;

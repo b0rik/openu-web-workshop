@@ -12,9 +12,11 @@ import {
   SquareCheck,
   TestTubeDiagonal,
   Camera,
+  Pencil,
 } from 'lucide-react';
 import type { TaskWithPatientType } from '@/data/tasks';
 import { updateStatus } from '@/actions/tasks';
+import Link from 'next/link';
 
 type TaskStatusType = 'Pending' | 'In progress' | 'Complete';
 
@@ -134,6 +136,12 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
               </div>
             )}
           </div>
+          <Link
+            className='self-end p-2'
+            href={`/tasks/${task.taskDetails.id}/edit`}
+          >
+            <Pencil />
+          </Link>
         </div>
       </AccordionContent>
     </AccordionItem>

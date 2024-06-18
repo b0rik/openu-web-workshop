@@ -14,7 +14,7 @@ import { taskStatusTable } from '@/models/drizzle/taskStatusSchema';
 import { usersTable } from '@/models/drizzle/usersSchema';
 import { taskSubCategoriesTable } from '@/models/drizzle/taskSubCategoriesSchema';
 import { cn } from '@/lib/utils';
-import { createTask } from '@/actions/tasks';
+import { editTask } from '@/actions/tasks';
 
 import {
   Card,
@@ -34,36 +34,41 @@ import { FormDatePicker } from '@/components/form/FormDatePicker';
 import { FormSwitch } from '@/components/form/FormSwitch';
 import { FormButton } from '@/components/form/FormButton';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { TaskCreateFormSchema } from '@/models/FormSchemas';
+import { TaskEditFormSchema } from '@/models/FormSchemas';
 import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
+import { tasksTable } from '@/models/drizzle/tasksSchema';
+import { TaskWithPatientType } from '@/data/tasks';
 
 const age = (date: Date): number => differenceInYears(new Date(), date);
 
-type createTaskType = {
+type editTaskType = {
   taskCategories: (typeof taskCategoriesTable.$inferSelect)[];
   taskStatuses: (typeof taskStatusTable.$inferSelect)[];
   users: Omit<typeof usersTable.$inferSelect, 'hashedPassword'>[];
   taskSubCategories: (typeof taskSubCategoriesTable.$inferSelect)[];
+  task: TaskWithPatientType;
 };
 
-export const CreateTask = ({
+export const EditTask = ({
   taskCategories,
   taskStatuses,
   users,
   taskSubCategories,
-}: createTaskType) => {
-  const form = useForm<z.infer<typeof TaskCreateFormSchema>>({
-    resolver: zodResolver(TaskCreateFormSchema.omit({ patientId: true })),
+  task,
+}: editTaskType) => {
+  const form = useForm<z.infer<typeof TaskEditFormSchema>>({
+    resolver: zodResolver(TaskEditFormSchema),
     defaultValues: {
-      assignedToUser: undefined,
-      categoryName: '',
-      comments: undefined,
-      dueDate: undefined,
-      isUrgent: false,
-      status: '',
-      subCategoryName: '',
-      patientId: '',
+      assignedToUser: task.taskDetails.assignedToUser || undefined,
+      categoryName: task.taskDetails.categoryName,
+      comments: task.taskDetails.comments || undefined,
+      dueDate: task.taskDetails.dueDate?.toUTCString() || undefined,
+      isUrgent: task.taskDetails.isUrgent,
+      status: task.taskDetails.status,
+      subCategoryName: task.taskDetails.subCategoryName,
+      patientId: task.taskDetails.patientId,
+      id: task.taskDetails.id,
     },
     mode: 'onChange',
     criteriaMode: 'all',
@@ -75,16 +80,8 @@ export const CreateTask = ({
   const [category, setCategory] = useState<string>('');
   const [subCategories, setSubCategories] = useState<string[]>([]);
   const [isSelectTime, setIsSelectTime] = useState(false);
-  const searchParams = useSearchParams();
-  const patientJson = searchParams.get('patient');
-  const {
-    id,
-    firstName,
-    lastName,
-    dateOfBirth,
-    unitName,
-    roomNumber,
-  }: typeof patientsTable.$inferSelect = JSON.parse(patientJson!);
+  const { id, firstName, lastName, dateOfBirth, unitName, roomNumber } =
+    task.patient;
   const [taskCategoriesWithIcon, setTaskCategoriesWithIcon] = useState<
     { name: string; icon: React.ReactNode }[]
   >([]);
@@ -109,10 +106,10 @@ export const CreateTask = ({
     );
   }, [category, form, taskSubCategories]);
 
-  const onSubmit = async (values: z.infer<typeof TaskCreateFormSchema>) => {
-    const result = await createTask({ ...values, patientId: id });
+  const onSubmit = async (values: z.infer<typeof TaskEditFormSchema>) => {
+    // console.log(values);
+    const result = await editTask(values);
     if (result.success) {
-      form.reset();
       setSuccess(result.success);
       setError(undefined);
       setTimeout(() => {
@@ -168,6 +165,7 @@ export const CreateTask = ({
               onChange={() => {
                 setCategory(form.getValues().categoryName);
               }}
+              disabled
             />
 
             <FormSelect
@@ -175,6 +173,7 @@ export const CreateTask = ({
               label='Sub category'
               placeholder='Select a a sub category'
               options={subCategories}
+              disabled
             />
 
             <FormTextArea
@@ -236,7 +235,7 @@ export const CreateTask = ({
 
             <FormSuccess message={success} />
             <FormError message={error} />
-            <FormButton>Save Task</FormButton>
+            <FormButton>Edit Task</FormButton>
           </form>
         </Form>
       </CardContent>

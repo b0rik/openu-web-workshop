@@ -23,7 +23,7 @@ type FormToggleGroupType = {
   }[];
   multiple?: boolean;
   onChange?: () => void;
-  outline?: boolean;
+  disabled?: boolean;
 };
 
 export const FormToggleGroup = ({
@@ -32,7 +32,7 @@ export const FormToggleGroup = ({
   items,
   onChange,
   multiple = false,
-  outline = false,
+  disabled = false,
 }: FormToggleGroupType) => {
   const form = useFormContext();
   const errorIdPrefix = useId();
@@ -48,6 +48,7 @@ export const FormToggleGroup = ({
           <FormControl>
             <div>
               <ToggleGroup
+                disabled={disabled}
                 className='grid grid-cols-2 gap-2 min-[425px]:grid-cols-3 md:grid-cols-6'
                 type={multiple ? 'multiple' : 'single'}
                 onValueChange={(value: any) => {
