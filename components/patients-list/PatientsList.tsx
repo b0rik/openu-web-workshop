@@ -131,7 +131,7 @@ export const PatientsList = ({
         </Dialog>
       </div>
 
-      <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
+      <div className='grid gap-5 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {patients.map((patientData) => {
           if (!patientData.isFiltered) {
             return (

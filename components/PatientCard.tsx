@@ -35,7 +35,7 @@ export const PatientCard = ({
   const isUrgent = data.tasks.some((task) => task.isUrgent);
 
   return (
-    <Card className='w-80 sm:w-96'>
+    <Card>
       <CardHeader
         className={cn(
           'relative flex flex-row items-center justify-between rounded-t-lg border-b-4 p-3 text-white',
@@ -44,7 +44,7 @@ export const PatientCard = ({
       >
         <div className='flex items-center gap-2'>
           <UserRound size='52px' />
-          <div className='max-w-40 space-y-2 text-wrap break-words sm:max-w-52'>
+          <div className='space-y-2 text-wrap break-words'>
             <CardTitle className=''>
               <span>{firstName + ' ' + lastName}</span>
               {/* {', '}

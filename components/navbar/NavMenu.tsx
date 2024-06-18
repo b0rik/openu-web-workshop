@@ -18,7 +18,7 @@ export const NavMenu = async ({ navLinks }: NavMenuProps) => {
 
   return (
     <div>
-      <div className='hidden items-center gap-6 md:flex'>
+      <div className='hidden items-center gap-6 lg:flex'>
         {session ? (
           <>
             {navLinks.map((link, i) => (
@@ -33,10 +33,10 @@ export const NavMenu = async ({ navLinks }: NavMenuProps) => {
         )}
       </div>
       <Sheet>
-        <SheetTrigger className='md:hidden'>
+        <SheetTrigger className='lg:hidden'>
           <Menu />
         </SheetTrigger>
-        <SheetContent className='md:hidden'>
+        <SheetContent className='lg:hidden'>
           <div className='mt-6 flex flex-col gap-6'>
             {session ? (
               <>
