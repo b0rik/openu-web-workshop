@@ -10,6 +10,7 @@ import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
 import { TaskWithPatientType } from '@/data/tasks';
 import { TasksAccordion } from '@/components/taskList/TasksAccordion';
+import { useSession } from 'next-auth/react';
 
 const filters = {
   category: [
@@ -59,6 +60,9 @@ const filters = {
 export const TaskList = ({ tasks }: { tasks: TaskWithPatientType[] }) => {
   const [tasksList, setTasksList] = useState(tasks);
   const [filterList, setFilterList] = useState(filters);
+
+  const session = useSession();
+  const activeUnit = session.data?.user?.activeUnit;
 
   useEffect(() => {
     // Filter tasks based on the filterList
@@ -114,6 +118,9 @@ export const TaskList = ({ tasks }: { tasks: TaskWithPatientType[] }) => {
 
   return (
     <Card className='mx-auto w-full max-w-screen-lg bg-white p-6'>
+      <p className='text-xl font-bold tracking-wide text-sky-700'>
+        {activeUnit}
+      </p>
       <Filter filterList={filterList} setFilterList={setFilterList} />
       <TasksAccordion tasks={tasksList} />
     </Card>

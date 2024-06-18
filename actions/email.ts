@@ -5,10 +5,10 @@ import { createTransport } from 'nodemailer';
 import { getUserByEmail } from '@/data/users';
 
 const emailUser = {
-  name: 'Lucas Ankunding',
+  name: 'Randal Auer',
   authData: {
-    user: 'lucas.ankunding90@ethereal.email',
-    pass: 'FRsPFszPJRSnsbmmSS',
+    user: 'randal.auer58@ethereal.email',
+    pass: 'WYpBpsyGpRDnqzxPZw',
   },
 };
 

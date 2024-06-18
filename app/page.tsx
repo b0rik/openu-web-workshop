@@ -10,6 +10,25 @@ import { getUserTasksWithPatientsByUnit } from '@/data/tasks';
 import { TasksAccordion } from '@/components/taskList/TasksAccordion';
 import { ListTodo, UserPlus, UsersRound } from 'lucide-react';
 
+const HomeNav = ({
+  href,
+  icon,
+  title,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  title: string;
+}) => {
+  return (
+    <Link className='shadow-lg' href={href}>
+      <div className='flex h-auto flex-col items-center justify-center bg-sky-400 p-4'>
+        <div>{icon}</div>
+        <p>{title}</p>
+      </div>
+    </Link>
+  );
+};
+
 const page = async () => {
   const session = await auth();
   const { user } = session!;
@@ -42,31 +61,14 @@ const page = async () => {
         </CardHeader>
         <CardContent className='space-y-6'>
           <div className='grid auto-rows-max gap-6 min-[425px]:grid-cols-2'>
-            <Link className='shadow-lg' href='/patients'>
-              <div className='flex h-auto flex-col items-center justify-center bg-sky-400 p-4'>
-                <div>
-                  <UsersRound />
-                </div>
-                <p>Patients</p>
-              </div>
-            </Link>
-            <Link className='shadow-lg' href='/tasks'>
-              <div className='flex h-auto flex-col items-center justify-center bg-sky-400 p-4'>
-                <div>
-                  <ListTodo />
-                </div>
-                <p>Tasks</p>
-              </div>
-            </Link>
+            <HomeNav href='/patients' icon={<UsersRound />} title='Patients' />
+            <HomeNav href='/tasks' icon={<ListTodo />} title='All tasks' />
             {user?.canManageUsers && (
-              <Link className='shadow-lg' href='/auth/create-user'>
-                <div className='flex h-auto flex-col items-center justify-center bg-sky-400 p-4'>
-                  <div>
-                    <UserPlus />
-                  </div>
-                  <p>Create user</p>
-                </div>
-              </Link>
+              <HomeNav
+                href='/auth/create-user'
+                icon={<UserPlus />}
+                title='Create user'
+              />
             )}
             <div className='col-span-full space-y-2'>
               <h1>Active unit:</h1>

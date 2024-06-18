@@ -173,9 +173,9 @@ users.push(createUser('shift manager'));
 import { usersPerUnitTable } from '@/models/drizzle/usersPerUnitSchema';
 
 const usersPerUnit: (typeof usersPerUnitTable.$inferInsert)[] = users.map(
-  ({ email }) => ({
+  ({ email, activeUnit }) => ({
     userEmail: email,
-    unitName: faker.helpers.arrayElement(units).name,
+    unitName: activeUnit ? activeUnit : faker.helpers.arrayElement(units).name,
   })
 );
 
@@ -192,8 +192,14 @@ const createTask = () => {
     patientId: faker.helpers.arrayElement(patients).id,
   };
 
+  const taskUnit = patients.find(
+    (patient) => task.patientId === patient.id
+  )?.unitName;
+
   if (faker.helpers.maybe(() => true, { probability: 0.8 })) {
-    task.assignedToUser = faker.helpers.arrayElement(users).email;
+    task.assignedToUser = faker.helpers.arrayElement(
+      usersPerUnit.filter((option) => option.unitName === taskUnit)
+    ).userEmail;
   }
 
   if (faker.helpers.maybe(() => true, { probability: 0.7 })) {
