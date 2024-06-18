@@ -34,9 +34,9 @@ export const PatientsList = ({
     tasks: (typeof tasksTable.$inferSelect)[];
   }[];
 }) => {
-  const [filter, setFilter] = useState('Name');
   const [searchInput, setSearchInput] = useState('');
-  const [patients, setPatients] = useState(data);
+  const [patients, setPatients] = useState(data.sort((d1, d2) => d1.patient.firstName + ' ' + d1.patient.lastName > d2.patient.firstName + ' ' + d2.patient.lastName ? 1 : -1
+   ).map((patient) => ({isFiltered: false,...patient})));
   const session = useSession();
   const activeUnit = session.data?.user?.activeUnit;
 
@@ -64,14 +64,30 @@ export const PatientsList = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setFilter('ID')}>
-              ID
+            <DropdownMenuItem onClick={
+              () => {
+                setPatients(
+                  patients.map((data) => {
+                    return ({...data, isFiltered: false})
+                  })
+                );
+              }
+            }>
+              All
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setFilter('Name')}>
-              Name
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setFilter('Room')}>
-              Room
+            <DropdownMenuItem onClick={
+              () => {
+                setPatients(
+                  patients.map((data) => {
+                    if (data.tasks.some((task) => task.isUrgent)) {
+                      return ({...data, isFiltered: false})
+                    }
+                    return ({...data, isFiltered: true})
+                  })
+                );
+              }
+            }>
+              Urgent
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -87,38 +103,26 @@ export const PatientsList = ({
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Search By {filter}</DialogTitle>
+              <DialogTitle>Search By Patient's Name Or ID</DialogTitle>
             </DialogHeader>
             <Input
               id='search-input'
               value={searchInput}
               onChange={(event) => {
-                const value = event.target.value.trim();
+                const value = event.target.value.toLowerCase().trim();
                 setSearchInput(value);
 
                 setPatients(
-                  patients.filter((patient) => {
-                    if (value === '') return true;
+                  patients.map((data) => {
+                    if (value === '') return {...data, isFiltered: false};
 
-                    switch (filter) {
-                      case 'ID':
-                        return patient.patient.id.includes(value);
-                      case 'Name':
-                        return (
-                          patient.patient.firstName +
-                          ' ' +
-                          patient.patient.lastName
-                        )
-                          .toLowerCase()
-                          .includes(value.toLowerCase());
-                      case 'Room':
-                        return (
-                          parseInt(patient.patient.roomNumber || '0') ===
-                          parseInt(value)
-                        );
-                      default:
-                        return true;
+                    if (data.patient.id.startsWith(value)) {
+                      return {...data, isFiltered: false}
+                    } else if((data.patient.firstName + ' ' + data.patient.lastName).toLowerCase().startsWith(value)) {
+                      return ({...data, isFiltered: false})
                     }
+
+                    return ({...data, isFiltered: true})
                   })
                 );
               }}
@@ -128,11 +132,15 @@ export const PatientsList = ({
       </div>
 
       <div className='grid gap-6 lg:grid-cols-2 xl:grid-cols-3'>
-        {patients.map((patientData) => (
-          <div key={patientData.patient.id}>
-            <PatientCard data={patientData} />
-          </div>
-        ))}
+        {patients.map((patientData) => {
+          if (!patientData.isFiltered) {
+            return (
+              <div key={patientData.patient.id}>
+                <PatientCard data={patientData} />
+              </div>
+            )
+          }
+          })}
       </div>
       {session?.data?.user?.canManagePatients && (
         // <Dialog>
