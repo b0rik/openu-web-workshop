@@ -9,6 +9,7 @@ import Filter from '../filter-bar/Filter';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
 import { TaskWithPatientType } from '@/data/tasks';
+import { TasksAccordion } from '@/components/taskList/TasksAccordion';
 
 const filters = {
   category: [
@@ -57,7 +58,6 @@ const filters = {
 
 export const TaskList = ({ tasks }: { tasks: TaskWithPatientType[] }) => {
   const [tasksList, setTasksList] = useState(tasks);
-  const [sortedTaskList, setSortedTaskList] = useState<TaskWithPatientType[]>([]);
   const [filterList, setFilterList] = useState(filters);
 
   useEffect(() => {
@@ -112,31 +112,10 @@ export const TaskList = ({ tasks }: { tasks: TaskWithPatientType[] }) => {
     setTasksList(filteredTasks);
   }, [filterList, tasks]);
 
-  
-  const compareStatus = (a: TaskWithPatientType, b: TaskWithPatientType) => {
-    if (a.taskDetails.status === 'Complete' && b.taskDetails.status === 'Complete') {
-      return 0;
-    }
-    
-    if (a.taskDetails.status === 'Complete') {
-      return 1;
-    }
-
-    return -1;
-  }
-
-  useEffect(() => {
-    setSortedTaskList(tasksList.toSorted(compareStatus));
-  }, [tasksList])
-
   return (
-    <Card className='top-14 z-50 w-full max-w-screen-lg bg-white p-6'>
+    <Card className='mx-auto w-full max-w-screen-lg bg-white p-6'>
       <Filter filterList={filterList} setFilterList={setFilterList} />
-      <Accordion type='multiple' className=''>
-        {sortedTaskList.map((task) => {
-          return <TaskCard key={task.taskDetails.id} task={task} />;
-        })}
-      </Accordion>
+      <TasksAccordion tasks={tasksList} />
     </Card>
   );
 };

@@ -31,6 +31,7 @@ export const updateActiveUnit = async (email: string, unit: string) => {
 
     revalidatePath('/patients');
     revalidatePath('/tasks');
+    revalidatePath('/');
 
     return { success: 'Updated active unit for user.' };
   } catch (error) {

@@ -1,7 +1,7 @@
 import { db } from '@/data/db';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 export type TaskWithPatientType = {
   taskDetails: typeof tasksTable.$inferSelect;
@@ -34,6 +34,32 @@ export const getTasksWithPatientByUnit = async (unit: string) => {
       .from(tasksTable)
       .innerJoin(patientsTable, eq(patientsTable.id, tasksTable.patientId))
       .where(eq(patientsTable.unitName, unit));
+
+    return result;
+  } catch (error) {
+    console.error('Error getting tasks.', error);
+    throw error;
+  }
+};
+
+export const getUserTasksWithPatientsByUnit = async (
+  userEmail: string,
+  unit: string
+) => {
+  try {
+    const result = await db
+      .select({
+        taskDetails: tasksTable,
+        patient: patientsTable,
+      })
+      .from(tasksTable)
+      .innerJoin(patientsTable, eq(patientsTable.id, tasksTable.patientId))
+      .where(
+        and(
+          eq(patientsTable.unitName, unit),
+          eq(tasksTable.assignedToUser, userEmail)
+        )
+      );
 
     return result;
   } catch (error) {
