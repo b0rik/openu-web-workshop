@@ -113,7 +113,7 @@ export const TaskList = ({ tasks }: { tasks: TaskWithPatientType[] }) => {
   }, [filterList, tasks]);
 
   
-  const compareStatus = (a, b) => {
+  const compareStatus = (a: TaskWithPatientType, b: TaskWithPatientType) => {
     if (a.taskDetails.status === 'Complete' && b.taskDetails.status === 'Complete') {
       return 0;
     }
