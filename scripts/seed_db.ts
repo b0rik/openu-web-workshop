@@ -114,6 +114,7 @@ const createPatient = () => {
     lastName: faker.person.lastName(),
     dateOfBirth: faker.date.birthdate(),
     unitName: faker.helpers.arrayElement(units).name,
+    admissionTime: faker.date.recent({ days: 10 }),
   };
 
   if (faker.helpers.maybe(() => true)) {
