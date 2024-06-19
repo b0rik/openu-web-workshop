@@ -82,7 +82,7 @@ export const FormDatePicker = ({
                     onSelect={(date) => {
                       setCalendarOpen(false);
                       date?.setDate(date.getDate() + 1); //date is offseted by one because on time zone diff
-                      field.onChange(date?.toISOString().split('T')[0]);
+                      field.onChange(date);
                     }}
                     disabled={(date) => {
                       if (future) {
