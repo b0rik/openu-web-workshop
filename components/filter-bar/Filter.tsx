@@ -381,7 +381,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
         </DisclosurePanel>
         <div className='col-start-1 row-start-1 py-4'>
           <div className='mx-auto flex max-w-7xl justify-end px-4 sm:px-6 lg:px-8'>
-            <Menu as='div' className='relative inline-block'>
+            {/* <Menu as='div' className='relative inline-block'>
               <div className='flex'>
                 <MenuButton className='group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900'>
                   Sort
@@ -423,7 +423,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                   </div>
                 </MenuItems>
               </Transition>
-            </Menu>
+            </Menu> */}
           </div>
         </div>
       </Disclosure>
