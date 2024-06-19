@@ -104,6 +104,7 @@ export const FormDatePicker = ({
                       dropdown_month: 'border',
                       dropdown_year: 'border',
                       caption_dropdowns: 'flex gap-2',
+                      nav: 'hidden',
                     }}
                   />
                 </PopoverContent>
