@@ -21,30 +21,35 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Filter, Search, Plus } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { useSession } from 'next-auth/react';
 
-export const PatientsList = ({
-  data,
-}: {
-  data: {
-    patient: typeof patientsTable.$inferSelect;
-    tasks: (typeof tasksTable.$inferSelect)[];
-  }[];
-}) => {
+type DataType = {
+  patient: typeof patientsTable.$inferSelect;
+  tasks: (typeof tasksTable.$inferSelect)[];
+};
+
+export const PatientsList = ({ data }: { data: DataType[] }) => {
   const [searchInput, setSearchInput] = useState('');
-  const [patients, setPatients] = useState(
-    data
-      .sort((d1, d2) =>
-        d1.patient.firstName + ' ' + d1.patient.lastName >
-        d2.patient.firstName + ' ' + d2.patient.lastName
-          ? 1
-          : -1
-      )
-      .map((patient) => ({ isFiltered: false, ...patient }))
-  );
+  const [patients, setPatients] = useState<
+    (DataType & { isFiltered: boolean })[]
+  >([]);
+
+  useEffect(() => {
+    setPatients(
+      data
+        .sort((d1, d2) =>
+          d1.patient.firstName + ' ' + d1.patient.lastName >
+          d2.patient.firstName + ' ' + d2.patient.lastName
+            ? 1
+            : -1
+        )
+        .map((patient) => ({ isFiltered: false, ...patient }))
+    );
+  }, [data]);
+
   const session = useSession();
   const activeUnit = session.data?.user?.activeUnit;
 

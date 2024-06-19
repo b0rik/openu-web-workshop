@@ -10,15 +10,14 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Bell, Bed, Calendar, UserRound, Plus } from 'lucide-react';
+import { Bell, Bed, Calendar, UserRound, Plus, UserRoundX } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
-import { useState } from 'react';
 import { patientsTable } from '@/models/drizzle/patientsSchema';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
-import { auth } from '@/auth';
 import { useSession } from 'next-auth/react';
+import { ConfirmDialog } from './ConfirmDialog';
+import { removePatient } from '@/actions/patients';
 
 const hospitalizationDays = (date: Date): number =>
   differenceInDays(new Date(), date);
@@ -85,22 +84,36 @@ export const PatientCard = ({
             hospitalized duration: {hospitalizationDays(admissionTime)} days
           </p>
         </div>
-        {session?.data?.user?.canManageTasks && (
-          <div className='flex items-center justify-end'>
-            <Button variant='ghost'>
+        <div className='flex flex-col justify-between gap-2 sm:flex-row'>
+          {session?.data?.user?.canManageTasks && (
+            <Button variant='ghost' className='justify-start px-2'>
               <Link
                 href={{
                   pathname: '/tasks/create',
                   query: { patient: JSON.stringify(data.patient) },
                 }}
-                className='flex items-center gap-1 self-end text-lg'
+                className='flex items-center gap-1 text-lg'
               >
                 <Plus />
                 <span>New Task</span>
               </Link>
             </Button>
-          </div>
-        )}
+          )}
+          {session?.data?.user?.canManagePatients && (
+            <ConfirmDialog
+              trigger={
+                <div className='flex items-center gap-1 px-2 text-lg hover:text-red-700'>
+                  <UserRoundX />
+                  <span>Delete</span>
+                </div>
+              }
+              title='Are You sure you want to delete the patient?'
+              description='This action cannot be undone. This will permanently delete the patient
+            and remove his data from our servers including his tasks.'
+              onAction={() => removePatient(id)}
+            />
+          )}
+        </div>
       </CardContent>
     </Card>
   );

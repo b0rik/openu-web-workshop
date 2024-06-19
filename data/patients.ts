@@ -108,3 +108,12 @@ export const getPatientsWithTasksByUnit = async (unit: string) => {
     throw error;
   }
 };
+
+export const deletePatient = async (id: string) => {
+  try {
+    await db.delete(patientsTable).where(eq(patientsTable.id, id));
+  } catch (error) {
+    console.error('Error deleting patient.', error);
+    throw error;
+  }
+};

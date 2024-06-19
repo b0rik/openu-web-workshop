@@ -4,10 +4,11 @@ import { z } from 'zod';
 
 import { revalidatePath } from 'next/cache';
 
-import { getPatientById, insertPatient } from '@/data/patients';
+import { deletePatient, getPatientById, insertPatient } from '@/data/patients';
 import { getUnits } from '@/data/units';
 
 import { PatientCreateFormSchema } from '@/models/FormSchemas';
+import { deleteTask, getTasksByPatientId } from '@/data/tasks';
 
 export const createPatient = async (
   values: z.infer<typeof PatientCreateFormSchema>
@@ -57,5 +58,23 @@ export const createPatient = async (
   } catch (error) {
     console.error('Error creating patient:', error);
     return { error: 'Something went wrong.' };
+  }
+};
+
+export const removePatient = async (id: string) => {
+  try {
+    const patientsTasks = await getTasksByPatientId(id);
+    patientsTasks.forEach(async (task) => await deleteTask(task.id));
+
+    await deletePatient(id);
+
+    revalidatePath('/patients');
+
+    return { success: 'Deleted patient.' };
+  } catch (error) {
+    {
+      console.error('Error deleting patient', error);
+      return { error: 'Something went wrong.' };
+    }
   }
 };
