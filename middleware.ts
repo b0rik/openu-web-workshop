@@ -3,6 +3,8 @@ import { auth } from '@/auth';
 const loginPath = '/auth/login';
 const createUserPath = '/auth/create-user';
 const createPatientPath = '/patients/create';
+const taskEditPath = '/tasks/[id]/edit';
+const taskCreatePath = '/tasks/create';
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
@@ -24,6 +26,14 @@ export default auth((req) => {
   }
 
   if (path === createPatientPath && !req.auth?.user?.canManagePatients) {
+    return Response.redirect(new URL('/', req.url));
+  }
+
+  if (path === taskCreatePath && !req.auth?.user?.canManageTasks) {
+    return Response.redirect(new URL('/', req.url));
+  }
+
+  if (path === taskEditPath && !req.auth?.user?.canManageTaskSettings) {
     return Response.redirect(new URL('/', req.url));
   }
 });

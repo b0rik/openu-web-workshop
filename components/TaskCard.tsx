@@ -17,6 +17,7 @@ import type { TaskWithPatientType } from '@/data/tasks';
 import { updateStatus } from '@/actions/tasks';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 type TaskStatusType = 'Pending' | 'In progress' | 'Complete';
 
@@ -45,6 +46,7 @@ const getCategoryIcon = (category: string) => {
 };
 
 export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
+  const session = useSession();
   const [checked, setChecked] = useState(
     task.taskDetails.status === 'Complete'
   );
@@ -143,12 +145,14 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
               </div>
             )}
           </div>
-          <Link
-            className='self-end p-2'
-            href={`/tasks/${task.taskDetails.id}/edit`}
-          >
-            <Pencil />
-          </Link>
+          {session?.data?.user?.canManageTaskSettings && (
+            <Link
+              className='self-end p-2'
+              href={`/tasks/${task.taskDetails.id}/edit`}
+            >
+              <Pencil />
+            </Link>
+          )}
         </div>
       </AccordionContent>
     </AccordionItem>
