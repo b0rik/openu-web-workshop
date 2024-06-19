@@ -114,9 +114,12 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
       </div>
       <AccordionContent className='rounded-b-lg border-t border-blue-600 bg-gray-50 p-4'>
         <div className='flex flex-col gap-1'>
-          <div className='text-gray-700'>
-            User: {task.taskDetails.assignedToUser}
-          </div>
+          {task.taskDetails.assignedToUser && (
+            <div className='flex flex-wrap text-gray-700'>
+              <span>User: {task.taskDetails.assignedToUser.split('@')[0]}</span>
+              <span>{`@${task.taskDetails.assignedToUser.split('@')[1]}`}</span>
+            </div>
+          )}
           <div className='flex items-center gap-1 text-gray-700'>
             Status:
             <span
