@@ -17,6 +17,8 @@ import { patientsTable } from '@/models/drizzle/patientsSchema';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
+import { auth } from '@/auth';
+import { useSession } from 'next-auth/react';
 
 const hospitalizationDays = (date: Date): number =>
   differenceInDays(new Date(), date);
@@ -29,6 +31,8 @@ export const PatientCard = ({
     tasks: (typeof tasksTable.$inferSelect)[];
   };
 }) => {
+  const session = useSession();
+
   const { id, firstName, lastName, unitName, roomNumber, admissionTime } =
     data.patient;
 
@@ -81,20 +85,22 @@ export const PatientCard = ({
             hospitalized duration: {hospitalizationDays(admissionTime)} days
           </p>
         </div>
-        <div className='flex items-center justify-end'>
-          <Button variant='ghost'>
-            <Link
-              href={{
-                pathname: '/tasks/create',
-                query: { patient: JSON.stringify(data.patient) },
-              }}
-              className='flex items-center gap-1 self-end text-lg'
-            >
-              <Plus />
-              <span>New Task</span>
-            </Link>
-          </Button>
-        </div>
+        {session?.data?.user?.canManageTasks && (
+          <div className='flex items-center justify-end'>
+            <Button variant='ghost'>
+              <Link
+                href={{
+                  pathname: '/tasks/create',
+                  query: { patient: JSON.stringify(data.patient) },
+                }}
+                className='flex items-center gap-1 self-end text-lg'
+              >
+                <Plus />
+                <span>New Task</span>
+              </Link>
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
