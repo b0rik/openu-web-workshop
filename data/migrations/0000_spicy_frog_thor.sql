@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS "tasks" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "task_status" (
 	"name" varchar(50) PRIMARY KEY NOT NULL,
+	"color" varchar(50) NOT NULL,
 	CONSTRAINT "task_status_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint

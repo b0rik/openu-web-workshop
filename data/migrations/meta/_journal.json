@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1718629549877,
-      "tag": "0000_warm_meltdown",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1716372132749,
-      "tag": "0002_wakeful_beyonder",
+      "when": 1718790245311,
+      "tag": "0000_spicy_frog_thor",
       "breakpoints": true
     }
   ]

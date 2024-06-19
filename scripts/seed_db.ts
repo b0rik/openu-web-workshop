@@ -19,12 +19,15 @@ import { taskStatusTable } from '@/models/drizzle/taskStatusSchema';
 const taskStatus: (typeof taskStatusTable.$inferInsert)[] = [
   {
     name: 'Pending',
+    color: 'purple',
   },
   {
     name: 'In progress',
+    color: 'yellow',
   },
   {
     name: 'Complete',
+    color: 'green',
   },
 ];
 
