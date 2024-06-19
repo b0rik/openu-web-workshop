@@ -143,3 +143,12 @@ export const updateTaskStatus = async (id: string, newStatus: string) => {
     throw error;
   }
 };
+
+export const deleteTask = async (id: string) => {
+  try {
+    await db.delete(tasksTable).where(eq(tasksTable.id, id));
+  } catch (error) {
+    console.error('Error deleting task.', error);
+    throw error;
+  }
+};

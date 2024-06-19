@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
 import {
+  deleteTask,
   getTaskById,
   insertTask,
   updateTask,
@@ -208,6 +209,22 @@ export const updateStatus = async (id: string, newStatus: string) => {
   } catch (error) {
     {
       console.error('Error updating status', error);
+      return { error: 'Something went wrong.' };
+    }
+  }
+};
+
+export const removeTask = async (id: string) => {
+  try {
+    await deleteTask(id);
+
+    revalidatePath('/tasks');
+    revalidatePath('/');
+
+    return { success: 'Deleted task.' };
+  } catch (error) {
+    {
+      console.error('Error deleting task', error);
       return { error: 'Something went wrong.' };
     }
   }

@@ -12,9 +12,10 @@ import {
   TestTubeDiagonal,
   Camera,
   Pencil,
+  SquareX,
 } from 'lucide-react';
 import type { TaskWithPatientType } from '@/data/tasks';
-import { updateStatus } from '@/actions/tasks';
+import { removeTask, updateStatus } from '@/actions/tasks';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
@@ -145,14 +146,25 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
               </div>
             )}
           </div>
-          {session?.data?.user?.canManageTaskSettings && (
-            <Link
-              className='self-end p-2'
-              href={`/tasks/${task.taskDetails.id}/edit`}
-            >
-              <Pencil />
-            </Link>
-          )}
+
+          <div className='flex gap-2 self-end p-2'>
+            {session?.data?.user?.canManageTaskSettings && (
+              <Link
+                className='text-yellow-700'
+                href={`/tasks/${task.taskDetails.id}/edit`}
+              >
+                <Pencil />
+              </Link>
+            )}
+            {session?.data?.user?.canManageTasks && (
+              <button
+                className='text-red-700'
+                onClick={() => removeTask(task.taskDetails.id)}
+              >
+                <SquareX />
+              </button>
+            )}
+          </div>
         </div>
       </AccordionContent>
     </AccordionItem>
