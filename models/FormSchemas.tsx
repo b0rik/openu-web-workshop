@@ -120,7 +120,6 @@ export const TaskCreateFormSchema = z.object({
   status: z.string().min(1, { message: 'status is required.' }),
   assignedToUser: z.string().optional(),
   dueDate: z
-    .string()
     .date()
     .refine(
       (val) => {
@@ -135,4 +134,5 @@ export const TaskCreateFormSchema = z.object({
 
 export const TaskEditFormSchema = TaskCreateFormSchema.extend({
   id: z.string().min(1, { message: 'id required' }),
+  dueDate: z.date().optional(),
 });

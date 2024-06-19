@@ -58,12 +58,12 @@ export const EditTask = ({
   task,
 }: editTaskType) => {
   const form = useForm<z.infer<typeof TaskEditFormSchema>>({
-    resolver: zodResolver(TaskEditFormSchema),
+    // resolver: zodResolver(TaskEditFormSchema),
     defaultValues: {
       assignedToUser: task.taskDetails.assignedToUser || undefined,
       categoryName: task.taskDetails.categoryName,
       comments: task.taskDetails.comments || undefined,
-      dueDate: task.taskDetails.dueDate?.toUTCString() || undefined,
+      dueDate: task.taskDetails.dueDate || undefined,
       isUrgent: task.taskDetails.isUrgent,
       status: task.taskDetails.status,
       subCategoryName: task.taskDetails.subCategoryName,

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { PatientCreateFormSchema } from '@/models/FormSchemas';
 import { createPatient } from '@/actions/patients';
@@ -18,6 +19,7 @@ import { FormError } from '@/components/form/FormError';
 import { FormDatePicker } from '@/components/form/FormDatePicker';
 
 export const PatientCreateForm = ({ units }: { units: string[] }) => {
+  const router = useRouter();
   const [success, setSuccess] = useState<string | undefined>('');
   const [error, setError] = useState<string | undefined>('');
 
@@ -44,8 +46,8 @@ export const PatientCreateForm = ({ units }: { units: string[] }) => {
       setError(undefined);
       setTimeout(() => {
         setSuccess(undefined);
+        router.push('/patients');
       }, 3000);
-      // redirect to patients list?
     } else {
       setError(result.error);
     }
