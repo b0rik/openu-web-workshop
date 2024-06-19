@@ -4,11 +4,12 @@ import { createTransport } from 'nodemailer';
 
 import { getUserByEmail } from '@/data/users';
 
+// get user from https://ethereal.email/
 const emailUser = {
-  name: 'Lucas Ankunding',
+  name: 'Randal Auer',
   authData: {
-    user: 'lucas.ankunding90@ethereal.email',
-    pass: 'FRsPFszPJRSnsbmmSS',
+    user: 'randal.auer58@ethereal.email',
+    pass: 'WYpBpsyGpRDnqzxPZw',
   },
 };
 
@@ -31,7 +32,12 @@ export const sendEmailNotificationToUser = async (email: string) => {
       from: `"${emailUser.name}" <${emailUser.authData.user}>`,
       to: email,
       subject: 'New Task',
-      html: '<b>Hello world?</b>',
+      html: `
+          <div>
+            <h1>Hello ${user.firstName} ${user.lastName}!</h1>
+              <p>You have a new task assigned to you in Meditask Manager.<p>
+          </div>
+        `,
     });
   } catch (error) {
     console.error('Error sending email notification.', error);

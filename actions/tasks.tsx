@@ -4,15 +4,19 @@ import { z } from 'zod';
 
 import { revalidatePath } from 'next/cache';
 
-import { getTaskById, insertTask, updateTaskStatus } from '@/data/tasks';
-import { TaskCreateFormSchema } from '@/models/FormSchemas';
+import {
+  getTaskById,
+  insertTask,
+  updateTask,
+  updateTaskStatus,
+} from '@/data/tasks';
+import { TaskCreateFormSchema, TaskEditFormSchema } from '@/models/FormSchemas';
 import { getTaskCategoryByName } from '@/data/taskCategories';
 import { getUserByEmail } from '@/data/users';
 import { getPatientById } from '@/data/patients';
 import { getTaskStatusByName } from '@/data/taskStatus';
 import { getTaskSubCategoryByName } from '@/data/taskSubCategories';
 import { sendEmailNotificationToUser } from '@/actions/email';
-import { tasksTable } from '@/models/drizzle/tasksSchema';
 
 export const createTask = async (
   values: z.infer<typeof TaskCreateFormSchema>
@@ -91,6 +95,93 @@ export const createTask = async (
     return { success: 'Task created.' };
   } catch (error) {
     console.error('Error creating task:', error);
+    return { error: 'Something went wrong.' };
+  }
+};
+
+export const editTask = async (values: z.infer<typeof TaskEditFormSchema>) => {
+  const validatedFields = TaskEditFormSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid data.' };
+  }
+
+  const {
+    assignedToUser,
+    categoryName,
+    comments,
+    dueDate,
+    isUrgent,
+    patientId,
+    status,
+    subCategoryName,
+    id,
+  } = validatedFields.data;
+
+  try {
+    const taskExists = await getTaskById(id);
+
+    if (!taskExists) {
+      return { error: 'invalid data.' };
+    }
+
+    if (assignedToUser && assignedToUser !== '') {
+      const userExists = getUserByEmail(assignedToUser);
+
+      if (!userExists) {
+        return { error: 'Invalid data.' };
+      }
+    }
+
+    const categoryExists = getTaskCategoryByName(categoryName);
+
+    if (!categoryExists) {
+      return { error: 'Invalid data.' };
+    }
+
+    if (dueDate && new Date(dueDate) < new Date()) {
+      return { error: 'Invalid data.' };
+    }
+
+    const patientExists = getPatientById(patientId);
+
+    if (!patientExists) {
+      return { error: 'Invalid data.' };
+    }
+
+    const statusExists = getTaskStatusByName(status);
+
+    if (!statusExists) {
+      return { error: 'Invalid data.' };
+    }
+
+    const subCategoryExists = getTaskSubCategoryByName(subCategoryName);
+
+    if (!subCategoryExists) {
+      return { error: 'Invalid data.' };
+    }
+
+    await updateTask({
+      id,
+      categoryName,
+      comments: comments || null,
+      dueDate: dueDate ? new Date(dueDate) : null,
+      isUrgent,
+      patientId,
+      status,
+      subCategoryName,
+      assignedToUser: assignedToUser || null,
+    });
+
+    revalidatePath('/tasks');
+
+    if (assignedToUser) {
+      await sendEmailNotificationToUser(assignedToUser);
+    }
+
+    return { success: 'Task edited.' };
+  } catch (error) {
+    console.error('Error editing task:', error);
     return { error: 'Something went wrong.' };
   }
 };

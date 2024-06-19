@@ -132,3 +132,7 @@ export const TaskCreateFormSchema = z.object({
   isUrgent: z.boolean(),
   patientId: z.string().min(1, { message: 'patient id required.' }),
 });
+
+export const TaskEditFormSchema = TaskCreateFormSchema.extend({
+  id: z.string().min(1, { message: 'id required' }),
+});

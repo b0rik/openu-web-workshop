@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   AccordionContent,
@@ -12,9 +11,12 @@ import {
   SquareCheck,
   TestTubeDiagonal,
   Camera,
+  Pencil,
 } from 'lucide-react';
 import type { TaskWithPatientType } from '@/data/tasks';
 import { updateStatus } from '@/actions/tasks';
+import Link from 'next/link';
+import { useState } from 'react';
 
 type TaskStatusType = 'Pending' | 'In progress' | 'Complete';
 
@@ -43,6 +45,9 @@ const getCategoryIcon = (category: string) => {
 };
 
 export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
+  const [checked, setChecked] = useState(
+    task.taskDetails.status === 'Complete'
+  );
   const formatDate = (date: Date | null) => {
     if (!date) return 'N/A';
     if (date instanceof Date) {
@@ -53,6 +58,7 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
 
   const onCheckboxChecked = async () => {
     // TODO: handle error
+    setChecked(true);
     await updateStatus(task.taskDetails.id, 'Complete');
   };
 
@@ -75,8 +81,8 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
             <Checkbox
               id={`checkbox-${task.taskDetails.id}`}
               onClick={onCheckboxChecked}
-              checked={task.taskDetails.status === 'Complete'}
-              disabled={task.taskDetails.status === 'Complete'}
+              checked={checked}
+              disabled={checked}
             />
             <div>
               <label
@@ -134,6 +140,12 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
               </div>
             )}
           </div>
+          <Link
+            className='self-end p-2'
+            href={`/tasks/${task.taskDetails.id}/edit`}
+          >
+            <Pencil />
+          </Link>
         </div>
       </AccordionContent>
     </AccordionItem>

@@ -49,8 +49,7 @@ type FilterPropsType = {
   setFilterList: Dispatch<SetStateAction<FiltersType>>;
 };
 
-export default function Filter({ filterList, setFilterList }: FilterPropsType) {
-  // const [filterList, setFilterList] = useState(filters);
+const useCheckedCategories = (filterList: FiltersType) => {
   const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
 
   useEffect(() => {
@@ -60,6 +59,13 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
         .map(({ value }) => value)
     );
   }, [filterList]);
+
+  return checkedCategories;
+};
+
+export default function Filter({ filterList, setFilterList }: FilterPropsType) {
+  // const [filterList, setFilterList] = useState(filters);
+  const checkedCategories = useCheckedCategories(filterList);
 
   const onCategoryChanged = (
     event: ChangeEvent<HTMLInputElement>,
@@ -192,6 +198,21 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
     }
   };
 
+  const onClearAllClicked = () => {
+    setFilterList((current) => ({
+      category: current.category.map((cat) => ({ ...cat, checked: false })),
+      subCategory: current.subCategory.map((subCat) => ({
+        category: subCat.category,
+        subCategory: subCat.subCategory.map((innerSubCat) => ({
+          ...innerSubCat,
+          checked: false,
+        })),
+      })),
+      urgency: current.urgency.map((option) => ({ ...option, checked: false })),
+      status: current.status.map((option) => ({ ...option, checked: false })),
+    }));
+  };
+
   return (
     <div className='bg-white'>
       {/* Filters */}
@@ -215,7 +236,11 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
               </DisclosureButton>
             </div>
             <div className='pl-6'>
-              <button type='button' className='text-gray-500'>
+              <button
+                type='button'
+                className='text-gray-500'
+                onClick={onClearAllClicked}
+              >
                 Clear all
               </button>
             </div>
@@ -240,6 +265,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                         type='checkbox'
                         className='h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500'
                         defaultChecked={option.checked}
+                        checked={option.checked}
                       />
                       <label
                         htmlFor={`category-${optionIdx}`}
@@ -279,6 +305,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                             type='checkbox'
                             className='h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500'
                             defaultChecked={option.checked}
+                            checked={option.checked}
                           />
                           <label
                             htmlFor={`subCategory-${optionIdx}`}
@@ -289,27 +316,6 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                         </div>
                       ))
                     )}
-                  {/* {filters.subCategory.map((option, optionIdx) => (
-                    <div
-                      key={option.value}
-                      className='flex items-center text-base sm:text-sm'
-                    >
-                      <input
-                        id={`subCategory-${optionIdx}`}
-                        name='subCategory[]'
-                        defaultValue={option.value}
-                        type='checkbox'
-                        className='h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500'
-                        defaultChecked={option.checked}
-                      />
-                      <label
-                        htmlFor={`subCategory-${optionIdx}`}
-                        className='ml-3 min-w-0 flex-1 text-gray-600'
-                      >
-                        {option.label}
-                      </label>
-                    </div>
-                  ))} */}
                 </div>
               </fieldset>
             </div>
@@ -330,6 +336,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                         type='checkbox'
                         className='h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500'
                         defaultChecked={option.checked}
+                        checked={option.checked}
                       />
                       <label
                         htmlFor={`urgency-${optionIdx}`}
@@ -357,6 +364,7 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
                         type='checkbox'
                         className='h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500'
                         defaultChecked={option.checked}
+                        checked={option.checked}
                       />
                       <label
                         htmlFor={`status-${optionIdx}`}
@@ -422,5 +430,3 @@ export default function Filter({ filterList, setFilterList }: FilterPropsType) {
     </div>
   );
 }
-
-

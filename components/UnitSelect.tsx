@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import {
   Select,
   SelectContent,
@@ -15,6 +17,7 @@ import { useSession } from 'next-auth/react';
 
 export const UnitSelect = ({ units }: { units: string[] }) => {
   const session = useSession();
+  const router = useRouter();
   const { activeUnit, email } = session.data?.user || {};
 
   return (
@@ -23,6 +26,7 @@ export const UnitSelect = ({ units }: { units: string[] }) => {
         // TODO: handle error
         await updateActiveUnit(email as string, value);
         await session.update({ activeUnit: value });
+        router.refresh();
       }}
     >
       <SelectTrigger>
