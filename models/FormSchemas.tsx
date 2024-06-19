@@ -90,15 +90,12 @@ export const PatientCreateFormSchema = z.object({
     .max(MAX_LENGTH, {
       message: `last name is too long, max ${MAX_LENGTH} allowed.`,
     }),
-  dateOfBirth: z
-    .string()
-    .date()
-    .refine(
-      (val) => {
-        return new Date(val) <= new Date();
-      },
-      { message: 'birth date invalid.' }
-    ),
+  dateOfBirth: z.date().refine(
+    (val) => {
+      return new Date(val) <= new Date();
+    },
+    { message: 'birth date invalid.' }
+  ),
   unitName: z
     .string()
     .min(1, { message: 'unit required.' })
