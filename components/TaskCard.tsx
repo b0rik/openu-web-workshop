@@ -15,10 +15,11 @@ import {
   SquareX,
 } from 'lucide-react';
 import type { TaskWithPatientType } from '@/data/tasks';
-import { removeTask, updateStatus } from '@/actions/tasks';
+import { editComment, removeTask, updateStatus } from '@/actions/tasks';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { TaskCardComment } from './TaskCardComment';
 
 type TaskStatusType = 'Pending' | 'In progress' | 'Complete';
 
@@ -115,6 +116,18 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
           </div>
         </div>
       </div>
+      <div className='p-2'>
+        {task.taskDetails.comments && (
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700'>
+              Comments:
+            </label>
+            <p className='w-full rounded-md border bg-gray-100 p-2'>
+              <TaskCardComment task={task} />
+            </p>
+          </div>
+        )}
+      </div>
       <AccordionContent className='rounded-b-lg border-t border-blue-600 bg-gray-50 p-4'>
         <div className='flex flex-col gap-1'>
           {task.taskDetails.assignedToUser && (
@@ -134,7 +147,7 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
           <div className='text-gray-700'>
             Due Date: {formatDate(task.taskDetails.dueDate)}
           </div>
-          <div className='mt-4'>
+          {/* <div className='mt-4'>
             {task.taskDetails.comments && (
               <div>
                 <label className='mb-2 block text-sm font-medium text-gray-700'>
@@ -145,7 +158,7 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
                 </p>
               </div>
             )}
-          </div>
+          </div> */}
 
           <div className='flex gap-2 self-end p-2'>
             {session?.data?.user?.canManageTaskSettings && (

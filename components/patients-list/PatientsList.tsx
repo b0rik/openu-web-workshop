@@ -36,6 +36,8 @@ export const PatientsList = ({ data }: { data: DataType[] }) => {
   const [patients, setPatients] = useState<
     (DataType & { isFiltered: boolean })[]
   >([]);
+  const session = useSession();
+  const activeUnit = session.data?.user?.activeUnit;
 
   useEffect(() => {
     setPatients(
@@ -49,9 +51,6 @@ export const PatientsList = ({ data }: { data: DataType[] }) => {
         .map((patient) => ({ isFiltered: false, ...patient }))
     );
   }, [data]);
-
-  const session = useSession();
-  const activeUnit = session.data?.user?.activeUnit;
 
   if (!activeUnit) {
     // show something more...friendly

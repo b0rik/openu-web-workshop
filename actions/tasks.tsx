@@ -229,3 +229,28 @@ export const removeTask = async (id: string) => {
     }
   }
 };
+
+export const editComment = async (
+  taskId: string,
+  newComment: string | undefined
+) => {
+  try {
+    const task = await getTaskById(taskId);
+
+    if (!task) {
+      return { error: 'invalid data.' };
+    }
+
+    await updateTask({
+      ...task,
+      comments: newComment || null,
+    });
+
+    revalidatePath('/tasks');
+
+    return { success: 'comment edited.' };
+  } catch (error) {
+    console.error('Error editing task:', error);
+    return { error: 'Something went wrong.' };
+  }
+};
