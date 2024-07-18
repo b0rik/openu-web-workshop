@@ -17,9 +17,9 @@ export const tasksTable = pgTable('tasks', {
   categoryName: varchar('category_name')
     .references(() => taskCategoriesTable.name)
     .notNull(),
-  subCategoryName: varchar('sub_category_name')
-    .references(() => taskSubCategoriesTable.name)
-    .notNull(),
+  // subCategoryName: varchar('sub_category_name')
+  //   .references(() => taskSubCategoriesTable.name)
+  //   .notNull(),
   comments: text('comments'),
   status: varchar('status')
     .references(() => taskStatusTable.name)

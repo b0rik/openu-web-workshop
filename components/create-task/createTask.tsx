@@ -62,7 +62,7 @@ export const CreateTask = ({
       dueDate: undefined,
       isUrgent: false,
       status: '',
-      subCategoryName: '',
+      subCategoriesNames: [],
       patientId: '',
     },
     mode: 'onChange',
@@ -170,12 +170,33 @@ export const CreateTask = ({
               }}
             />
 
-            <FormSelect
-              name='subCategoryName'
-              label='Sub category'
-              placeholder='Select a a sub category'
-              options={subCategories}
+            <FormToggleGroup
+              name='subCategoriesNames'
+              label='Sub Categories'
+              items={taskSubCategories
+                .filter(({ categoryName }) => categoryName === category)
+                .map(({ name }) => ({
+                  item: (
+                    <div className='flex flex-col items-center'>{name}</div>
+                  ),
+                  value: name,
+                }))}
+              multiple
             />
+            {/* <div>
+              {taskSubCategories.map((subCategory) => {
+                return (
+                  <div className='space-x-2' key={subCategory.name}>
+                    <label for={subCategory.name}>{subCategory.name}</label>
+                    <input
+                      type='checkbox'
+                      name={subCategory.name}
+                      value={subCategory.name}
+                    />
+                  </div>
+                );
+              })}
+            </div> */}
 
             <FormTextArea
               name='comments'
@@ -243,3 +264,12 @@ export const CreateTask = ({
     </Card>
   );
 };
+
+{
+  /* <FormSelect
+              name='subCategoryName'
+              label='Sub category'
+              placeholder='Select a a sub category'
+              options={subCategories}
+            />  */
+}

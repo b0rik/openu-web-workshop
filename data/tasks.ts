@@ -102,7 +102,8 @@ export const getTasksByPatientId = async (patientId: string) => {
 
 export const insertTask = async (task: typeof tasksTable.$inferInsert) => {
   try {
-    await db.insert(tasksTable).values(task);
+    const result = await db.insert(tasksTable).values(task).returning();
+    return result[0];
   } catch (error) {
     console.error('Error inserting task.', error);
     throw error;

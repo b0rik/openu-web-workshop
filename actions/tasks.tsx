@@ -18,6 +18,10 @@ import { getPatientById } from '@/data/patients';
 import { getTaskStatusByName } from '@/data/taskStatus';
 import { getTaskSubCategoryByName } from '@/data/taskSubCategories';
 import { sendEmailNotificationToUser } from '@/actions/email';
+import {
+  deleteTaskToSubCategoriesByTaskId,
+  insertTaskToSubCategory,
+} from '@/data/taskToSubCategories';
 
 export const createTask = async (
   values: z.infer<typeof TaskCreateFormSchema>
@@ -36,19 +40,19 @@ export const createTask = async (
     isUrgent,
     patientId,
     status,
-    subCategoryName,
+    // subCategoryName,
+    subCategoriesNames,
   } = validatedFields.data;
-
   try {
     if (assignedToUser && assignedToUser !== '') {
-      const userExists = getUserByEmail(assignedToUser);
+      const userExists = await getUserByEmail(assignedToUser);
 
       if (!userExists) {
         return { error: 'Invalid data.' };
       }
     }
 
-    const categoryExists = getTaskCategoryByName(categoryName);
+    const categoryExists = await getTaskCategoryByName(categoryName);
 
     if (!categoryExists) {
       return { error: 'Invalid data.' };
@@ -58,33 +62,44 @@ export const createTask = async (
       return { error: 'Invalid data.' };
     }
 
-    const patientExists = getPatientById(patientId);
+    const patientExists = await getPatientById(patientId);
 
     if (!patientExists) {
       return { error: 'Invalid data.' };
     }
 
-    const statusExists = getTaskStatusByName(status);
+    const statusExists = await getTaskStatusByName(status);
 
     if (!statusExists) {
       return { error: 'Invalid data.' };
     }
 
-    const subCategoryExists = getTaskSubCategoryByName(subCategoryName);
+    // const subCategoryExists = getTaskSubCategoryByName(subCategoryName);
+    const subCategoriesExists = subCategoriesNames.every((subCategoryName) =>
+      getTaskSubCategoryByName(subCategoryName)
+    );
 
-    if (!subCategoryExists) {
+    // if (!subCategoryExists) {
+    if (!subCategoriesExists) {
       return { error: 'Invalid data.' };
     }
 
-    await insertTask({
+    const { id: insertedTaskId } = await insertTask({
       categoryName,
       comments,
       dueDate: dueDate ? new Date(dueDate) : null,
       isUrgent,
       patientId,
       status,
-      subCategoryName,
+      // subCategoryName,
       assignedToUser,
+    });
+
+    subCategoriesNames.forEach(async (subCategoryName) => {
+      await insertTaskToSubCategory({
+        subCategoryName,
+        taskId: insertedTaskId,
+      });
     });
 
     revalidatePath('/tasks');
@@ -115,7 +130,9 @@ export const editTask = async (values: z.infer<typeof TaskEditFormSchema>) => {
     isUrgent,
     patientId,
     status,
-    subCategoryName,
+    // subCategoryName,
+    subCategoriesNames,
+
     id,
   } = validatedFields.data;
 
@@ -156,9 +173,13 @@ export const editTask = async (values: z.infer<typeof TaskEditFormSchema>) => {
       return { error: 'Invalid data.' };
     }
 
-    const subCategoryExists = getTaskSubCategoryByName(subCategoryName);
+    // const subCategoryExists = getTaskSubCategoryByName(subCategoryName);
+    const subCategoriesExists = subCategoriesNames.every((subCategoryName) =>
+      getTaskSubCategoryByName(subCategoryName)
+    );
 
-    if (!subCategoryExists) {
+    // if (!subCategoryExists) {
+    if (!subCategoriesExists) {
       return { error: 'Invalid data.' };
     }
 
@@ -170,8 +191,17 @@ export const editTask = async (values: z.infer<typeof TaskEditFormSchema>) => {
       isUrgent,
       patientId,
       status,
-      subCategoryName,
+      // subCategoryName,
       assignedToUser: assignedToUser || null,
+    });
+
+    await deleteTaskToSubCategoriesByTaskId(id);
+
+    subCategoriesNames.forEach(async (subCategoryName) => {
+      await insertTaskToSubCategory({
+        subCategoryName,
+        taskId: id,
+      });
     });
 
     revalidatePath('/tasks');
@@ -216,6 +246,7 @@ export const updateStatus = async (id: string, newStatus: string) => {
 
 export const removeTask = async (id: string) => {
   try {
+    await deleteTaskToSubCategoriesByTaskId(id);
     await deleteTask(id);
 
     revalidatePath('/tasks');

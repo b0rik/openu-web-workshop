@@ -112,7 +112,9 @@ export const PatientCreateFormSchema = z.object({
 
 export const TaskCreateFormSchema = z.object({
   categoryName: z.string().min(1, { message: 'category required.' }),
-  subCategoryName: z.string().min(1, { message: 'sub category required.' }),
+  subCategoriesNames: z.array(
+    z.string().min(1, { message: 'sub category required.' })
+  ),
   comments: z.string().optional(),
   status: z.string().min(1, { message: 'status is required.' }),
   assignedToUser: z.string().optional(),

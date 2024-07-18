@@ -39,6 +39,7 @@ import { FormSuccess } from '@/components/form/FormSuccess';
 import { FormError } from '@/components/form/FormError';
 import { tasksTable } from '@/models/drizzle/tasksSchema';
 import { TaskWithPatientType } from '@/data/tasks';
+import { taskToSubCategoriesTable } from '@/models/drizzle/taskToSubCategoriesSchema';
 
 const age = (date: Date): number => differenceInYears(new Date(), date);
 
@@ -48,6 +49,7 @@ type editTaskType = {
   users: Omit<typeof usersTable.$inferSelect, 'hashedPassword'>[];
   taskSubCategories: (typeof taskSubCategoriesTable.$inferSelect)[];
   task: TaskWithPatientType;
+  taskSelectedSubCategories: (typeof taskToSubCategoriesTable.$inferSelect)[];
 };
 
 export const EditTask = ({
@@ -56,6 +58,7 @@ export const EditTask = ({
   users,
   taskSubCategories,
   task,
+  taskSelectedSubCategories,
 }: editTaskType) => {
   const form = useForm<z.infer<typeof TaskEditFormSchema>>({
     // resolver: zodResolver(TaskEditFormSchema),
@@ -66,7 +69,10 @@ export const EditTask = ({
       dueDate: task.taskDetails.dueDate || undefined,
       isUrgent: task.taskDetails.isUrgent,
       status: task.taskDetails.status,
-      subCategoryName: task.taskDetails.subCategoryName,
+      // subCategoryName: task.taskDetails.subCategoryName,
+      subCategoriesNames: taskSelectedSubCategories.map(
+        ({ subCategoryName }) => subCategoryName
+      ),
       patientId: task.taskDetails.patientId,
       id: task.taskDetails.id,
     },
@@ -168,11 +174,26 @@ export const EditTask = ({
               disabled
             />
 
-            <FormSelect
+            {/* <FormSelect
               name='subCategoryName'
               label='Sub category'
               placeholder='Select a a sub category'
               options={subCategories}
+              disabled
+            /> */}
+
+            <FormToggleGroup
+              name='subCategoriesNames'
+              label='Sub Categories'
+              items={subCategories.map((subCategory) => ({
+                item: (
+                  <div className='flex flex-col items-center'>
+                    {subCategory}
+                  </div>
+                ),
+                value: subCategory,
+              }))}
+              multiple
               disabled
             />
 

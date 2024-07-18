@@ -183,43 +183,43 @@ const usersPerUnit: (typeof usersPerUnitTable.$inferInsert)[] = users.map(
   })
 );
 
-import { tasksTable } from '@/models/drizzle/tasksSchema';
+// import { tasksTable } from '@/models/drizzle/tasksSchema';
 
-const createTask = () => {
-  const taskSubCategory = faker.helpers.arrayElement(taskSubCategories);
+// const createTask = () => {
+//   const taskSubCategory = faker.helpers.arrayElement(taskSubCategories);
 
-  const task: typeof tasksTable.$inferInsert = {
-    categoryName: taskSubCategory.categoryName,
-    subCategoryName: taskSubCategory.name,
-    status: faker.helpers.arrayElement(taskStatus).name,
-    isUrgent: faker.helpers.maybe(() => true) || false,
-    patientId: faker.helpers.arrayElement(patients).id,
-  };
+//   const task: typeof tasksTable.$inferInsert = {
+//     categoryName: taskSubCategory.categoryName,
+//     subCategoryName: taskSubCategory.name,
+//     status: faker.helpers.arrayElement(taskStatus).name,
+//     isUrgent: faker.helpers.maybe(() => true) || false,
+//     patientId: faker.helpers.arrayElement(patients).id,
+//   };
 
-  const taskUnit = patients.find(
-    (patient) => task.patientId === patient.id
-  )?.unitName;
+//   const taskUnit = patients.find(
+//     (patient) => task.patientId === patient.id
+//   )?.unitName;
 
-  if (faker.helpers.maybe(() => true, { probability: 0.8 })) {
-    task.assignedToUser = faker.helpers.arrayElement(
-      usersPerUnit.filter((option) => option.unitName === taskUnit)
-    ).userEmail;
-  }
+//   if (faker.helpers.maybe(() => true, { probability: 0.8 })) {
+//     task.assignedToUser = faker.helpers.arrayElement(
+//       usersPerUnit.filter((option) => option.unitName === taskUnit)
+//     ).userEmail;
+//   }
 
-  if (faker.helpers.maybe(() => true, { probability: 0.7 })) {
-    task.dueDate = faker.date.soon({ days: 10 });
-  }
+//   if (faker.helpers.maybe(() => true, { probability: 0.7 })) {
+//     task.dueDate = faker.date.soon({ days: 10 });
+//   }
 
-  if (faker.helpers.maybe(() => true, { probability: 0.3 })) {
-    task.comments = faker.lorem.words({ min: 3, max: 7 });
-  }
+//   if (faker.helpers.maybe(() => true, { probability: 0.3 })) {
+//     task.comments = faker.lorem.words({ min: 3, max: 7 });
+//   }
 
-  return task;
-};
+//   return task;
+// };
 
-const tasks: (typeof tasksTable.$inferInsert)[] = Array(20)
-  .fill(0)
-  .map((_) => createTask());
+// const tasks: (typeof tasksTable.$inferInsert)[] = Array(20)
+//   .fill(0)
+//   .map((_) => createTask());
 
 import { db } from '@/data/db';
 
@@ -233,7 +233,7 @@ const main = async () => {
     await db.insert(patientsTable).values(patients);
     await db.insert(usersTable).values(users);
     await db.insert(usersPerUnitTable).values(usersPerUnit);
-    await db.insert(tasksTable).values(tasks);
+    // await db.insert(tasksTable).values(tasks);
 
     console.log('database seeded.');
   } catch (error) {

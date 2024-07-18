@@ -93,7 +93,7 @@ export const TaskCard = ({ task }: { task: TaskWithPatientType }) => {
                 htmlFor={`checkbox-${task.taskDetails.id}`}
                 className='text-xs font-medium'
               >
-                {task.taskDetails.subCategoryName}
+                {/* {task.taskDetails.subCategoryName} */}
               </label>
               <p>{task.patient.firstName + ' ' + task.patient.lastName}</p>
               <p>ID: {task.patient.id}</p>
